@@ -4,16 +4,10 @@ app.controller("productcontroller", function ($scope, $http) {
     $scope.btnName = "Insert";
     //เพิ่มข้อมูล
     $scope.insertData = function () {
-        if ($scope.realregno == null) {
-            sweetAlert("บันทึกข้อมูลผิดพลาด", "กรุณาใส่เลขทะเบียนตํารับยา", "warning");
-            return false;
-        }
+
+
         if ($scope.pname == null) {
             sweetAlert("บันทึกข้อมูลผิดพลาด", "กรุณาใส่ชื่อผลิตภัณฑ์", "warning");
-            return false;
-        }
-        if ($scope.brandid == null) {
-            sweetAlert("บันทึกข้อมูลผิดพลาด", "กรุณาใส่ยี่ห้อผลิตภัณฑ์", "warning");
             return false;
         } else {
             $http.post("php/pinsert.php", {
@@ -26,7 +20,6 @@ app.controller("productcontroller", function ($scope, $http) {
                     'btnName': $scope.btnName
                 })
                 .then(function (data) {
-                    sweetAlert("บันทึกข้อมูลเสร็จสิ้น", "ข้อมูลถูกบันทึกลงในฐานข้อมูลเรียบร้อยแล้ว", "success");
                     $scope.regno = null;
                     $scope.realregno = null;
                     $scope.pname = null;
@@ -35,6 +28,7 @@ app.controller("productcontroller", function ($scope, $http) {
                     $scope.brandid = null;
                     $scope.btnName = "Insert";
                     $scope.displayData();
+                    sweetAlert("บันทึกข้อมูลเสร็จสิ้น", "ข้อมูลถูกบันทึกลงในฐานข้อมูลเรียบร้อยแล้ว", "success");
                 });
         }
 
