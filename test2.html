@@ -1,0 +1,104 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Pos</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/lib/angular.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/lib/jquery-3.3.1.min.js"></script>
+    <script src="js/lib/popper.min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+
+    <style>
+        /* Style the input field */
+
+        #myInput {
+            padding: 8px;
+            margin-top: -6px;
+            border: 0;
+            border-radius: 0;
+            background: #f1f1f1;
+        }
+
+        #searchBtn {
+            text-align: left
+        }
+
+    </style>
+</head>
+
+<body>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#additemModal" data-lotnumber="1707005" data-productname="Ponstan 500" data-retailprice="50">Open modal for @getbootstrap</button>
+
+
+    <script>
+        //modalControl
+        $(document).ready(function() {
+            $('#additemModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var price = button.data('retailprice')
+                //var recipient = button.data('whatever') // Extract info from data-* attributes
+                //lotnumber = "เลขล็อตที่ : " + lotnumber;
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.                
+                var modal = $(this)
+                modal.find('.modal-title').html('<b>เพิ่มรายการขาย</b>')
+                modal.find('.modal-body #item-qty').val("1")
+                modal.find('.modal-body #item-price').val(price)
+                $("#lotnumber").text(button.data('lotnumber'))
+                $("#productname").text(button.data('productname'))
+            })
+        });
+
+    </script>
+</body>
+
+<!--..................................modal start........................................-->
+<div class="modal fade" id="additemModal" tabindex="-1" role="dialog" aria-labelledby="additemModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="additemModalLabel">Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="container">
+                        <div class="row">
+                            <h5>เลขล็อตที่ :&nbsp;</h5>
+                            <h5 id="lotnumber"></h5>
+                        </div>
+                        <div class="row">
+                            <h5>ชื่อ :&nbsp;</h5>
+                            <h5 id="productname"></h5>
+                        </div>
+                    </div>
+                    <!--<label id="productname">ชื่อ : </label>-->
+                    <!--<label id="lotnumber">เลขล็อตที่ : </label>-->
+                    <div class="form-group row">
+                        <label for="message-text" class="col-sm-2 col-form-label">จำนวน:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="item-qty">
+                        </div>
+                        <label for="message-text" class="col-sm-1 col-form-label">แผง</label>
+                    </div>
+                    <hr>
+
+                    <div class="form-group row">
+                        <label for="message-text" class="col-sm-2 col-form-label">ราคา:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="item-price">
+                        </div>
+                        <label for="message-text" class="col-sm-1 col-form-label">บาท</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                <button type="button" class="btn btn-success">เพิ่มในตะกร้า</button>
+            </div>
+        </div>
+    </div>
+</div>
