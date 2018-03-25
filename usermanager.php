@@ -108,12 +108,13 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="col"><label class="col-form-label">หน้าที่ :</label></div>
-                                    <div class="col">
+                                    <div class="col" ng-init="getallRole()">
                                         <select class="form-control" ng-model="newrole" ng-change="setnewroleDesc()" style="width:300px;" id="newuserrole">
-                                        <option value="admin" selected>ผู้ดูแลระบบ</option>
+                                        <option ng-repeat="role in roles" value="{{role.rolename}}" >{{role.rolethai}}</option>
+                                        <!--<option value="admin">ผู้ดูแลระบบ</option>
                                         <option value="mainstoragemanager" >พนักงานสต๊อกสำนักงานใหญ่</option>
                                         <option value="branchstockmanager" >พนักงานสต๊อกสาขาย่อย</option>
-                                        <option value="cashier" >พนักงานคิดเงินหน้าร้าน</option>
+                                        <option value="cashier" >พนักงานคิดเงินหน้าร้าน</option>-->
                                     </select>
                                     </div>
                                 </div>
@@ -225,6 +226,11 @@
                         });
                     });
                 }
+                $scope.getallRole = function() {
+                    $http.get("php/getallRole.php").then(function(response) {
+                        $scope.roles = response.data.records;
+                    });
+                }
                 $scope.acctest = function() {
                     forEach($scope.users, function(value, key) {
                         console.log(key + ': ' + value.fname);
@@ -270,8 +276,8 @@
                         $scope.newusername = null;
                         $scope.newpassword = null;
                         $scope.newinfo = null;
-                        //$scope.getallUser();
-                        location.reload();
+                        $scope.getallUser();
+                        //location.reload();
                     });
                 }
                 $scope.setnewroleDesc = function() {
@@ -351,8 +357,8 @@
                         $scope.editusername = null;
                         $scope.editpassword = null;
                         $scope.editinfo = null;
-                        //$scope.getallUser();
-                        location.reload();
+                        $scope.getallUser();
+                        //location.reload();
                     });
                 }
                 $scope.deleteUser = function(userid) {
