@@ -12,7 +12,7 @@ if($data) {
         $stockid = mysqli_real_escape_string($con,$data->stockid);
         $qty = mysqli_real_escape_string($con,$data -> qty);
 
-        $result = array('addStock'=> 'Failed','upstsdetail' =>'Failed');
+        $result = array();
 
         $sql = "INSERT INTO drugstorerx.stock
 (
@@ -40,6 +40,8 @@ AND rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rpt
         if(mysqli_query($con,$sql)){
 
             $result[0]['addStock'] = 'Successed';
+        }else{
+            $result[0]['addStock'] = 'Failed';
         }
 
         $sqlUp = "update drugstorerx.rpt_stocktobranchstockdetail set rpt_stocktobranchstockdetail.sts = '0' where rpt_stocktobranchstockdetail.stockid = $stockid and rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rptsTbs_id FROM rpt_stocktobranchstock where rpt_stocktobranchstock.rptsTbs_no = '$rtsTbsNo')";
@@ -48,7 +50,26 @@ AND rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rpt
         if(mysqli_query($con,$sqlUp)){
             $result[0]['upstsdetail'] = 'Successed';
 
+        }else{
+            $result[0]['upstsdetail'] = 'Failed';
         }
+
+
+
+        $sqlSts = "SELECT rpt_stocktobranchstockdetail.sts FROM rpt_stocktobranchstockdetail WHERE rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rptsTbs_id FROM rpt_stocktobranchstock where rpt_stocktobranchstock.rptsTbs_no = '$rtsTbsNo') GROUP BY rpt_stocktobranchstockdetail.sts";
+       $rws = mysqli_query($con,$sqlSts) or mysqli_error($con );
+
+       if($rws ->num_rows == 1){
+
+           $sqlUpStatus = "UPDATE rpt_stocktobranchstock set rpt_stocktobranchstock.rptsTbs_status  = '0' WHERE rpt_stocktobranchstock.rptsTbs_no = '$rtsTbsNo'";
+           if(mysqli_query($con,$sqlUpStatus)){
+               $result[0]['uprptsTbs'] = 'Successed';
+           }else{
+               $result[0]['uprptsTbs'] = 'Failed';
+           }
+
+
+       }
 
         echo  json_encode($result);
 
