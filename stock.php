@@ -9,8 +9,20 @@
 </head>
 
 <body>
+    <?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("8", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
 
     <div class="container" style="width:70%;">
+
         <br>
         <h3 align="center">จัดการข้อมูลคลัง</h3>
         <div ng-app="stockApp" ng-controller="stockcontroller" class="ng-scope">

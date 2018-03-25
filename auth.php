@@ -44,9 +44,31 @@ if(isset($_POST['username'])){
     $subbranchmidquery = "SELECT mid FROM `subbranch` WHERE `id` LIKE '{$_SESSION["subbranchid"]}'";
     $resultsubbranchmid = mysqli_query($con,$subbranchmidquery);     
     $rows = $resultsubbranchmid->fetch_array(MYSQLI_ASSOC);    
-    $_SESSION["masterbranchid"] = $rows['mid'];
+    $_SESSION["masterbranchid"] = $rows['mid'];   
+    
+        
 }
-include 'mainbar.php';
+if(!empty($_SESSION["role"])){
+    $role=$_SESSION["role"];
+    $rulequery="SELECT rolesetting.rule FROM rolesetting WHERE rolesetting.rolename = '$role';";
+    $ruleresult=mysqli_query($con,$rulequery);
+    $rows = $ruleresult->fetch_array(MYSQLI_ASSOC);
+    $firstrule = $rows['rule'][0];
+    
+    $firstfilequery="SELECT privilege.file FROM privilege WHERE privilege.id = '$firstrule'";
+    $firstfileresult=mysqli_query($con,$firstfilequery);
+    $rows = $firstfileresult->fetch_array(MYSQLI_ASSOC);
+    $firstfile = $rows['file']; 
+}
+
+if(!empty($firstfile)){
+        header("Location: $firstfile");             
+    }else{
+        header("Location: logout.php");
+    }
+
+
+//include 'mainbartest.php';
 //------------------------------------------------------------------------------
 /*if($_SESSION["id"] != null){
     if($_SESSION["role"] == 'admin'){

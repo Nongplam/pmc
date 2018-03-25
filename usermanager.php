@@ -25,6 +25,17 @@
     </head>
 
     <body>
+        <?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("7", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
         <div class="container" ng-app="usermanagerApp" ng-controller="usersCtrl">
             <!--<nav class="navbar navbar-dark navbar-expand-md bg-primary">
                 <div class="container-fluid"><a href="#" class="navbar-brand">จัดการผู้ใช้</a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>

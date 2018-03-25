@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<?php session_start(); ?>
 <html>
 
 <head>
@@ -68,6 +67,18 @@
 </head>
 
 <body>
+    <?php 
+    session_start();
+    include 'php/connectDB.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("4", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
     <div id="productsCtrl" ng-app="posApp" ng-controller="productsCtrl">
         <div class="container-fluid border border-dark rounded">
             <br>
@@ -110,16 +121,16 @@
                                 <!--<tr ng-repeat="x in products">-->
                                 <tr ng-repeat="y in positems">
                                     <td>{{$index+1}}</td>
-                                    <th>{{y.pname}}</th>
-                                    <th>{{y.pcore}}</th>
-                                    <th>{{y.bname}}</th>
-                                    <th>{{y.price}}</th>
-                                    <th>{{y.qty}}</th>
-                                    <th>{{y.stocktype}}</th>
-                                    <th class="totalonlist">{{y.price*y.qty}}</th>
-                                    <th><button class="btn btn-danger" ng-click="deleteItem(y.id)">x</button></th>
+                                    <td class="pname">{{y.pname}}</td>
+                                    <td>{{y.pcore}}</td>
+                                    <td>{{y.bname}}</td>
+                                    <td>{{y.price}}</td>
+                                    <td>{{y.qty}}</td>
+                                    <td>{{y.stocktype}}</td>
+                                    <td class="totalonlist">{{y.price*y.qty}}</td>
+                                    <td><button class="btn btn-danger" ng-click="deleteItem(y.id)">x</button></td>
                                 </tr>
-                                <tr class="table-info">
+                                <!--<tr class="table-info">
                                     <td>P1</td>
                                     <th>แพ็คเกจพอนแสตนคู่ผงเกลือแร่</th>
                                     <th></th>
@@ -129,7 +140,7 @@
                                     <th></th>
                                     <th class="discountonlist">-40</th>
                                     <th></th>
-                                </tr>
+                                </tr>-->
                                 <!--<tr class="table-info">
                                     <td>P2</td>
                                     <th>แพ็คเกจพอนแสตนคู่ผงเกลือแร่</th>
@@ -654,7 +665,7 @@
                                 }).then(function(data) {
                                     $scope.id = null;
                                     //$scope.posItem();
-                                    location.reload();
+                                    location.reload(true);
                                 });
                             }
                         });
@@ -760,7 +771,7 @@
         </script>
         <script>
             $(document).ready(function() {
-                $("#checkout").ready(setTimeout(function() {
+                $(".pname").ready(setTimeout(function() {
                     var total = 0;
                     var totaltax = 0;
                     var sumtotal = 0;
@@ -834,7 +845,7 @@
         <script>
             //modalControl
             $(document).ready(function() {
-                $('#checkoutModal').on('show.bs.modal', function(event) {
+                $('.checkoutModal').on('show.bs.modal', function(event) {
                     var button = $(event.relatedTarget) // Button that triggered the modal                    
                     //var recipient = button.data('whatever') // Extract info from data-* attributes
                     //lotnumber = "เลขล็อตที่ : " + lotnumber;
@@ -848,7 +859,7 @@
         </script>
         <script>
             $(document).ready(function() {
-                $("#checkout").ready(function() {
+                $(".pname").ready(function() {
                     var naga = 0;
                     var totaldiscount = 0;
                     $(".discountonlist").each(function() {
@@ -862,7 +873,7 @@
         <script>
             //modalcheckoutControl
             $(document).ready(function() {
-                $("#checkout").ready(setTimeout(function() {
+                $(".pname").ready(setTimeout(function() {
                     var sumtotal = parseFloat($("#sumtotal").text());
                     console.log(sumtotal);
                     $("#money-total").html(sumtotal);
