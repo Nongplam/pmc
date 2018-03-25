@@ -25,6 +25,17 @@
     </head>
 
     <body>
+        <?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("7", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
         <div class="container" ng-app="usermanagerApp" ng-controller="usersCtrl">
             <!--<nav class="navbar navbar-dark navbar-expand-md bg-primary">
                 <div class="container-fluid"><a href="#" class="navbar-brand">จัดการผู้ใช้</a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
@@ -97,12 +108,13 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="col"><label class="col-form-label">หน้าที่ :</label></div>
-                                    <div class="col">
+                                    <div class="col" ng-init="getallRole()">
                                         <select class="form-control" ng-model="newrole" ng-change="setnewroleDesc()" style="width:300px;" id="newuserrole">
-                                        <option value="admin" selected>ผู้ดูแลระบบ</option>
+                                        <option ng-repeat="role in roles" value="{{role.rolename}}" >{{role.rolethai}}</option>
+                                        <!--<option value="admin">ผู้ดูแลระบบ</option>
                                         <option value="mainstoragemanager" >พนักงานสต๊อกสำนักงานใหญ่</option>
                                         <option value="branchstockmanager" >พนักงานสต๊อกสาขาย่อย</option>
-                                        <option value="cashier" >พนักงานคิดเงินหน้าร้าน</option>
+                                        <option value="cashier" >พนักงานคิดเงินหน้าร้าน</option>-->
                                     </select>
                                     </div>
                                 </div>
@@ -214,6 +226,11 @@
                         });
                     });
                 }
+                $scope.getallRole = function() {
+                    $http.get("php/getallRole.php").then(function(response) {
+                        $scope.roles = response.data.records;
+                    });
+                }
                 $scope.acctest = function() {
                     forEach($scope.users, function(value, key) {
                         console.log(key + ': ' + value.fname);
@@ -259,8 +276,8 @@
                         $scope.newusername = null;
                         $scope.newpassword = null;
                         $scope.newinfo = null;
-                        //$scope.getallUser();
-                        location.reload();
+                        $scope.getallUser();
+                        //location.reload();
                     });
                 }
                 $scope.setnewroleDesc = function() {
@@ -340,8 +357,8 @@
                         $scope.editusername = null;
                         $scope.editpassword = null;
                         $scope.editinfo = null;
-                        //$scope.getallUser();
-                        location.reload();
+                        $scope.getallUser();
+                        //location.reload();
                     });
                 }
                 $scope.deleteUser = function(userid) {

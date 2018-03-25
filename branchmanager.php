@@ -12,10 +12,10 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/lib/angular.min.js"></script>
-        <link rel="stylesheet" href="css/bootstrap.min.css">
         <script src="js/lib/jquery-3.3.1.min.js"></script>
         <script src="js/lib/popper.min.js"></script>
         <script src="js/lib/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
         <style>
             .form-row {
                 margin-bottom: 17px;
@@ -25,6 +25,17 @@
     </head>
 
     <body>
+        <?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("1", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
         <div class="container" ng-app="subbranchmanagerApp" ng-controller="subbranchsCtrl">
             <!--<nav class="navbar navbar-dark navbar-expand-md bg-primary">
                 <div class="container-fluid"><a href="#" class="navbar-brand">จัดการสาขา</a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
@@ -69,7 +80,7 @@
                                         <td>{{x.name}}</td>
                                         <td>{{x.info}}</td>
                                         <td>{{x.tel}}</td>
-                                        <td><button class="editsubbranchbtn btn btn-info" id="editsubbranchbtn" ng-click="seteditsubbranchvalue(x.id,x.name,x.tel,x.info)">Edit</button></td>
+                                        <td><button class="editsubbranchbtn btn btn-info" id="editsubbranchbtn" ng-click="seteditsubbranchvalue(x.id,x.name,x.tel,x.info)" data-target="#editsubbranchmodal" data-toggle="modal">Edit</button></td>
                                         <td><button class="btn btn-danger" ng-click="deleteSubbranch(x.id)" type="button">ลบสาขา</button></td>
                                     </tr>
                                 </tbody>
@@ -220,17 +231,18 @@
             })
 
         </script>
-        <script>
+        <!--<script>
             $(document).ready(function() {
                 $(".editsubbranchbtn").ready(function() {
                     $(".editsubbranchbtn").click(function() {
+                        console.log("Work");
                         $("#editsubbranchmodal").modal("show");
                     });
                 });
 
             });
 
-        </script>
+        </script>-->
     </body>
 
     <script src="dist/sweetalert.min.js"></script>

@@ -11,6 +11,17 @@
 </head>
 
 <body>
+    <?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("0", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
     <div class="container" style="width:70%">
         <h3 align="center">เพิ่มข้อมูลยา</h3>
         <div ng-app="productApp" ng-controller="productcontroller" class="ng-scope">
