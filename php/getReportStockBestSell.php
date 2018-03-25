@@ -5,7 +5,7 @@ include 'connectDB.php';
 $id=$_GET['branch'];
     $query="SELECT stock.sid,product.pname,stock.productid,brand.bname, SUM(dailysaledetail.qty) as qtyall,(stock.remain+SUM(dailysaledetail.qty)) as remainall ,stock.stocktype,stock.receiveday 
     FROM dailysaledetail ,stock,product,brand WHERE dailysaledetail.stockid = stock.sid AND stock.productid = product.regno AND product.brandid = brand.bid 
-    AND dailysaledetail.date >= DATE_ADD( NOW() , INTERVAL -30 DAY) AND dailysaledetail.subbranchid = ".$id." GROUP BY dailysaledetail.stockid ORDER BY qtyall DESC";
+    AND dailysaledetail.date >= DATE_ADD( NOW() , INTERVAL -30 DAY) AND dailysaledetail.subbranchid = ".$id." GROUP BY dailysaledetail.stockid,product.pname,stock.productid,stock.remain,stock.stocktype,stock.receiveday,stock.expireday ORDER BY qtyall DESC";
     $result = mysqli_query($con,$query);
 
 

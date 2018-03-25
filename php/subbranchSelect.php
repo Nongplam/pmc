@@ -2,8 +2,9 @@
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 
+$mid = 1/*$_SESSION["masterbranchid"]*/;
 
-$query="select * from subbranch ";
+$query="select * from subbranch WHERE mid = $mid";
 $result = mysqli_query($con,$query);
 $res = array();
 while ($rows = $result->fetch_array(MYSQLI_ASSOC)){
