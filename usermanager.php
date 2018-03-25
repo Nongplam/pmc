@@ -168,10 +168,7 @@
                                     <div class="col"><label class="col-form-label">หน้าที่ :</label></div>
                                     <div class="col">
                                         <select class="form-control" ng-model="editrole" ng-change="seteditroleDesc()" style="width:300px;" id="edituserrole">
-                                        <option value="admin">ผู้ดูแลระบบ</option>
-                                        <option value="mainstoragemanager">พนักงานสต๊อกสำนักงานใหญ่</option>
-                                        <option value="branchstockmanager" >พนักงานสต๊อกสาขาย่อย</option>
-                                        <option value="cashier" >พนักงานคิดเงินหน้าร้าน</option>
+                                        <option ng-repeat="role in roles" value="{{role.rolename}}" >{{role.rolethai}}</option>
                                     </select>
                                     </div>
                                 </div>
