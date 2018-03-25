@@ -39,7 +39,6 @@ app.controller("productcontroller", function ($scope, $http) {
             $scope.products = response.data.records;
         });
     }
-
     $scope.selectBrand = function () {
         $http.get("php/getBrandborn.php").then(function (response) {
             $scope.brands = response.data.records;

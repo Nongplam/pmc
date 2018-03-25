@@ -6,16 +6,16 @@ include 'php/connectDB.php';
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
-    $allowrule = explode(",",$allowruleraw["rule"]);
+    $allowrule = explode(",",$allowruleraw["rule"]);  
 ?>
 
 
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script src="js/lib/popper.min.js"></script>
-        <!--<link rel="stylesheet" href="css/bootstrap.min.css">
-        <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>-->
-        <script src="js/lib/jquery-3.3.1.min.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>
+        <script src="js/lib/jquery-3.3.1.min.js"></script>-->
 
     </head>
 
@@ -32,7 +32,9 @@ include 'php/connectDB.php';
                             $ruledetail=$ruleresult->fetch_array(MYSQLI_ASSOC);                            
                             echo '<li role="presentation" class="nav-item" value="';
                             echo $value;
-                            echo '"><a href="#" id="menuitem" class="nav-link" value="';                            
+                            echo '"><a href="';
+                            echo $ruledetail['file'];
+                            echo '" id="menuitem" class="nav-link" value="';                            
                             echo $value;
                             echo '">';
                             echo $ruledetail['rulethai'];                            
@@ -48,22 +50,22 @@ include 'php/connectDB.php';
     <!--<button type="button" class="btn btn-danger" id="testbtn">Test BTN</button>-->
 
     <?php         
-        if(isset($_POST['pagenumber'])){            
+        /*if(isset($_POST['pagenumber'])){            
             $pagenumber=$_POST['pagenumber'];
             $getpagequery="select file from privilege where privilege.id = '$pagenumber'";
             $getpageresult=mysqli_query($con,$getpagequery);
             $getpage=$getpageresult->fetch_array(MYSQLI_ASSOC);            
             include $getpage['file'];            
-        }
+        }*/
     ?>
 
-    <div id="insertpagehere" class="container">
-        <form action="mainbar.php" method="post" id="pageform">
+    <!--<div id="insertpagehere" class="container">
+        <form action="mainbartest.php" method="post" id="pageform">
             <input type="hidden" name="pagenumber" id="pagenumber">
 
         </form>
-    </div>
-    <script>
+    </div>-->
+    <!--<script>
         $(document).ready(function() {
             $(".nav-item").click(function() {
                 console.log(this.value);
@@ -72,7 +74,7 @@ include 'php/connectDB.php';
             });
         });
 
-    </script>
+    </script>-->
     <!--<script>
         $(document).ready(function() {
             $("#testbtn").click(function() {
@@ -86,7 +88,7 @@ include 'php/connectDB.php';
             });
         });
     </script>-->
-    <script>
+    <!--<script>
         $(document).ready(function() {
             $("#li.nav-item").ready(function() {
                 var checker = "<?php if(isset($_POST['pagenumber'])){ echo $_POST['pagenumber']; }  ?>";
@@ -102,4 +104,4 @@ include 'php/connectDB.php';
             });
         });
 
-    </script>
+    </script>-->
