@@ -18,7 +18,7 @@
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
     $allowrule = explode(",",$allowruleraw["rule"]);
-        if (!in_array("0", $allowrule)){
+        if (!in_array("5", $allowrule)){
             header("Location: auth.php");
         }
      ?>
@@ -42,14 +42,15 @@
             </select>
             <br>
             <br>
-            <label>ค้นหา</label>
-            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="SearchInput" placeholder="Search" />
-            <br>
-            <br>
             <input type="submit" name="btnInsert" ng-click="insertData()" class="btn btn-success" value="{{btnName}}" style="width: 117px;">
             <input type="button" name="btnCancel" ng-click="cancel()" class="btn btn-info" value="Cancel" style="width: 117px;">
             <br>
             <br>
+            <label>ค้นหา</label>
+            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="SearchInput" ng-keyup="customfiler(SearchInput)" placeholder="Search" />
+            <br>
+            <br>
+
             <table class="table table-bordered" ng-init="displayData()" id="stockTable">
                 <tbody>
                     <tr>
@@ -61,7 +62,7 @@
                         <th>แก้ไข</th>
                         <th>ลบข้อมูล</th>
                     </tr>
-                    <tr ng-repeat="x in products | filter:SearchInput">
+                    <tr ng-repeat="x in products | filter:SearchInput1 | filter:SearchInput2 | filter:SearchInput3 | limitTo:20">
                         <td id="realregno">{{x.realregno}}</td>
                         <td>{{x.pname}}</td>
                         <td>{{x.pcore}}</td>
@@ -78,7 +79,107 @@
         </div>
     </div>
 
-    <script src="js/product.js"></script>
+    <script>
+        var app = angular.module("productApp", []);
+
+        app.controller("productcontroller", function($scope, $http) {
+            $scope.btnName = "Insert";
+            //เพิ่มข้อมูล
+            $scope.insertData = function() {
+
+
+                if ($scope.pname == null) {
+                    sweetAlert("บันทึกข้อมูลผิดพลาด", "กรุณาใส่ชื่อผลิตภัณฑ์", "warning");
+                    return false;
+                } else {
+                    $http.post("php/pinsert.php", {
+                            'regno': $scope.regno,
+                            'realregno': $scope.realregno,
+                            'pname': $scope.pname,
+                            'pcore': $scope.pcore,
+                            'pdesc': $scope.pdesc,
+                            'brandid': $scope.brandid,
+                            'btnName': $scope.btnName
+                        })
+                        .then(function(data) {
+                            $scope.regno = null;
+                            $scope.realregno = null;
+                            $scope.pname = null;
+                            $scope.pcore = null;
+                            $scope.pdesc = null;
+                            $scope.brandid = null;
+                            $scope.btnName = "Insert";
+                            $scope.displayData();
+                            sweetAlert("บันทึกข้อมูลเสร็จสิ้น", "ข้อมูลถูกบันทึกลงในฐานข้อมูลเรียบร้อยแล้ว", "success");
+                        });
+                }
+
+            }
+            //ดึงข้อมูล Product มาแสดง
+            $scope.displayData = function() {
+                $http.get("php/pselect.php").then(function(response) {
+                    $scope.products = response.data.records;
+                });
+            }
+            $scope.selectBrand = function() {
+                $http.get("php/getBrandborn.php").then(function(response) {
+                    $scope.brands = response.data.records;
+                });
+            }
+            $scope.customfiler = function(text) {
+                var res = text.split(" ");
+                $scope.SearchInput1 = res[0];
+                $scope.SearchInput2 = res[1];
+                $scope.SearchInput3 = res[2];
+            }
+
+            $scope.deleteData = function(regno) {
+
+                swal({
+                        title: "คุณแน่ใจหรือไม่",
+                        text: "ยืนยันการลบข้อมูล",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((data) => {
+                        if (data) {
+                            $http.post("php/pdelete.php", {
+                                'regno': regno
+                            }).then(function(data) {
+                                swal("ลบข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกลบ", "success");
+                                $scope.regno = null;
+                                $scope.displayData();
+                            });
+                        }
+                    });
+
+            }
+            //$scope.getBrandName = function (brandid) {};
+
+            $scope.updateData = function(regno, realregno, pname, pcore, pdesc, brandid) {
+                $scope.realregno = realregno;
+                $scope.regno = regno;
+                $scope.pname = pname;
+                $scope.pcore = pcore;
+                $scope.pdesc = pdesc;
+                $scope.brandid = brandid;
+                $scope.btnName = "Update";
+            }
+            $scope.cancel = function() {
+                $scope.realregno = null;
+                $scope.regno = null;
+                $scope.pname = null;
+                $scope.pcore = null;
+                $scope.pdesc = null;
+                $scope.brandid = null;
+                $scope.btnName = "Insert";
+            }
+        });
+
+    </script>
+
+    <!--<script src="js/product.js"></script>-->
     <script src="dist/sweetalert.min.js"></script>
 
 
