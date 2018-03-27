@@ -17,19 +17,23 @@ $date2 =mysqli_real_escape_string($con, $data->date2);
     FROM dailysaledetail ,stock,product,brand 
     WHERE dailysaledetail.stockid = stock.sid AND stock.productid = product.regno AND product.brandid = brand.bid  
     AND (dailysaledetail.date >= DATE('".$date1."') AND dailysaledetail.date <= DATE('".$date2."') ) 
-    AND dailysaledetail.subbranchid = ".$id." GROUP BY dailysaledetail.stockid ORDER BY profit DESC";
+    AND dailysaledetail.subbranchid = ".$id." GROUP BY dailysaledetail.stockid,product.pname,stock.productid,stock.lotno,stock.receiveday ORDER BY profit DESC";
 
 
- 
-    $result = mysqli_query($con,$query);    
 
-       
+if ($result = mysqli_query($con,$query)) {
+
+
     $res = array();
-while ($rows = $result->fetch_array(MYSQLI_ASSOC)){
-    
-    $res[] = array('sid' =>$rows['sid'],'pname' =>$rows['pname'],'productid' =>$rows['productid'],'bname' =>$rows['bname'],'qty' =>$rows['qty']
-    ,'sell' =>$rows['sell'],'cost' =>$rows['cost'],'profit' =>$rows['profit'],'lotno' =>$rows['lotno'],
-    'receiveday' =>$rows['receiveday'] );
+    while ($rows = $result->fetch_array(MYSQLI_ASSOC)) {
+
+        $res[] = array('sid' => $rows['sid'], 'pname' => $rows['pname'], 'productid' => $rows['productid'], 'bname' => $rows['bname'], 'qty' => $rows['qty']
+        , 'sell' => $rows['sell'], 'cost' => $rows['cost'], 'profit' => $rows['profit'], 'lotno' => $rows['lotno'],
+            'receiveday' => $rows['receiveday']);
+    }
+    $stocks['records'] = $res;
+    echo json_encode($stocks);
+}else{
+
+    echo  mysqli_error($con);
 }
-$stocks['records'] = $res;
-echo json_encode($stocks);
