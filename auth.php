@@ -68,6 +68,8 @@ if(!empty($_SESSION["role"])){
     }else{
         header("Location: logout.php");
     }
+}else{
+    header("Location: logout.php");
 }
 
 
