@@ -59,7 +59,7 @@
 
 
 
-        <!--..................................modal addtoPOS start........................................-->
+        <!--..................................modal addtpre start........................................-->
         <div class="modal fade" id="reciveModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
