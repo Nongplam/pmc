@@ -67,7 +67,7 @@
             <h3 align="center">สินค้าที่จะนำเข้าชั้น</h3>
             <hr>
             <div class="row">
-                <div class="col col-6">
+                <div class="col">
                     <div class="table-responsive">
                         <table class="table" ng-init="preshelf()">
                             <thead>
@@ -76,6 +76,10 @@
                                     <th>เลขทะเบียน</th>
                                     <th>เลขล็อต</th>
                                     <th>จำนวน</th>
+                                    <th>นำเข้า</th>
+                                    <th>ชั้นวางเลขที่</th>
+                                    <th>รายละเอียด</th>
+                                    <th>ลบ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,27 +88,10 @@
                                     <td>{{preshelf.productid}}</td>
                                     <td>{{preshelf.lotno}}</td>
                                     <td>{{preshelf.qty}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center col-1"><i class="icon ion-android-arrow-forward d-flex justify-content-center" style="font-size:76px;"></i></div>
-                <div class="col">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th style="width:113px;">ชั้นวางเลขที่</th>
-                                    <th>รายละเอียด</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="preshelf in preshelfs">
+                                    <td><i class="icon ion-android-arrow-forward d-flex justify-content-center text-success" style="font-size:20px;"></i></td>
                                     <td>{{preshelf.toshelfno}}</td>
                                     <td>{{preshelf.shelfinfo}}</td>
-                                    <td class="text-danger" ng-click="deletepreShelf(preshelf.id)">ลบ</td>
+                                    <td><button class="btn btn-danger" ng-click="deletepreShelf(preshelf.id)">ลบ</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -155,7 +142,7 @@
                                     <div class="dropdown col-sm-8">
                                         <input type="text" ng-model="toshelfnomodal" ng-init="displayshelfChoose()" data-toggle="dropdown" class="form-control dropdown-toggle w-100 ng-pristine ng-untouched ng-valid ng-empty">
                                         <ul class="dropdown-menu w-100">
-                                            <div ng-repeat="shelfchoose in shelfchooses">
+                                            <div ng-repeat="shelfchoose in shelfchooses |filter:toshelfnomodal">
                                                 <li class="dropdown-item" ng-click="setshelfno(shelfchoose.shelfid,shelfchoose.shelfno,shelfchoose.shelfinfo,shelfchoose.shelfcode)"><a>ชั้นเลขที่ {{shelfchoose.shelfno}} {{shelfchoose.shelfinfo}}</a></li>
 
                                             </div>
