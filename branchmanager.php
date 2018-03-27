@@ -1,7 +1,7 @@
 <?php
 //delete when debug complete!!!!!
 //session_start();
-//print_r($_SESSION);
+
 ?>
     <!DOCTYPE html>
     <html>
@@ -26,7 +26,7 @@
 
     <body>
         <?php 
-    include 'mainbartest.php';
+    include 'mainbartest.php';    
     $role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
     $allowqueryresult=mysqli_query($con,$allowquery);

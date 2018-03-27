@@ -15,7 +15,16 @@ if($data){
     $info=mysqli_real_escape_string($con, $data->info);
       
     
-    if($role == 'admin' || $role == 'mainstoragemanager' || $role == 'owner'){
+    $stm2="insert into user(fname,lname,role,roledesc,subbranchid,username,password,userinfo) values('$fname','$lname','$role','$roledesc','$subbranch','$username','$password','$info')";
+    if(mysqli_query($con, $stm2)) {
+        echo "Data Inserted";
+        
+        }
+        else {
+            echo "Error";
+        }
+    
+    /*if($role == 'admin' || $role == 'mainstoragemanager' || $role == 'owner'){
         $stm1="insert into user(fname,lname,role,roledesc,username,password,userinfo) values('$fname','$lname','$role','$roledesc','$username','$password','$info')";
     if(mysqli_query($con, $stm1)) {
         echo "Data Inserted";
@@ -33,7 +42,7 @@ if($data){
         else {
             echo "Error";
         }
-    }
+    }*/
     
     
     
