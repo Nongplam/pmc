@@ -4,6 +4,7 @@ app.controller("stockcontroller", function ($scope, $http) {
     $scope.btnName = "Insert";
     $scope.stocktype = "";
     $scope.receiveday = new Date();
+    $scope.expireday = new Date();
 
     //เพิ่มข้อมูล
     $scope.insertData = function () {

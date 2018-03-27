@@ -16,7 +16,7 @@
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
     $allowrule = explode(",",$allowruleraw["rule"]);
-        if (!in_array("8", $allowrule)){
+        if (!in_array("10", $allowrule)){
             header("Location: auth.php");
         }
      ?>

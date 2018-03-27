@@ -32,37 +32,6 @@
             <br>
             <h3 align="center">จัดสินค้าเข้าชั้นวาง</h3>
             <br>
-            <label>ค้นหา : </label>
-            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="SearchInput" placeholder="Search" />
-            <br>
-            <table class="table table-bordered" ng-init="displayStock()" id="stockTable">
-                <tbody>
-                    <tr>
-                        <th>สินค้า</th>
-                        <th>เลขทะเบียน</th>
-                        <th>บริษัท</th>
-                        <th>จำนวน</th>
-                        <th>เลขที่ลอต</th>
-                        <th>หน่วย</th>
-                        <th>วันที่รับเข้า</th>
-                        <th>วันหมดอายุ</th>
-                        <th>นำเข้า</th>
-
-                    </tr>
-                    <tr ng-repeat="stock in stocks | filter:SearchInput">
-                        <td>{{stock.pname}}</td>
-                        <td>{{stock.productid}}</td>
-                        <td>{{stock.cname}}</td>
-                        <td>{{stock.remain}}</td>
-                        <td>{{stock.lotno}}</td>
-                        <td>{{stock.stocktype}}</td>
-                        <td>{{stock.receiveday | date:'dd/MM/yyyy'}}</td>
-                        <td>{{stock.expireday | date:'dd/MM/yyyy'}}</td>
-
-                        <td><button class="btn btn-info btn-xs" type="button" ng-click="setpreshelfModal(stock.sid,stock.lotno,stock.pname,stock.stocktype)" data-toggle="modal" data-target="#prestockModal">เตรียม</button></td>
-                    </tr>
-                </tbody>
-            </table>
             <hr>
             <h3 align="center">สินค้าที่จะนำเข้าชั้น</h3>
             <hr>
@@ -101,6 +70,38 @@
             <hr>
             <h3 align="right"><button class="btn btn-lg btn-success" ng-click="addtoshelf()">ยืนยันสินค้า</button></h3>
             <hr>
+            <label>ค้นหา : </label>
+            <input type="text" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-model="SearchInput" placeholder="Search" />
+            <br>
+            <table class="table table-bordered" ng-init="displayStock()" id="stockTable">
+                <tbody>
+                    <tr>
+                        <th>สินค้า</th>
+                        <th>เลขทะเบียน</th>
+                        <th>บริษัท</th>
+                        <th>จำนวน</th>
+                        <th>เลขที่ลอต</th>
+                        <th>หน่วย</th>
+                        <th>วันที่รับเข้า</th>
+                        <th>วันหมดอายุ</th>
+                        <th>นำเข้า</th>
+
+                    </tr>
+                    <tr ng-repeat="stock in stocks | filter:SearchInput">
+                        <td>{{stock.pname}}</td>
+                        <td>{{stock.productid}}</td>
+                        <td>{{stock.cname}}</td>
+                        <td>{{stock.remain}}</td>
+                        <td>{{stock.lotno}}</td>
+                        <td>{{stock.stocktype}}</td>
+                        <td>{{stock.receiveday | date:'dd/MM/yyyy'}}</td>
+                        <td>{{stock.expireday | date:'dd/MM/yyyy'}}</td>
+
+                        <td><button class="btn btn-info btn-xs" type="button" ng-click="setpreshelfModal(stock.sid,stock.lotno,stock.pname,stock.stocktype)" data-toggle="modal" data-target="#prestockModal">เตรียม</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
 
             <!--..................................modal addtoPOS start........................................-->
             <div class="modal fade" id="prestockModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
@@ -208,7 +209,7 @@
                     swal("บันทึกข้อมูลเสร็จสิ้น", "บันทึกข้อมูลแล้ว", "success");
                     $scope.sidonmodal = null;
                     $scope.preshelfqtyonmodal = 1;
-                    $scope.toshelfnomodal = null;
+                    $scope.toshelfnomodal = "";
                     $scope.preshelf();
                 });
 
