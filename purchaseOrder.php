@@ -115,7 +115,7 @@
                         <div class="input-group-prepend ">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ภาษี</span>
                         </div>
-                        <input type="number" min="0" name="po_vat" ng-model="po_vat" class="form-control" aria-label="Small"  ng-change ="calvat()" aria-describedby="inputGroup-sizing-sm" >
+                        <input type="number" min="0" max="100" name="po_vat" ng-model="po_vat" class="form-control" aria-label="Small"  ng-change ="calvat()" aria-describedby="inputGroup-sizing-sm" >
                         <div class="input-group-append">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">%</span>
                         </div>
@@ -131,7 +131,7 @@
                         <div class="input-group-prepend ">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ส่วนลด</span>
                         </div>
-                        <input type="number" min="0" name="po_disc" ng-model="po_disc" class="form-control" aria-label="Small" ng-change="discOfPrice()" aria-describedby="inputGroup-sizing-sm" >
+                        <input type="number" min="0" max="100" name="po_disc" ng-model="po_disc" class="form-control" aria-label="Small" ng-change="discOfPrice()" aria-describedby="inputGroup-sizing-sm" >
                         <div class="input-group-append">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">%</span>
                         </div>
@@ -142,7 +142,7 @@
             </div>
         </div>
         <div class="btn-group offset-sm-9" role="group" >
-                <button class="btn btn-success mr-2" ng-click="" >สั่งสินค้า &#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button>
+                <button class="btn btn-success mr-2" ng-click="addTorptPO()" >สั่งสินค้า &#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button>
 
                 <button class="btn btn-primary "  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
 
@@ -365,6 +365,7 @@
 
           $scope.discOfPrice();
        };
+
         $http.get('php/pselect.php').then(function(res){
             $scope.list = res.data.records;
             $scope.currentPage = 1; //current page
@@ -489,6 +490,27 @@
             $scope.totalPAll = parseFloat( parseFloat( $scope.priceallMidisc) + parseFloat( $scope.vatofprice)).toFixed(2) ;
 
         };
+
+
+        $scope.addToRptPO = function(){
+
+            $http.post('php/addToRptPO.php',{
+                'po_no':,
+                'po_date':,
+                '':,
+                '':,
+                '':,
+                '':,
+                '':,
+                '':,
+                '':,
+                '':
+            }).then(function(res){
+
+            });
+
+
+        }
     });
 
 
