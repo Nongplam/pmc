@@ -115,7 +115,7 @@
                         <div class="input-group-prepend ">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ภาษี</span>
                         </div>
-                        <input type="text" name="po_vat" ng-model="po_vat" class="form-control" aria-label="Small"  ng-change ="calvat()" aria-describedby="inputGroup-sizing-sm" >
+                        <input type="number" min="0" name="po_vat" ng-model="po_vat" class="form-control" aria-label="Small"  ng-change ="calvat()" aria-describedby="inputGroup-sizing-sm" >
                         <div class="input-group-append">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">%</span>
                         </div>
@@ -131,7 +131,7 @@
                         <div class="input-group-prepend ">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ส่วนลด</span>
                         </div>
-                        <input type="text" name="po_disc" ng-model="po_disc" class="form-control" aria-label="Small" ng-change="discOfPrice()" aria-describedby="inputGroup-sizing-sm" >
+                        <input type="number" min="0" name="po_disc" ng-model="po_disc" class="form-control" aria-label="Small" ng-change="discOfPrice()" aria-describedby="inputGroup-sizing-sm" >
                         <div class="input-group-append">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">%</span>
                         </div>
@@ -356,11 +356,14 @@
         $scope.priceallMidisc = 0.00;
         $scope.totalPAll = 0.00;
 
+        var ttprice = 0.00;
         var po_productid = null;
         $scope.sumallprice = function(allprice){
-            $scope.totalprice =  parseFloat(  $scope.totalprice + parseFloat( allprice)).toFixed(2);
 
-            $scope.discOfPrice();
+
+            $scope.totalprice =   parseFloat( parseFloat( $scope.totalprice) + parseFloat( allprice)  ).toFixed(2);
+
+          $scope.discOfPrice();
        };
         $http.get('php/pselect.php').then(function(res){
             $scope.list = res.data.records;
@@ -401,7 +404,7 @@
               $scope.po_type = null;
               $scope.po_pricePerType = null;
               $scope.po_discount = 0;
-              $scope.totalprice = 0;
+              $scope.totalprice =0.00;
 
                 $scope.selectPrePO();
 
@@ -430,7 +433,7 @@
                         'id':id
                     }).then(function(){
                         swal("ลบข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกลบ", "success");
-                        $scope.totalprice = 0;
+                        $scope.totalprice =0.00;
                         $scope.discOfPrice();
                         $scope.selectPrePO();
                     });
@@ -462,7 +465,7 @@
 
                 $scope.vatofprice =  parseFloat($scope.priceallMidisc  *$scope.po_vat / 100).toFixed(2);
             }else{
-                $scope.vatofprice =0.00;
+                $scope.vatofprice = 0.00;
             }
             $scope.totalPriceAll();
         };
