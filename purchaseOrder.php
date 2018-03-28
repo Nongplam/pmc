@@ -104,25 +104,41 @@
 
             </div>
             <div class="col-sm-4">
+
                 <div class="form-group row">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="vatOp" ng-model="vatOp" id="inlineRadio1" value="1" checked>
+                        <input class="form-check-input" type="checkbox" name="vatOp" ng-model="vatOp" id="vatOP" ng-click="calvat()">
                         <label class="form-check-label" for="inlineRadio1">คิดภาษี</label>
                     </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="vatOp" ng-model="vatOp" id="inlineRadio2" value="2">
-                        <label class="form-check-label" for="inlineRadio2">ไม่คิดภาษี</label>
-                    </div>
+
                     <div class="input-group input-group-sm col-sm-6 ">
                         <div class="input-group-prepend ">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ภาษี</span>
                         </div>
-                        <input type="text" name="po_vat" ng-model="po_vat" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" >
+                        <input type="text" name="po_vat" ng-model="po_vat" class="form-control" aria-label="Small"  ng-change ="calvat()" aria-describedby="inputGroup-sizing-sm" >
                         <div class="input-group-append">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">%</span>
                         </div>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="disc" ng-model="disc" id="disc" ng-click="discOfPrice()">
+                        <label class="form-check-label" for="inlineRadio1">คิดส่วนลด</label>
+                    </div>
+
+                    <div class="input-group input-group-sm col-sm-6 ">
+                        <div class="input-group-prepend ">
+                            <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ส่วนลด</span>
+                        </div>
+                        <input type="text" name="po_disc" ng-model="po_disc" class="form-control" aria-label="Small" ng-change="discOfPrice()" aria-describedby="inputGroup-sizing-sm" >
+                        <div class="input-group-append">
+                            <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">%</span>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
         <div class="btn-group offset-sm-9" role="group" >
@@ -151,11 +167,28 @@
                         <td>{{producrPO.type}}</td>
                         <td>{{producrPO.pricePerType}}</td>
                         <td>{{producrPO.discount}}</td>
-                        <td>{{producrPO.priceall}}</td>
+                        <td ng-init="sumallprice(producrPO.priceall)"> {{producrPO.priceall}}</td>
                         <td><button class="btn btn-danger" ng-click = "delProPrePO(producrPO.prePo_id)">ลบ&#160;<span class="icon ion-android-remove-circle font-weight-bold"></span> </button> </td>
                     </tr>
                 </tbody>
             </table>
+        <div class="col-sm-4 offset-sm-8 border row">
+            <div class="col-7">
+                <p class="font-weight-bold text-right mb-0">รวมเงิน : </p>
+                <p class="font-weight-bold text-right mb-0">ส่วนลด : </p>
+                <p class="font-weight-bold text-right mb-0">หลังหักส่วนลด : </p>
+                <p class="font-weight-bold text-right mb-0">ภาษีมูลค่าเพิม : </p>
+                <p class="font-weight-bold text-right mb-0">จำนวนเงินทั้งสิ้น : </p>
+            </div>
+            <div class="col-5">
+                <p class="mb-0" >{{totalprice}}</p>
+                <p class="mb-0">{{discofprice}}</p>
+                <p class="mb-0">{{priceallMidisc}}</p>
+                <p class="mb-0">{{vatofprice}}</p>
+                <p class="mb-0">{{totalPAll}}</p>
+
+            </div>
+        </div>
 
 
 
@@ -294,9 +327,11 @@
 </div>
 
 <script>
+
+
+
+
     var app = angular.module("purchaseOrderApp", []);
-
-
 
     app.filter('startFrom', function() {
         return function(input, start) {
@@ -307,11 +342,26 @@
             return [];
         }
     });
+
     app.controller('purchaseOrdercontroller', function ($scope, $http, $timeout) {
+
+        $scope.po_discount = 0;
         $scope.countPro = 0;
         $scope.po_date = new Date();
         $scope.po_vat  = 7;
-       var po_productid = null;
+        $scope.po_disc =0;
+        $scope.discofprice = 0.00;
+        $scope.totalprice =0.00;
+        $scope.vatofprice = 0.00 ;
+        $scope.priceallMidisc = 0.00;
+        $scope.totalPAll = 0.00;
+
+        var po_productid = null;
+        $scope.sumallprice = function(allprice){
+            $scope.totalprice =  parseFloat(  $scope.totalprice + parseFloat( allprice)).toFixed(2);
+
+            $scope.discOfPrice();
+       };
         $http.get('php/pselect.php').then(function(res){
             $scope.list = res.data.records;
             $scope.currentPage = 1; //current page
@@ -331,7 +381,6 @@
             $scope.predicate = predicate;
             $scope.reverse = !$scope.reverse;
         };
-
         $scope.selectProduct = function(id,name){
 
             $scope.po_pname = name ;
@@ -352,16 +401,19 @@
               $scope.po_type = null;
               $scope.po_pricePerType = null;
               $scope.po_discount = 0;
+              $scope.totalprice = 0;
+
                 $scope.selectPrePO();
 
           });
         };
         $scope.selectPrePO = function(){
           $http.get('php/selelctPrePO.php').then(function(res){
+
                     $scope.producrPOs  = res.data.records
+
           })
         };
-
         $scope.delProPrePO = function(id){
 
             swal({
@@ -378,6 +430,8 @@
                         'id':id
                     }).then(function(){
                         swal("ลบข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกลบ", "success");
+                        $scope.totalprice = 0;
+                        $scope.discOfPrice();
                         $scope.selectPrePO();
                     });
 
@@ -385,8 +439,6 @@
             });
 
         };
-
-
         $scope.genPO_NO = function(){
             $http.get('php/genPO_NO.php').then(function(res){
 
@@ -394,8 +446,6 @@
 
             });
         };
-
-
         $scope.selectCompany = function () {
             $http.get("php/companySelect.php").then(function (response) {
                 $scope.companys = response.data.records;
@@ -407,11 +457,41 @@
 
 
         };
+        $scope.calvat = function(){
+            if($scope.vatOp) {
 
+                $scope.vatofprice =  parseFloat($scope.priceallMidisc  *$scope.po_vat / 100).toFixed(2);
+            }else{
+                $scope.vatofprice =0.00;
+            }
+            $scope.totalPriceAll();
+        };
+
+        $scope.discOfPrice = function()
+        {
+            if($scope.disc ){
+                $scope.discofprice =  parseFloat(  $scope.totalprice *  $scope.po_disc  /100).toFixed(2);
+                $scope.priceallMidisc = parseFloat( $scope.totalprice-$scope.discofprice).toFixed(2);
+                $scope.calvat();
+            }else{
+                $scope.discofprice = 0.00 ;
+                $scope.priceallMidisc = parseFloat(  $scope.totalprice-$scope.discofprice).toFixed(2);
+                $scope.calvat();
+            }
+
+        };
+
+
+        $scope.totalPriceAll = function(){
+            $scope.totalPAll = parseFloat( parseFloat( $scope.priceallMidisc) + parseFloat( $scope.vatofprice)).toFixed(2) ;
+
+        };
     });
 
 
 </script>
 <script src="dist/sweetalert.min.js"></script>
+<script type="application/javascript">
+</script>
 </body>
 </html>
