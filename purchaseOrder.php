@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>สั่งสินค้า</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/popper.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/lib/jquery-3.3.1.min.js"></script>
     <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>
@@ -36,10 +38,20 @@
         <div class="row ">
             <div class="col-sm-4">
                 <div class="input-group input-group-sm mb-sm-2 ">
-                    <div class="input-group-prepend ">
-                        <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ผู้ขาย</span>
+                    <input type="hidden" id="cid" name="cid" ng-model="cid">
+
+                        <div class="input-group-prepend ">
+                            <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ผู้ขาย</span>
+                        </div>
+                    <div class="dropdown">
+                        <input type="text" id="cname" name="cname" ng-model="cname" ng-init="selectCompany()" aria-label="Small" aria-describedby="inputGroup-sizing-sm" data-toggle="dropdown" class="form-control dropdown-toggle w-100 ">
+                        <ul class="dropdown-menu w-100">
+                            <div ng-repeat="company in companys | filter:cname">
+                                <li class="dropdown-item" ng-click="setCompany(company.cid,company.cname)"><a>{{company.cname}}</a></li>
+                            </div>
+                        </ul>
                     </div>
-                    <input type="text" name="po_saler" ng-model="po_saler" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" >
+
                 </div>
                 <div class="input-group input-group-sm mb-sm-2 ">
                     <div class="input-group-prepend ">
@@ -112,8 +124,9 @@
                 </div>
             </div>
         </div>
-            <div>
-                <button class="btn btn-primary offset-sm-11"  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า</button>
+            <div class="row">
+                <button class="btn btn-success col-sm-2 offset-sm-8" ng-click="" >สั่งสินค้า</button>
+                <button class="btn btn-primary col-sm-2 offset-sm-10"  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า</button>
             </div>
             <table class="table table-striped" ng-init="selectPrePO()">
                 <thead>
@@ -377,7 +390,20 @@
                     $scope.po_no = res.data.records[0].rptPO_no;
 
             });
-        }
+        };
+
+
+        $scope.selectCompany = function () {
+            $http.get("php/companySelect.php").then(function (response) {
+                $scope.companys = response.data.records;
+            });
+        };
+        $scope.setCompany = function (id, name) {
+            $scope.cid = id;
+            $scope.cname = name;
+
+
+        };
 
     });
 
