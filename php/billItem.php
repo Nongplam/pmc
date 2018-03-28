@@ -5,15 +5,15 @@ include 'connectDB.php';
 
 $output="";
 $subbranchid = $_SESSION["subbranchid"];
+$userid = $_SESSION["id"];
 $stm1="SELECT dmid
 FROM dailysalemaster 
-WHERE dailysalemaster.dmid = (SELECT MAX(dailysalemaster.dmid) FROM dailysalemaster where dailysalemaster.subbranchid = '$subbranchid')";
+WHERE dailysalemaster.dmid = (SELECT MAX(dailysalemaster.dmid) FROM dailysalemaster where dailysalemaster.subbranchid = '$subbranchid' and dailysalemaster.userid = '$userid')";
 $result = mysqli_query($con,$stm1);    
-    $dmid=array();
-    while ($rows = $result->fetch_array(MYSQLI_ASSOC)){
-        array_push($dmid,$rows['dmid']);
-    }
-$query="select * from dailysaledetail where masterid='$dmid[0]'";
+$dmid = $result->fetch_array(MYSQLI_ASSOC);
+$dmidtemp = $dmid['dmid'];
+    
+$query="select * from dailysaledetail where masterid='$dmidtemp'";
 $result=mysqli_query($con, $query);
 if(mysqli_num_rows($result)>0) {
     while ($rs = $result->fetch_array(MYSQLI_ASSOC)) {
