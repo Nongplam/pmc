@@ -7,7 +7,7 @@ include 'connectDB.php';
 $subid = $_SESSION['subbranchid'];
 
 
-$sql = "SELECT product.pname,prePo.* FROM prePo,product WHERE prePo.productid = product.regno AND $subid";
+$sql = "SELECT product.pname,prePo.* FROM prePo,product WHERE prePo.productid = product.regno AND prePo.subbranchid = $subid";
 
 
 if($result = mysqli_query($con,$sql)){
