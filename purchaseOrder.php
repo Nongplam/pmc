@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/lib/jquery-3.3.1.min.js"></script>
     <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 
 
 </head>
@@ -124,10 +125,12 @@
                 </div>
             </div>
         </div>
-            <div class="row">
-                <button class="btn btn-success col-sm-2 offset-sm-8" ng-click="" >สั่งสินค้า</button>
-                <button class="btn btn-primary col-sm-2 offset-sm-10"  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า</button>
-            </div>
+        <div class="btn-group offset-sm-9" role="group" >
+                <button class="btn btn-success mr-2" ng-click="" >สั่งสินค้า &#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button>
+
+                <button class="btn btn-primary "  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
+
+        </div>
             <table class="table table-striped" ng-init="selectPrePO()">
                 <thead>
                     <tr>
@@ -149,7 +152,7 @@
                         <td>{{producrPO.pricePerType}}</td>
                         <td>{{producrPO.discount}}</td>
                         <td>{{producrPO.priceall}}</td>
-                        <td><button class="btn btn-danger" ng-click = "delProPrePO(producrPO.prePo_id)">ลบ</button> </td>
+                        <td><button class="btn btn-danger" ng-click = "delProPrePO(producrPO.prePo_id)">ลบ&#160;<span class="icon ion-android-remove-circle font-weight-bold"></span> </button> </td>
                     </tr>
                 </tbody>
             </table>
