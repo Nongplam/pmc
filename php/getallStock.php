@@ -4,8 +4,9 @@ header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 
 $output="";
-$branchid = $_SESSION["subbranchid"];
-$query="SELECT stock.*,product.pname,brand.bname FROM stock,product,brand WHERE stock.productid = product.regno and product.brandid = brand.bid and stock.subbranchid = '$branchid'";
+$subbranchid = $_SESSION["subbranchid"];
+
+$query="SELECT stock.*,product.pname FROM stock,product WHERE stock.productid = product.regno and stock.subbranchid = '$subbranchid'";
 $result=mysqli_query($con, $query);
 if(mysqli_num_rows($result)>0) {
     while ($rs = $result->fetch_array(MYSQLI_ASSOC)) {
@@ -25,8 +26,8 @@ if(mysqli_num_rows($result)>0) {
         $output .='"wholesaleprice":"' . $rs["wholesaleprice"] . '",'; 
         $output .='"receiveday":"' . $rs["receiveday"] . '",'; 
          $output .='"expireday":"' . $rs["expireday"] . '",'; 
-          $output .='"pname":"' . $rs["pname"] . '",'; 
-        $output .='"bname":"' . $rs["bname"] . '"}';
+          
+        $output .='"pname":"' . $rs["pname"] . '"}';
     }
     $output = '{"records":['.$output.']}';
     echo($output);

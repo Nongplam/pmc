@@ -8,7 +8,7 @@ $subbranchid = $_SESSION["subbranchid"];
 
 $output="";
 
-$query="SELECT pos.*,product.pname,product.pcore,brand.bname,stock.stocktype FROM pos,stock,product,brand WHERE pos.stockid = stock.sid AND stock.productid=product.regno AND product.brandid = brand.bid AND pos.userid =  '$userid'";
+$query="SELECT pos.*,product.pname,product.pcore,stock.stocktype FROM pos,stock,product WHERE pos.stockid = stock.sid AND stock.productid=product.regno AND pos.userid = '$userid'";
 $result=mysqli_query($con, $query);
 if(mysqli_num_rows($result)>0) {
     while ($rs = $result->fetch_array(MYSQLI_ASSOC)) {
@@ -20,9 +20,8 @@ if(mysqli_num_rows($result)>0) {
         $output .='"price":"' . $rs["price"] . '",';
         $output .='"qty":"' . $rs["qty"] . '",';
         $output .='"pname":"' . $rs["pname"] . '",';
-        $output .='"pcore":"' . $rs["pcore"] . '",';
-        $output .='"bname":"' . $rs["bname"] . '",';
-        $output .='"stocktype":"' . $rs["bname"] . '"}';        
+        $output .='"pcore":"' . $rs["pcore"] . '",';        
+        $output .='"stocktype":"' . $rs["stocktype"] . '"}';        
     }
     $output = '{"records":['.$output.']}';
     echo($output);
