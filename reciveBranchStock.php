@@ -14,7 +14,17 @@
 </head>
 <body>
 
-
+<?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("20", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
 
 
 <div ng-app="reciveBranchStockApp" ng-controller="reciveBranchStockcontroller"  class="ng-scope">
