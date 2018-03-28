@@ -80,14 +80,16 @@
                                 <div class="form-row newuserrowbuffer">
                                     <div class="col"><label class="col-form-label">ชื่อ :</label></div>
                                     <div class="col"><input type="text" class="form-control" ng-model="newfname" style="width:171px;" id="newuserfname" />
+                                    <br>
                                     </div>
                                     <div class="col"><label class="col-form-label">สกุล :</label></div>
                                     <div class="col"><input type="text" class="form-control" ng-model="newlname" style="width:180px;" id="newuserlname" /></div>
-                                </div>
+                                </div>                                
                                 <div class="form-row newuserrowbuffer">
                                     <div class="col"><label class="col-form-label">Username :</label></div>
                                     <div class="col"><input type="text" class="form-control" ng-model="newusername" style="width:345px;" id="newuserusername" /></div>
                                 </div>
+                                <br>
                                 <div class="form-row newuserrowbuffer">
                                     <div class="col"><label class="col-form-label">Password :</label></div>
                                     <div class="col"><input type="password" class="form-control" ng-model="newpassword" style="width:345px;" id="newuserpassword" /></div>
@@ -108,6 +110,7 @@
     <script>
         var app = angular.module("extractstockApp", []);
         app.controller("extractstockcontroller", function($scope, $http) {
+            
             $scope.displayData = function() {
                 $http.get("php/stockSelect.php").then(function(response) {
                     $scope.stocks = response.data.records;

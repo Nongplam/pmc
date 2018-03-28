@@ -5,7 +5,6 @@ include 'connectDB.php';
 
 $output="";
 $subbranch = $_SESSION["subbranchid"];
-
 $query="SELECT shelf.* FROM shelf WHERE shelf.subbranchid = '$subbranch' GROUP BY shelf.shelfno";
 
 $result = mysqli_query($con,$query);

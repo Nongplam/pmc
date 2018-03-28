@@ -30,10 +30,9 @@
 
         <div ng-app="stockApp" ng-controller="stockcontroller" class="ng-scope">
             <br>
-            <h3 align="center">จัดสินค้าเข้าชั้นวาง</h3>
-            <br>
+            <h3 align="center">จัดสินค้าเข้าชั้นวาง</h3>            
             <hr>
-            <h3 align="center">สินค้าที่จะนำเข้าชั้น</h3>
+            <h4 align="center">สินค้าที่จะนำเข้าชั้น</h4>
             <hr>
             <div class="row">
                 <div class="col">
@@ -211,6 +210,7 @@
                     $scope.preshelfqtyonmodal = 1;
                     $scope.toshelfnomodal = "";
                     $scope.preshelf();
+                    $scope.displayStock();
                 });
 
             }
@@ -221,6 +221,7 @@
                 }).then(function(data) {
                     swal("ลบข้อมูลเสร็จสิ้น", "ลบข้อมูลแล้ว", "success");
                     $scope.preshelf();
+                    $scope.displayStock();
                 });
             }
             $scope.addtoshelf = function() {
@@ -230,6 +231,7 @@
                 }).then(function(data) {
                     swal("บันทึกข้อมูลเสร็จสิ้น", "บันทึกข้อมูลแล้ว", "success");
                     $scope.preshelf();
+                    $scope.displayStock();
                 });
             }
 

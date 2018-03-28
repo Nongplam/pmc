@@ -7,15 +7,22 @@
     <script src="js/lib/jquery-3.3.1.min.js"></script>
     <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-
-
-
 </head>
 
 <body>
-
+<?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("19", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
 <div class="container">
-    <!--style="width:70%;"-->
+    <!--style="width:70%;"-->    
 
     <div ng-app="stockApp" ng-controller="stockcontroller" class="ng-scope">
         <br>
