@@ -22,7 +22,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >เลขที่ใบสั่งซื้อ</span>
                 </div>
-                <input type="text" name="po_no" ng-model="po_no" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" disabled>
+                <input type="text" name="po_no" ng-model="po_no" class="form-control" ng-init="genPO_NO()" aria-label="Small" aria-describedby="inputGroup-sizing-sm" disabled>
             </div>
             <div class="input-group input-group-sm mb-3  col-sm-5 ">
                 <div class="input-group-prepend">
@@ -136,6 +136,7 @@
                         <td>{{producrPO.pricePerType}}</td>
                         <td>{{producrPO.discount}}</td>
                         <td>{{producrPO.priceall}}</td>
+                        <td><button class="btn btn-danger" ng-click = "delProPrePO(producrPO.prePo_id)">ลบ</button> </td>
                     </tr>
                 </tbody>
             </table>
@@ -319,10 +320,10 @@
 
             $scope.po_pname = name ;
             po_productid = id;
-           console.log( po_productid );
+
         };
         $scope.addToPrePO = function(){
-                    console.log(po_productid);
+
           $http.post('php/addToPrePO.php',{
               'po_productid': po_productid,
               'po_remain': $scope.po_remain,
@@ -330,7 +331,13 @@
               'po_pricePerType':$scope.po_pricePerType,
               'po_discount' : $scope.po_discount
           }).then(function(res){
+              po_productid = null;
+              $scope.po_remain = null;
+              $scope.po_type = null;
+              $scope.po_pricePerType = null;
+              $scope.po_discount = 0;
                 $scope.selectPrePO();
+
           });
         };
         $scope.selectPrePO = function(){
@@ -338,9 +345,44 @@
                     $scope.producrPOs  = res.data.records
           })
         };
+
+        $scope.delProPrePO = function(id){
+
+            swal({
+                title: "คุณแน่ใจหรือไม่",
+                text: "ยืนยันการลบข้อมูล",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((data) => {
+                if (data) {
+
+                    $http.post('php/delProPrePO.php',{
+                        'id':id
+                    }).then(function(){
+                        swal("ลบข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกลบ", "success");
+                        $scope.selectPrePO();
+                    });
+
+                }
+            });
+
+        };
+
+
+        $scope.genPO_NO = function(){
+            $http.get('php/genPO_NO.php').then(function(res){
+
+                    $scope.po_no = res.data.records[0].rptPO_no;
+
+            });
+        }
+
     });
 
 
 </script>
+<script src="dist/sweetalert.min.js"></script>
 </body>
 </html>
