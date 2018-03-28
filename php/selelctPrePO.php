@@ -4,7 +4,7 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 
-$subid = 1/*$_SESSION['subbranchid']*/;
+$subid = $_SESSION['subbranchid'];
 
 
 $sql = "SELECT product.pname,prePo.* FROM prePo,product WHERE prePo.productid = product.regno AND $subid";
