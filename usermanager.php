@@ -168,10 +168,7 @@
                                     <div class="col"><label class="col-form-label">หน้าที่ :</label></div>
                                     <div class="col">
                                         <select class="form-control" ng-model="editrole" ng-change="seteditroleDesc()" style="width:300px;" id="edituserrole">
-                                        <option value="admin">ผู้ดูแลระบบ</option>
-                                        <option value="mainstoragemanager">พนักงานสต๊อกสำนักงานใหญ่</option>
-                                        <option value="branchstockmanager" >พนักงานสต๊อกสาขาย่อย</option>
-                                        <option value="cashier" >พนักงานคิดเงินหน้าร้าน</option>
+                                        <option ng-repeat="role in roles" value="{{role.rolename}}" >{{role.rolethai}}</option>
                                     </select>
                                     </div>
                                 </div>
@@ -209,7 +206,7 @@
         <script>
             var app = angular.module('usermanagerApp', []);
             app.controller('usersCtrl', function($scope, $http) {
-                $scope.issubemploy = false;
+                $scope.issubemploy = true;
                 $scope.newroledesc = 'พนักงานสต๊อกสำนักงานใหญ่';
                 $scope.newrole = '';
                 $scope.newfname = '';
@@ -217,13 +214,6 @@
                 $scope.getallUser = function() {
                     $http.get("php/getallUser.php").then(function(response) {
                         $scope.users = response.data.records;
-
-                        angular.forEach($scope.users, function(value, key) {
-                            console.log(key + ': ' + value.fname);
-                            /*value.fname += "55";
-                            console.log(key + ': ' + value.fname);*/
-
-                        });
                     });
                 }
                 $scope.getallRole = function() {
@@ -240,7 +230,7 @@
                     });
                 }
                 $scope.resubEmploy = function() {
-                    $scope.issubemploy = false;
+                    $scope.issubemploy = true;
                 }
                 $scope.getallSubbranch = function() {
                     $http.get("php/getallSubbranch.php").then(function(response) {
@@ -284,7 +274,7 @@
                     var role = $scope.newrole;
                     if (role == 'mainstoragemanager') {
                         $scope.newroledesc = 'พนักงานสต๊อกสำนักงานใหญ่';
-                        $scope.issubemploy = false;
+                        $scope.issubemploy = true;
                     } else if (role == 'branchstockmanager') {
                         $scope.newroledesc = 'พนักงานสต๊อกสาขาย่อย';
                         $scope.issubemploy = true;
@@ -293,10 +283,10 @@
                         $scope.issubemploy = true;
                     } else if (role == 'admin') {
                         $scope.newroledesc = 'ผู้ดูแลระบบ';
-                        $scope.issubemploy = false;
+                        $scope.issubemploy = true;
                     } else {
                         $scope.newroledesc = 'blank';
-                        $scope.issubemploy = false;
+                        $scope.issubemploy = true;
                     }
                     //console.log($scope.newroledesc);
                 }
@@ -304,7 +294,7 @@
                     var role = $scope.editrole;
                     if (role == 'mainstoragemanager') {
                         $scope.editroledesc = 'พนักงานสต๊อกสำนักงานใหญ่';
-                        $scope.issubemploy = false;
+                        $scope.issubemploy = true;
                     } else if (role == 'branchstockmanager') {
                         $scope.editroledesc = 'พนักงานสต๊อกสาขาย่อย';
                         $scope.issubemploy = true;
@@ -313,10 +303,10 @@
                         $scope.issubemploy = true;
                     } else if (role == 'admin') {
                         $scope.editroledesc = 'ผู้ดูแลระบบ';
-                        $scope.issubemploy = false;
+                        $scope.issubemploy = true;
                     } else {
                         $scope.editroledesc = 'blank';
-                        $scope.issubemploy = false;
+                        $scope.issubemploy = true;
                     }
                     //console.log($scope.newroledesc);
                 }
@@ -331,7 +321,7 @@
                     $scope.editpassword = password;
                     $scope.editinfo = userinfo;
                     if (role == 'admin' || role == 'mainstoragemanager') {
-                        $scope.issubemploy = false;
+                        $scope.issubemploy = true;
                     } else {
                         $scope.issubemploy = true;
                     }

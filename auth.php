@@ -25,11 +25,12 @@ if(isset($_POST['username'])){
     $resultrole = mysqli_query($con,$rolequery);     
     $rows = $resultrole->fetch_array(MYSQLI_ASSOC);    
     $_SESSION["role"] = $rows['role'];
+    $roletemp=$_SESSION["role"];
     
-    $roledescquery = "SELECT roledesc FROM `user` WHERE `username` LIKE '{$username}' AND `password` LIKE '{$password}'";
+    $roledescquery = "SELECT rolesetting.rolethai FROM rolesetting WHERE rolesetting.rolename = '$roletemp'";
     $resultroledesc = mysqli_query($con,$roledescquery);     
     $rows = $resultroledesc->fetch_array(MYSQLI_ASSOC);    
-    $_SESSION["roledesc"] = $rows['roledesc']; 
+    $_SESSION["roledesc"] = $rows['rolethai']; 
     
     $subbranchidquery = "SELECT subbranchid FROM `user` WHERE `username` LIKE '{$username}' AND `password` LIKE '{$password}'";
     $resultsubbranchid = mysqli_query($con,$subbranchidquery);     
@@ -52,20 +53,26 @@ if(!empty($_SESSION["role"])){
     $role=$_SESSION["role"];
     $rulequery="SELECT rolesetting.rule FROM rolesetting WHERE rolesetting.rolename = '$role';";
     $ruleresult=mysqli_query($con,$rulequery);
-    $rows = $ruleresult->fetch_array(MYSQLI_ASSOC);
-    $firstrule = $rows['rule'][0];
+    $rows = $ruleresult->fetch_array(MYSQLI_ASSOC);    
+    $firstrule = explode(",",$rows['rule']);
     
-    $firstfilequery="SELECT privilege.file FROM privilege WHERE privilege.id = '$firstrule'";
+    
+    $firstfilequery="SELECT privilege.file FROM privilege WHERE privilege.id = '$firstrule[0]'";
     $firstfileresult=mysqli_query($con,$firstfilequery);
     $rows = $firstfileresult->fetch_array(MYSQLI_ASSOC);
     $firstfile = $rows['file']; 
-}
-
-if(!empty($firstfile)){
+    
+    
+    if(!empty($firstfile)){
         header("Location: $firstfile");             
     }else{
         header("Location: logout.php");
     }
+}else{
+    header("Location: logout.php");
+}
+
+
 
 
 //include 'mainbartest.php';
