@@ -20,7 +20,6 @@
             header("Location: auth.php");
         }
      ?>
-
     <div class="container" style="width:70%;">
 
         <br>
