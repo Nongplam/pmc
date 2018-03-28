@@ -110,7 +110,6 @@
                                     <th>No.</th>
                                     <th>ชื่อผลิตภัณฑ์</th>
                                     <th>ชื่อตัวยาหลัก</th>
-                                    <th>แบรนด์</th>
                                     <th>ราคา</th>
                                     <th>จำนวน</th>
                                     <th>หน่วย</th>
@@ -123,7 +122,6 @@
                                     <td>{{$index+1}}</td>
                                     <td class="pname">{{y.pname}}</td>
                                     <td>{{y.pcore}}</td>
-                                    <td>{{y.bname}}</td>
                                     <td>{{y.price}}</td>
                                     <td>{{y.qty}}</td>
                                     <td>{{y.stocktype}}</td>
