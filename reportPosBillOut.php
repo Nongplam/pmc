@@ -32,12 +32,11 @@ if (!in_array("13", $allowrule)){
 
 
             สาขา :
-            <select id="branch" name="branch" ng-model="branch" class="form-control custom-select" ng-init="selectBranch()">
-                <option selected>กรุณาเลือกสาขา</option>
+            <select id="branch" name="branch" ng-model="branch" class="form-control " ng-init="selectBranch()">
                 <option ng-repeat="branch in branchs" value="{{branch.id}}">{{branch.name}}</option>
 
             </select>
-            <input type="date" name="date1" ng-model="date1">
+            <input type="date" name="date1" ng-model="date1" class="form-control col-sm-2">
             <input type="submit" name="" ng-click="disPlayData()" class="btn btn-success" value="ตกลง" style="width: 117px;">
 
         <table class="table table-info table-bordered" ng-init="disPlayData()">
