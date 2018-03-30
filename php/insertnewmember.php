@@ -1,8 +1,9 @@
 <?php 
+session_start();
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 $data=json_decode(file_get_contents("php://input"));
-
+$subbranchid = $_SESSION["subbranchid"];
 
 if(!empty($_POST["fname"])){
     $fname = $_POST['fname'];
@@ -12,7 +13,7 @@ if(!empty($_POST["fname"])){
     $gender = $_POST['gender'];
     $birthday = $_POST['birthday'];
     
-    $stm1="insert into member(citizenid,fname,lname,phonenumber,gender,birthday) values('$citizenid','$fname','$lname','$phone','$gender','$birthday')";
+    $stm1="insert into member(citizenid,fname,lname,phonenumber,gender,birthday,subbranchid) values('$citizenid','$fname','$lname','$phone','$gender','$birthday','$subbranchid')";
     if(mysqli_query($con, $stm1)) {
             echo "Data Inserted";
             echo $fname;
