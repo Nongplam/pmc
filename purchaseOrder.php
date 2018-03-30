@@ -107,7 +107,7 @@
 
                 <div class="form-group row">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="vatOp" ng-model="vatOp" id="vatOP" ng-click="calvat()">
+                        <input class="form-check-input" type="checkbox" name="vatOp" ng-model="vatOp" id="vatOP" ng-click="discOfPrice()">
                         <label class="form-check-label" for="inlineRadio1">คิดภาษี</label>
                     </div>
 
@@ -115,7 +115,7 @@
                         <div class="input-group-prepend ">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ภาษี</span>
                         </div>
-                        <input type="number" min="0" max="100" name="po_vat" ng-model="po_vat" class="form-control" aria-label="Small"  ng-change ="calvat()" aria-describedby="inputGroup-sizing-sm" >
+                        <input type="number" min="0" max="100" name="po_vat" ng-model="po_vat" class="form-control" aria-label="Small"  ng-change ="discOfPrice()" aria-describedby="inputGroup-sizing-sm" >
                         <div class="input-group-append">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">%</span>
                         </div>
@@ -142,7 +142,7 @@
             </div>
         </div>
         <div class="btn-group offset-sm-9" role="group" >
-                <button class="btn btn-success mr-2" ng-click="addTorptPO()" >สั่งสินค้า &#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button>
+                <button class="btn btn-success mr-2" ng-click="addToRptPO()" >สั่งสินค้า&#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button>
 
                 <button class="btn btn-primary "  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
 
@@ -291,7 +291,7 @@
 
 
                                             </thead>
-                                            <tbody>
+                                            <tbody ng-init="getProduct()">
                                             <tr ng-repeat="data in filtered = (list | filter:search | orderBy : predicate :reverse) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
                                                 <td>{{data.pname}}</td>
 
@@ -366,13 +366,6 @@
           $scope.discOfPrice();
        };
 
-        $http.get('php/pselect.php').then(function(res){
-            $scope.list = res.data.records;
-            $scope.currentPage = 1; //current page
-            $scope.entryLimit = 5; //max no of items to display in a page
-            $scope.filteredItems = $scope.list.length; //Initially for no filter
-            $scope.totalItems = $scope.list.length;
-        });
         $scope.setPage = function(pageNo) {
             $scope.currentPage = pageNo;
         };
@@ -461,56 +454,86 @@
 
 
         };
-        $scope.calvat = function(){
+
+
+        $scope.discOfPrice = function()
+        {
+            if($scope.po_disc > 100){
+                $scope.po_disc = 0;
+            }
+
+            if($scope.disc ){
+                $scope.discofprice =  parseFloat(  $scope.totalprice *  $scope.po_disc  /100).toFixed(2);
+                $scope.priceallMidisc = parseFloat( $scope.totalprice-$scope.discofprice).toFixed(2);
+
+            }else{
+                $scope.discofprice = 0.00 ;
+                $scope.priceallMidisc = parseFloat(  $scope.totalprice-$scope.discofprice).toFixed(2);
+
+            }
+
             if($scope.vatOp) {
 
                 $scope.vatofprice =  parseFloat($scope.priceallMidisc  *$scope.po_vat / 100).toFixed(2);
             }else{
                 $scope.vatofprice = 0.00;
             }
-            $scope.totalPriceAll();
-        };
 
-        $scope.discOfPrice = function()
-        {
-            if($scope.disc ){
-                $scope.discofprice =  parseFloat(  $scope.totalprice *  $scope.po_disc  /100).toFixed(2);
-                $scope.priceallMidisc = parseFloat( $scope.totalprice-$scope.discofprice).toFixed(2);
-                $scope.calvat();
-            }else{
-                $scope.discofprice = 0.00 ;
-                $scope.priceallMidisc = parseFloat(  $scope.totalprice-$scope.discofprice).toFixed(2);
-                $scope.calvat();
-            }
-
-        };
-
-
-        $scope.totalPriceAll = function(){
             $scope.totalPAll = parseFloat( parseFloat( $scope.priceallMidisc) + parseFloat( $scope.vatofprice)).toFixed(2) ;
 
         };
 
 
+
+
+        $scope.formatDate = function (date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [year, month, day].join('-');
+        };
+
         $scope.addToRptPO = function(){
 
+
+            var date1 =  new Date($scope.po_date);
+            var date2 = new Date($scope.po_datesend);
             $http.post('php/addToRptPO.php',{
-                'po_no':,
-                'po_date':,
-                '':,
-                '':,
-                '':,
-                '':,
-                '':,
-                '':,
-                '':,
-                '':
+                'po_no':$scope.po_no,
+                'po_date':  $scope.formatDate(date1),
+                'cid':$scope.cid,
+                'po_agent':$scope.po_agent,
+                'po_lo':$scope.po_lo,
+                'po_tel':$scope.po_tel,
+                'po_mail':$scope.po_mail,
+                'po_vatno':$scope.po_vatno,
+                'po_sendlo':$scope.po_sendlo,
+                'po_datesend':$scope.formatDate(date2),
+                'pricesum':$scope.totalprice,
+                'pricediscount':$scope.discofprice,
+                'priceMIdicount':$scope.priceallMidisc,
+                'pricevat':$scope.vatofprice,
+                'totalprice':$scope.totalPAll
             }).then(function(res){
 
             });
 
 
-        }
+        };
+        $scope.getProduct = function() {
+            $http.get('php/pselect.php').then(function (res) {
+                $scope.list = res.data.records;
+                $scope.currentPage = 1; //current page
+                $scope.entryLimit = 5; //max no of items to display in a page
+                $scope.filteredItems = $scope.list.length; //Initially for no filter
+                $scope.totalItems = $scope.list.length;
+            });
+        };
     });
 
 

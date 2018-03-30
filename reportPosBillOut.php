@@ -31,14 +31,21 @@ if (!in_array("13", $allowrule)){
     <div ng-app="reportPosBillOutApp" ng-controller="reportPosBillOutcontroller" class="ng-scope">
 
 
-            สาขา :
-            <select id="branch" name="branch" ng-model="branch" class="form-control " ng-init="selectBranch()">
+
+
+        <div class="form-group row">
+
+            <label class="col-sm-1 col-form-label font-weight-bold text-right " for="branch"> สาขา :</label>
+            <select id="branch" name="branch" ng-model="branch" class="form-control col-sm-4 mr-2" ng-init="selectBranch()">
                 <option ng-repeat="branch in branchs" value="{{branch.id}}">{{branch.name}}</option>
 
             </select>
-            <input type="date" name="date1" ng-model="date1" class="form-control col-sm-2">
-            <input type="submit" name="" ng-click="disPlayData()" class="btn btn-success" value="ตกลง" style="width: 117px;">
 
+            <label class="col-sm-1 col-form-label font-weight-bold text-right " for="date1"> เลือกวัน :</label>
+            <input type="date" name="date1" id="date1" ng-model="date1" class="form-control col-sm-3 mr-2">
+
+            <input type="submit" name="" ng-click="disPlayData()" class="btn btn-success col-sm-2" value="ตกลง" style="width: 117px;">
+        </div>
         <table class="table table-info table-bordered" ng-init="disPlayData()">
             <tbody>
             <tr><th>#</th>
