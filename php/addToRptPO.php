@@ -17,14 +17,53 @@ if($data) {
 
     $po_no = mysqli_real_escape_string($con,$data -> po_no);
     $po_date = mysqli_real_escape_string($con,$data -> po_date);
-    $cid = mysqli_real_escape_string($con,$data -> cid);
-    $po_agent = mysqli_real_escape_string($con,$data -> po_agent);
-    $po_lo = mysqli_real_escape_string($con,$data ->po_lo);
-    $po_tel = mysqli_real_escape_string($con,$data -> po_tel);
-    $po_mail = mysqli_real_escape_string($con,$data -> po_mail);
-    $po_vatno = mysqli_real_escape_string($con,$data -> po_vatno);
-    $po_sendlo = mysqli_real_escape_string($con,$data -> po_sendlo);
+    try{
+        $cid = mysqli_real_escape_string($con,$data -> cid);
+    } catch (mysqli_sql_exception $e){
+        $cid = "-";
+    }
+
+    try{
+        $po_agent = mysqli_real_escape_string($con,$data -> po_agent);
+    }catch (mysqli_sql_exception $e){
+        $po_agent = "-";
+    }
+
+    try{
+        $po_lo = mysqli_real_escape_string($con,$data ->po_lo);
+    }catch (mysqli_sql_exception $e){
+        $po_lo = "-";
+    }
+
+    try{
+        $po_tel = mysqli_real_escape_string($con,$data -> po_tel);
+    }catch (mysqli_sql_exception $e){
+        $po_tel = "-";
+    }
+
+    try{
+        $po_mail = mysqli_real_escape_string($con,$data -> po_mail);
+    }catch (mysqli_sql_exception $e){
+        $po_mail = "-";
+    }
+
+    try{
+        $po_vatno = mysqli_real_escape_string($con,$data -> po_vatno);
+    }catch (mysqli_sql_exception $e){
+        $po_vatno = "-";
+    }
+    try{
+        $po_sendlo = mysqli_real_escape_string($con,$data -> po_sendlo);
+    }catch (mysqli_sql_exception $e){
+        $po_sendlo =  "-";
+    }
+
+try{
     $po_datesend = mysqli_real_escape_string($con,$data -> po_datesend);
+}catch (mysqli_sql_exception $e){
+    $po_datesend = "0000-00-00";
+}
+
     $pricesum = mysqli_real_escape_string($con,$data -> pricesum);
     $pricediscount = mysqli_real_escape_string($con,$data -> pricediscount);
     $priceMIdicount = mysqli_real_escape_string($con,$data -> priceMIdicount);
