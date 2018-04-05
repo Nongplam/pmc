@@ -348,6 +348,7 @@
         $scope.po_discount = 0;
         $scope.countPro = 0;
         $scope.po_date = new Date();
+        $scope.po_datesend = new Date();
         $scope.po_vat  = 7;
         $scope.po_disc =0;
         $scope.discofprice = 0.00;
@@ -503,6 +504,32 @@
 
             var date1 =  new Date($scope.po_date);
             var date2 = new Date($scope.po_datesend);
+            if($scope.cid == null){
+                $scope.cid = 0;
+            }
+
+            if($scope.po_agent ==null){
+                $scope.po_agent = "-";
+            }
+            if($scope.po_lo ==null){
+                $scope.po_lo  = "-";
+            }
+            if( $scope.po_tel==null){
+                $scope.po_tel  = "-";
+            }
+            if($scope.po_mail ==null){
+                $scope.po_mail = "-";
+            }
+            if($scope.po_vatno ==null){
+                $scope.po_vatno  = "-";
+            }
+            if($scope.po_sendlo ==null){
+                $scope.po_sendlo = "-";
+            }
+            if($scope.po_datesend ==null){
+                date2 = "0000/00/00"
+            }
+
             $http.post('php/addToRptPO.php',{
                 'po_no':$scope.po_no,
                 'po_date':  $scope.formatDate(date1),
