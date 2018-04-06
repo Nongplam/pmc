@@ -80,5 +80,24 @@ if($data) {
     } else {
         $result[0]['addrpt_PO'] = 'Failed = '.mysqli_error($con)."------".$sqlInPO;
     }
+
+    $sqlInPOD = "INSERT INTO rpt_POdetail( rptPO_no, productid, remain, type, pricePerType, discount, priceall, sts,subbranchid, userid) SELECT '$po_no',productid, remain, type, pricePerType, discount, priceall,'1',$subid,$userid FROM prePo WHERE prePo.subbranchid = $subid";
+
+    if (mysqli_query($con, $sqlInPOD)) {
+        $result[0]['addrpt_POD'] = 'Successed';
+    } else {
+        $result[0]['addrpt_POD'] = 'Failed = '.mysqli_error($con)."------".$sqlInPOD;
+    }
+
+    $sqlDelPrePO = "DELETE FROM prePo WHERE subbranchid = $subid";
+
+
+    if (mysqli_query($con, $sqlDelPrePO)) {
+        $result[0]['DelPrePO'] = 'Successed';
+    } else {
+        $result[0]['DelPrePO'] = 'Failed = '.mysqli_error($con)."------".$sqlDelPrePO;
+    }
+
+
 echo   json_encode($result);
 }
