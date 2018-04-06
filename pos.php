@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Pos</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="js/lib/angular.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">
