@@ -135,14 +135,14 @@
                 $scope.sTbss = res.data.records;
             });
 
-        }
+        };
 
         $scope.reciveToStockModal  = function(sid,pname,qty,type){
              $scope.pnameonmodal = pname ;
             $scope.stockqtyonmodal=      parseInt(qty);
             $scope.typeonmodal = type;
             $scope.stockid =sid;
-        }
+        };
 
 
         $scope.addToStock =function(){
@@ -159,7 +159,7 @@
             });
 
 
-        }
+        };
 
 
     });
