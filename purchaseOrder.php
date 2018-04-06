@@ -548,6 +548,29 @@
                 'totalprice':$scope.totalPAll
             }).then(function(res){
 
+                $scope.genPO_NO();
+                $scope.selectPrePO();
+                $scope. cname= null;
+                $scope.cid = null;
+                $scope.po_agent= null;
+                $scope.po_lo= null;
+                $scope.po_tel= null;
+                $scope.po_mail= null;
+                $scope.po_vatno= null;
+                $scope.po_sendlo= null;
+                $scope.po_discount = 0;
+                $scope.countPro = 0;
+                $scope.po_date = new Date();
+                $scope.po_datesend = new Date();
+                $scope.po_vat  = 7;
+                $scope.po_disc =0;
+                $scope.discofprice = 0.00;
+                $scope.totalprice =0.00;
+                $scope.vatofprice = 0.00 ;
+                $scope.priceallMidisc = 0.00;
+                $scope.totalPAll = 0.00;
+                swal("บันทึกข้อมูลเสร็จสิ้น", "บันทึกข้อมูลแล้ว", "success");
+
             });
 
 
