@@ -14,12 +14,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 
 $mpdf = new \Mpdf\Mpdf([
-    'mode' => 'utf-8',
+    'mode' => 'c',
     'format' => [190, 236],
     'autoLangToFont' => true
 ]);
 
 $mpdf->pdf_version = '7.0.3';
 
-$mpdf->writeBarcode('978-1234-567-890');
+$mpdf->writeHTML('<barcode code="024681024680" type="EAN128C" /><br />');
 $mpdf->Output();
