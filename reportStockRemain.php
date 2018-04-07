@@ -11,8 +11,10 @@
 </head>
 
 <body>
-    <?php 
+    <?php
+
     include 'mainbartest.php';
+
     $role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
     $allowqueryresult=mysqli_query($con,$allowquery);
@@ -21,6 +23,7 @@
         if (!in_array("14", $allowrule)){
             header("Location: auth.php");
         }
+
      ?>
     <div class="container" style="width:70%">
         <h3 align="center">รายงานสินค้าใกล้หมดในสต๊อค แต่ละสาขา</h3>
