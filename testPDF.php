@@ -21,12 +21,5 @@ $mpdf = new \Mpdf\Mpdf([
 
 $mpdf->pdf_version = '7.0.3';
 
-// Write some HTML code:
-$mpdf->WriteHTML("<p lang='th'>สวัสดีชาว World</p>");
-
-$mpdf->AddPage(); // Adds a new page in Landscape orientation
-$mpdf->WriteHTML('สวัสดีชาว World');
-
-
-// Output a PDF file directly to the browser
+$mpdf->writeBarcode('978-1234-567-890');
 $mpdf->Output();
