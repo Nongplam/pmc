@@ -1,67 +1,80 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>ใบสั่งซื้อ</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="js/lib/angular.min.js"></script>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/lib/jquery-3.3.1.min.js"></script>
-    <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>
-   
-</head>
-<body>
-
-<div class="container">
-    <div>
-        <h3 class="text-center"> ใบสั่งซื้อ </h3>
-       <h3 class="text-center"> บริษัท </h3>
-        <h6 class="text-center">ที่อยู่ ddddddddddddddddddddddddddddddddddddd</h6>
-        <h6 class="text-center">ที่อยู่ dddddddddddddddddddddddddddddddddddddddddddddddd</h6>
-        
-    </div>
+<?php
+require_once __DIR__ . '/vendor/autoload.php';
+session_start();
+header('Content-Type: text/html; charset=utf-8');
+include 'php/connectDB.php';
 
 
+$poNO = $_GET["NO"];
 
+$sql = "SELECT rpt_PO.*,company.cname FROM rpt_PO,company WHERE company.cid = rpt_PO.cid  AND rptPO_no = '$poNO'";
+if($result = mysqli_query($con,$sql)){
+    $row = $result->fetch_array(1);
 
-        <div class="row">
-           <div class="col-8 "></div>
-           <div class="col-4">
-                <table class="table table-bordered ">
+    $rptPO_no = $row["rptPO_no"];
+    $cname = $row["cname"];
+    $rptPO_agent = $row["rptPO_agent"];
+    $rptPO_lo = $row["rptPO_lo"];
+    $rptPO_tel = $row["rptPO_tel"];
+    $rptPO_mail = $row["rptPO_mail"];
+    $rptPO_vatNo = $row["rptPO_vatNo"];
+    $rptPO_losend = $row["rptPO_losend"];
+    $rptPO_date = $row["rptPO_date"];
+    $rptPO_datesend = $row["rptPO_datesend"];
+    $pricesum = $row["pricesum"];
+    $pricediscount = $row["pricediscount"];
+    $priceMIdicount = $row["priceMIdicount"];
+    $pricevat = $row["pricevat"];
+    $totalprice = $row["totalprice"];
+    $rptPO_status = $row["rptPO_status"];
+
+}
+
+ob_start();
+?>
+
+<div  lang="th">
+
+        <h4  lang="th" align="center"> ใบสั่งซื้อ </h4>
+       <h4 lang="th"> บริษัท สุมิตรเภสัช</h4>
+         
+                <table align="right" border="1" lang="th" >
+                <tbody>
                     <tr>
-                        <td>เลขที่ใบสั่งซื้อ</td>
-                        <td>11111111111111111</td>
+                        <th>เลขที่ใบสั่งซื้อ</th>
+                        <td><?=$rptPO_no?></td>
                     </tr>
                     <tr>
-                        <td>วันที่</td>
-                        <td>11/11/1111</td>
+                        <th>วันที่</th>
+                        <td><?=$rptPO_date?></td>
                     </tr>
+                     </tbody>
                 </table>
-
-           </div>
-        </div>
-
-       
-
-        <table class="table table-bordered">
+        <table  border="1" lang="th" style="width: 100%;">
+         <tbody>
             <tr>
-                <td class="w-50">
-                    <b>ผู้ขาย : </b> 
-                    <p>ssssssssssssssssssssssssssss</p>
-                    <b>ที่อยู๋  : </b> 
-                    <p>ssssssssssssssssssss</p>
-                    <b>โทร  : </b> 
-                    <p>ssssssssssssssssssss</p>
+                <td style="width: 50%;">
+                    <p>บริษัทผู้ขาย : <?=$cname?></p>
+                    <br>
+                    <p>ตัวแทน : <?=$rptPO_agent?></p>
+                    <br>
+                    <p>ที่อยู่  : <?=$rptPO_lo?></p>
+                    <br>
+                    <p>โทร  : <?=$rptPO_tel?></p>
+                    <br>
+                    <p>mail  : <?=$rptPO_mail?></p>
                 </td>
-                <td class="w-50">
-                    <b>วันที่กำหนดส่ง</b>
-                    <p>11/11/1111</p>
-                    <b>การขำระเงิน</b>
-                    <p>cash</p>
+                <td style="width: 50%;">
+                    <p>เลขที่ใบกำกับภาษี  : <?=$rptPO_vatNo?></p>
+                    <br>
+                    <p>ที่อยู่จัดส่ง  : <?=$rptPO_losend?></p>
+                    <br>
+                    <p>กำหนดส่ง : <?=$rptPO_datesend?></p>
+
+
                 </td>
             </tr>
-
+             </tbody>
         </table>
 
 
@@ -69,68 +82,137 @@
 
 
 
-        <table class="table table-bordered  text-center">
-            <tr  class="d-flex">
-                <th class="col-1">รหัส</th>
-                <th class="col-4">ชื่อ</th>
-                <th class="col-1">จำนวน</th>
-                <th class="col-1">หน่วย</th>
-                <th class="col-1">ราคา/หน่วย</th>
-                <th class="col-1">ส่วนลด</th>
-                <th class="col-3">จำนวนเงิน</th>
-            </tr>
-            <tr class="d-flex">
-                <td class="col-1">111111</td>
-                <td class="col-4">dsadasdasassd</td>
-                <td class="col-1">20</td>
-                <td class="col-1">kg</td>
-                <td class="col-1">10</td>
-                <td class="col-1">0.00</td>
-                <td class="col-3">200</td>
-            </tr>
+    <table border="1" lang="th" style="width: 100%;">
+        <thead>
+        <tr class="headerrow">
+            <th>#</th>
+            <th>ชื่อ</th>
+            <th>จำนวน</th>
+            <th>หน่วย</th>
+            <th>ราคา/หน่วย</th>
+            <th>ส่วนลด</th>
+            <th>จำนวนเงิน</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+
+        $sqlDe = "SELECT rpt_POdetail.*,product.pname FROM rpt_POdetail,product WHERE rpt_POdetail.productid = product.regno AND rpt_POdetail.rptPO_no = $poNO ORDER BY product.pname ASC";
+            $c =0 ;
+        if($result2 = mysqli_query($con,$sqlDe)){
+            while ($rowD = $result2->fetch_array(1)) {
+                ?>
+                <tr>
+                    <td><?=$c=$c+1?></td>
+                    <td><?=$rowD["pname"]?></td>
+                    <td align="center"><?=$rowD["remain"]?></td>
+                    <td align="center"><?=$rowD["type"]?></td>
+                    <td align="center"><?=$rowD["pricePerType"]?></td>
+                    <td align="center"><?=$rowD["discount"]?></td>
+                    <td align="center"><?=$rowD["priceall"]?></td>
+                </tr>
+                <?php
+            }
+        }
+            ?>
+             </tbody>
         </table>
 
-        
-        <div class="row">
-            <div class="col-8 ">
-            <b>หมายเหตุ : </b><p >sssssssdfsssssssssssssssssssdddddddddddsvvvvv</p>
-                       
-            </div>
-            <div class="col-4 border row">
-                <div class="col-7">
-                    <p class="font-weight-bold text-right">รวมเงิน : </p>
-                    <p class="font-weight-bold text-right">ส่วนลด : </p>
-                    <p class="font-weight-bold text-right">หลังหักส่วนลด : </p>
-                    <p class="font-weight-bold text-right">ภาษีมูลค่าเพิม : </p>
-                    <p class="font-weight-bold text-right">จำนวนเงินทั้งสิ้น : </p>
-                </div>
-                <div class="col-5">
-                    <p >000000</p>
-                    <p >000000</p>
-                    <p >000000</p>
-                    <p >000000</p>
-                </div>
-            </div>
-        </div>
+    <table align="right " lang="th">
 
-    <div class="row">
-        <div class="col-6 ">
-            <p class="font-weight-bold text-center">ตัวแทน</p>
-            <p class="text-center">...............................................................</p>
-            <p class="text-center">(	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;  &#160;	&#160;	&#160;	&#160;	&#160;	&#160; 	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;)</p>
-            <p class="text-center">วันที่ ........./........./..............</p>
-        </div>
-        <div class="col-6 ">
-            <p class="font-weight-bold text-center">ในนาม บริษัท</p>
-            <p class="text-center">...............................................................</p>
-            <p class="text-center">(	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;)</p>
-            <p class="text-center">วันที่ ........./........./..............</p>
-        </div>
-    </div>
+        <tbody>
+        <tr>
+            <th align="right">รวมเงิน : </th>
+            <td><?=$pricesum?></td>
+        </tr>
+        <tr>
+            <th align="right">ส่วนลด : </th>
+            <td><?=$pricediscount?></td>
+        </tr>
+        <tr>
+            <th align="right">หลังหักส่วนลด : </th>
+            <td><?=$priceMIdicount?></td>
+        </tr>
+        <tr>
+            <th align="right">ภาษีมูลค่าเพิม : </th>
+            <td><?=$pricevat?></td>
+        </tr>
+        <tr>
+            <th align="right">จำนวนเงินทั้งสิ้น : </th>
+            <td><?=$totalprice?></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
 
 </div>
-    
-</body>
-</html>
+
+<?php
+
+$html = ob_get_contents();
+
+ob_end_clean();
+
+$mpdf = new \Mpdf\Mpdf([
+    'mode' => 'utf-8',
+    'format' => [190, 236],
+    'setAutoBottomMargin' => 'pad',
+    'autoLangToFont' => true
+]);
+
+
+$mpdf->pdf_version = '7.0.3';
+
+$mpdf->SetHeader('|<p lang="th">หน้า {PAGENO}/{nbpg}</p>|<p lang="th">ใบสั่งซื้อเลขที่ : '.$poNO.' </p>');
+$mpdf->setFooter("<table   style='width: 100%;' lang='th' >
+        <tbody>
+        <tr>
+            <td style='width: 50%;text-align: center;'>
+                <p >ตัวแทน</p>
+                <br>
+                <p >...............................................................</p>
+                <p >(	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;  &#160;	&#160;	&#160;	&#160;	&#160;	&#160; 	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;)</p>
+                <br>
+                <p >วันที่ ........./........./..............</p>
+            </td>
+            <td style='width: 50%;text-align: center;'>
+                <p>ในนาม บริษัท</p>
+                <br>
+                <p >...............................................................</p>
+                <p>(	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;	&#160;)</p>
+                <br>
+                <p >วันที่ ........./........./..............</p>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>");
+
+
+$mpdf->list_indent_first_level = 0; // 1 or 0 - whether to indent the first level of a list
+$mpdf->defaultfooterline=4;
+// Load a stylesheet
+$stylesheet = file_get_contents('css/mpdfstyletables.css');
+
+$mpdf->WriteHTML($stylesheet, 1); // The parameter 1 tells that this is css/style only and no body/html/text
+$mpdf->WriteHTML($html,2);
+
+
+
+// Output a PDF file directly to the browser
+$mpdf->Output();
+?>

@@ -53,11 +53,6 @@
                         <td>{{stock.lotno}}</td>
                         <td>{{stock.receiveday}}</td>
                         <td>{{stock.expireday}}</td>
-
-
-
-                       
-
                     </tr>
 
                 </tbody>

@@ -142,7 +142,7 @@
             </div>
         </div>
         <div class="btn-group offset-sm-9" role="group" >
-                <button class="btn btn-success mr-2" ng-click="addToRptPO()" >สั่งสินค้า&#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button>
+            <a href="showAllPurchaseOrder.php?no={{no}}" ><button class="btn btn-success mr-2" ng-click="addToRptPO()" >สร้างใยสั่งสินค้า&#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button></a>
 
                 <button class="btn btn-primary "  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
 
@@ -441,7 +441,7 @@
             $http.get('php/genPO_NO.php').then(function(res){
 
                     $scope.po_no = res.data.records[0].rptPO_no;
-
+                       $scope.no =   res.data.records[0].rptPO_no;
             });
         };
         $scope.selectCompany = function () {

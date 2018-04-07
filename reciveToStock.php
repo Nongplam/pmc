@@ -2,7 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: Abadon
- */?>
+ */
+
+$no = "";
+if (isset($_GET["no"])){
+    $no =  sprintf("%'.010d", $_GET["no"]);
+
+}
+?>
 
 <!DOCTYPE html>
 <html>
@@ -29,7 +36,7 @@
         <div class="form-group row">
             <label for="po_no" class="col-sm-2 col-form-label font-weight-bold text-right">รหัสใบสั่ง : </label>
             <div class="col-sm-7">
-                <input name="po_no" ng-model="po_no" class="form-control"/>
+                <input name="po_no" ng-model="po_no" class="form-control" ng-focus="searchReciveStock()"  ng-change="searchReciveStock()" autofocus/>
             </div>
             <div class="col-sm-2">
 
@@ -84,7 +91,7 @@
                             <div class="form-group row">
                                 <label for="message-text" class="col-sm-3 col-form-label">จำนวน:</label>
                                 <div class="col-sm-5">
-                                    <input type="number" min="0" step="1" class="form-control" ng-model="remain">
+                                    <input type="number" min="0" step="1" ng-change="checkRemain()" class="form-control" ng-model="remain">
                                 </div>
                                 <label for="message-text" class="col-sm-1 col-form-label" ng-bind="typeonmodal"></label>
                             </div>
@@ -178,9 +185,10 @@
     var app = angular.module("reciveStockApp", []);
 
     app.controller("reciveStockcontroller", function($scope, $http) {
-
+        $scope.po_no = '<?=sprintf("%'.010d", $no)?>';
         $scope.receiveday = new Date();
         var  poNo  ;
+            var total ;
         $scope.searchReciveStock = function(){
             if($scope.po_no == null){
                 return false
@@ -193,11 +201,16 @@
             });
 
         };
-
+        $scope.checkRemain =function(){
+          if($scope.remain>total || $scope.remain <0 ||$scope.remain ==null )  {
+              $scope.remain = total;
+          }
+        };
         $scope.reciveToStockModal  = function(rpt_POD_id,rptPO_no,cid,pname,productid,remain,type,pricePerType){
             $scope.ponomodal = rptPO_no;
             $scope.pnameonmodal = pname ;
-            $scope.remain=      parseInt(remain);
+            $scope.remain =      parseInt(remain);
+            total = parseInt(remain);
             $scope.typeonmodal = type;
             $scope.costprice = pricePerType;
             $scope.cid = cid;
