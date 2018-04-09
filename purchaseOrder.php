@@ -16,8 +16,20 @@
 
 </head>
 <body>
+<?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("21", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
 <div  ng-controller="purchaseOrdercontroller"  class="ng-scope">
     <div class="container">
+       <br>
         <h3 class="text-center">สั่งสินค้า</h3>
         <hr>
         <div class="form-group row ">
@@ -142,7 +154,7 @@
             </div>
         </div>
         <div class="btn-group offset-sm-9" role="group" >
-            <a href="showAllPurchaseOrder.php?no={{no}}" ><button class="btn btn-success mr-2" ng-click="addToRptPO()" >สร้างใยสั่งสินค้า&#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button></a>
+            <a href="showAllPurchaseOrder.php?no={{no}}" ><button class="btn btn-success mr-2" ng-click="addToRptPO()" >สร้างใบสั่งสินค้า&#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button></a>
 
                 <button class="btn btn-primary "  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
 
