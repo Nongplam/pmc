@@ -26,7 +26,17 @@ if (isset($_GET["no"])){
 
 </head>
 <body>
-
+<?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("24", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
 <div ng-app="reciveStockApp" ng-controller="reciveStockcontroller"  class="ng-scope">
     <div class=" container">
         <br>
@@ -36,7 +46,7 @@ if (isset($_GET["no"])){
         <div class="form-group row">
             <label for="po_no" class="col-sm-2 col-form-label font-weight-bold text-right">รหัสใบสั่ง : </label>
             <div class="col-sm-7">
-                <input name="po_no" ng-model="po_no" class="form-control" ng-focus="searchReciveStock()"  ng-change="searchReciveStock()" autofocus/>
+                <input name="po_no" ng-model="po_no" class="form-control" ng-focus="searchReciveStock()"  ng-keyup="onEnter($event)" autofocus/>
             </div>
             <div class="col-sm-2">
 
@@ -199,7 +209,12 @@ if (isset($_GET["no"])){
             }).then(function(res){
                 $scope.POs = res.data.records;
             });
-
+        };
+        $scope.onEnter = function(event){
+            if(event.keyCode == 13){
+               $scope.searchReciveStock();
+               }
+            //console.log(event.keyCode)
         };
         $scope.checkRemain =function(){
           if($scope.remain>total || $scope.remain <0 ||$scope.remain ==null )  {

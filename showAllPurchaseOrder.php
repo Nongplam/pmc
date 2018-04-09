@@ -23,7 +23,17 @@
 
 </head>
 <body>
-
+<?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("22", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
 
 <div ng-app="showAllPurchaseOrderApp" ng-controller="showAllPurchaseOrderController"  class="ng-scope">
     <div class=" container">
@@ -39,7 +49,7 @@
             </thead >
 
             <tbody ng-init="getAllPurchaseOrder()" >
-            <tr ng-repeat="PO in POs">
+            <tr ng-repeat="PO in POs | orderBy : '-rptPO_no'">
                 <td>{{PO.rptPO_no}}</td>
                 <td>{{PO.rptPO_date}}</td>
                 <td><a href="reportPurchaseOrder.php?NO={{PO.rptPO_no}}" target="_blank"><button class="btn btn-info"><span class="icon ion-document-text font-weight-bold"></span>&#160;PDF </button></a> </td>
