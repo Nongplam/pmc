@@ -5,9 +5,9 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 $data=json_decode(file_get_contents("php://input"));
- $id  = 2 /*$_SESSION["id"] */;
+ $id  = $_SESSION["id"] ;
 
-$mbranchid = 70 /*$_SESSION["masterbranchid"] */;
+$mbranchid = $_SESSION["masterbranchid"] ;
  
  
  
