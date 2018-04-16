@@ -6,8 +6,8 @@ header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 $data=json_decode(file_get_contents("php://input"));
 
-$userid = 31/* $_SESSION['id']*/;
-$subid = 1/*$_SESSION['subbranchid']*/;
+$userid = $_SESSION['id'];
+$subid = $_SESSION['subbranchid'];
 if($data) {
     $productid =  mysqli_real_escape_string($con,$data ->po_productid);
     $type =   mysqli_real_escape_string($con,$data ->po_type );
