@@ -64,7 +64,7 @@
                             </div>
                         </ul>
                     </div>
-
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#addcompany"><span class="icon ion-android-contacts font-weight-bold"></span>&#160;เพิ่ม</button>
                 </div>
                 <div class="input-group input-group-sm mb-sm-2 ">
                     <div class="input-group-prepend ">
@@ -94,12 +94,6 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="input-group input-group-sm mb-sm-2 ">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm" >เลขที่ใบกำกับภาษี</span>
-                    </div>
-                    <input type="text" name="po_vatno" ng-model="po_vatno" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" >
-                </div>
 
                 <div class="input-group input-group-sm mb-sm-2 ">
                     <div class="input-group-prepend ">
@@ -154,7 +148,9 @@
             </div>
         </div>
         <div class="btn-group offset-sm-9" role="group" >
+
             <a href="showAllPurchaseOrder.php?no={{no}}" ><button class="btn btn-success mr-2" ng-click="addToRptPO()" >สร้างใบสั่งสินค้า&#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button></a>
+
 
                 <button class="btn btn-primary "  data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
 
@@ -205,64 +201,64 @@
 
 
 <!--..................................modal selectPro start........................................-->
-<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered" role="document">
+                <div class="modal-content">
 
 
-            <div class="modal-header">
-                <h5 class="modal-title" id="prestockModalLabel">สินค้า : {{po_pname}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <div class="form-group row">
-
-                        <div class="form-group row">
-                            <div class="input-group input-group-sm  col-sm-6">
-                                <div class="input-group-prepend ">
-                                    <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >จำนวน</span>
-                                </div>
-                                <input type="number" min="0" name="po_remain" id="po_remain" ng-model="po_remain" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                            </div>
-                            <div class="input-group input-group-sm   col-sm-6">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm" >หน่วย</span>
-                                </div>
-                                <input type="text" name="po_type" id="po_type" ng-model="po_type" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                            </div>
-
-                        </div>
-                        <div class="form-group row">
-                            <div class="input-group input-group-sm   col-sm-6">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm" >ราคาต่อหน่วย</span>
-                                </div>
-                                <input type="text" name="po_pricePerType" id="po_pricePerType" ng-model="po_pricePerType" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                            </div>
-                            <div class="input-group input-group-sm   col-sm-6">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm" >ส่วนลด</span>
-                                </div>
-                                <input type="text" name="po_discount" id="po_discount" ng-model="po_discount" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                            </div>
-                        </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="prestockModalLabel">สินค้า : {{po_pname}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="form-group row">
+
+                                <div class="form-group row">
+                                    <div class="input-group input-group-sm  col-sm-6">
+                                        <div class="input-group-prepend ">
+                                            <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >จำนวน</span>
+                                        </div>
+                                        <input type="number" min="0" name="po_remain" id="po_remain" ng-model="po_remain" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                    </div>
+                                    <div class="input-group input-group-sm   col-sm-6">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm" >หน่วย</span>
+                                        </div>
+                                        <input type="text" name="po_type" id="po_type" ng-model="po_type" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                    </div>
+
+                                </div>
+                                <div class="form-group row">
+                                    <div class="input-group input-group-sm   col-sm-6">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm" >ราคาต่อหน่วย</span>
+                                        </div>
+                                        <input type="text" name="po_pricePerType" id="po_pricePerType" ng-model="po_pricePerType" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                    </div>
+                                    <div class="input-group input-group-sm   col-sm-6">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm" >ส่วนลด</span>
+                                        </div>
+                                        <input type="text" name="po_discount" id="po_discount" ng-model="po_discount" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        <button type="button" class="btn btn-success" ng-click="addToPrePO()" data-dismiss="modal">เพิ่ม</button>
+                    </div>
+
                 </div>
-
             </div>
-
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                <button type="button" class="btn btn-success" ng-click="addToPrePO()" data-dismiss="modal">เพิ่ม</button>
-            </div>
-
         </div>
-    </div>
-</div>
 
         <!--..................................modal selectPro start........................................-->
         <div class="modal fade" id="selectProductModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
@@ -333,6 +329,72 @@
             </div>
         </div>
         <!--......................................endmodal...................................-->
+
+
+        <!--modal add company-->
+        <div class="modal fade" id="addcompany" tabindex="1" role="dialog">
+            <div class="modal-dialog  modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title  font-weight-bold" >เพิ่มบริษัท</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+
+                            <div class="input-group input-group-sm  mb-2">
+                                <div class="input-group-prepend ">
+                                    <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ชื่อบริษัท</span>
+                                </div>
+                                <input type="text"  name="cname" id="cname" ng-model="cname" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                            <div class="input-group input-group-sm  mb-2">
+                                <div class="input-group-prepend ">
+                                    <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ตัวแทน</span>
+                                </div>
+                                <input type="text"  name="agent" id="agent" ng-model="agent" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                            <div class="input-group input-group-sm mb-2 ">
+                                <div class="input-group-prepend ">
+                                    <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >ที่อยู่</span>
+                                </div>
+                                <input type="text"  name="contact" id="contact" ng-model="contact" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                            <div class="input-group input-group-sm  mb-2">
+                                <div class="input-group-prepend ">
+                                    <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >เบอร์โทร</span>
+                                </div>
+                                <input type="text"  name="tel" id="tel" ng-model="tel" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+                            <div class="input-group input-group-sm  ">
+                                <div class="input-group-prepend ">
+                                    <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm" >E-mail</span>
+                                </div>
+                                <input type="text"  name="mail" id="mail" ng-model="mail" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                            </div>
+
+                            <div
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-danger" data-dismiss="modal">ยกเลิก</button>
+                    <button  class="btn  btn-lg btn-success" ng-click ="addCompany()">บันทึก</button>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
 
 
     </div>
@@ -532,9 +594,7 @@
             if($scope.po_mail ==null){
                 $scope.po_mail = "-";
             }
-            if($scope.po_vatno ==null){
-                $scope.po_vatno  = "-";
-            }
+
             if($scope.po_sendlo ==null){
                 $scope.po_sendlo = "-";
             }
@@ -550,7 +610,7 @@
                 'po_lo':$scope.po_lo,
                 'po_tel':$scope.po_tel,
                 'po_mail':$scope.po_mail,
-                'po_vatno':$scope.po_vatno,
+
                 'po_sendlo':$scope.po_sendlo,
                 'po_datesend':$scope.formatDate(date2),
                 'pricesum':$scope.totalprice,
@@ -568,7 +628,7 @@
                 $scope.po_lo= null;
                 $scope.po_tel= null;
                 $scope.po_mail= null;
-                $scope.po_vatno= null;
+
                 $scope.po_sendlo= null;
                 $scope.po_discount = 0;
                 $scope.countPro = 0;
