@@ -15,4 +15,5 @@ echo json_encode($user);*/
 <?php
 	include 'connectDB.php';
 	$stm1="SELECT * from"
+	$qry1="SELECT * f"
 ?>
