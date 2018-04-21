@@ -1,2 +1,4 @@
 .idea/workspace.xml
 *.xml
+.vscode/settings.json
+php/testapi.php
