@@ -101,7 +101,8 @@
                             </ul>
                         </div>
                         <br>
-                        <h1>รายการ : SR</h1>
+                        <h1>รายการ : SR
+                            <!--<button class="btn btn-primary" ng-click="calculateallPrice()">Test</button>--></h1>
 
                         <table class="table col">
                             <thead class="thead-light">
@@ -125,7 +126,7 @@
                                     <td>{{y.qty}}</td>
                                     <td>{{y.stocktype}}</td>
                                     <td class="totalonlist">{{y.price*y.qty}}</td>
-                                    <td><button class="btn btn-danger" ng-click="deleteItem(y.id)">x</button></td>
+                                    <td ng-init="calculateallPrice()"><button class="btn btn-danger" ng-click="deleteItem(y.id)">x</button></td>
                                 </tr>
                                 <!--<tr class="table-info">
                                     <td>P1</td>
@@ -160,7 +161,7 @@
                         <div class="card-body d-flex justify-content-center">
                             <div class="container d-flex justify-content-center">
                                 <div class="row">
-                                    <button class="btn btn-primary" id="openmemberbtn" type="button" style="height:45px;width:400px;" ng-show="addmemberbtnbool">เพิ่มสมาชิก +</button>
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#membermodal" id="openmemberbtn" type="button" style="height:45px;width:400px;" ng-show="addmemberbtnbool">เพิ่มสมาชิก +</button>
                                     <button class="btn btn-danger" type="button" style="height:45px;width:400px;" ng-show="!addmemberbtnbool" ng-click="cancelcurrentMember()">ยกเลิก</button>
                                     <br><br>
                                     <div class="container border border-primary rounded" ng-show="currentmemberboxbool">
@@ -208,7 +209,7 @@
                                     <td>
                                         <div class="price-tag">
                                             <span class="currency-symbol">฿</span>
-                                            <span class="total-price" id="totalbefore">0.00</span>
+                                            <span class="total-price" id="totalbefore" ng-bind="firsttotalPrice.toFixed(2)">0.00</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -231,7 +232,7 @@
                                     <td>
                                         <div class="price-tag">
                                             <span class="currency-symbol">฿</span>
-                                            <span class='total-price' id="totalafterdiscount">0.00</span>
+                                            <span class='total-price' id="totalafterdiscount" ng-bind="totalpriceafterDiscount.toFixed(2)">0.00</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -243,7 +244,7 @@
                                     <td>
                                         <div class="price-tag">
                                             <span class="currency-symbol">฿</span>
-                                            <span class="total-price" id="totaltax">0.00</span>
+                                            <span class="total-price" id="totaltax" ng-bind="totalpriceafterttax.toFixed(2)">0.00</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -254,7 +255,7 @@
                                     <td>
                                         <div class="price-tag" id="totalcart">
                                             <span class="currency-symbol">฿</span>
-                                            <span class="total-price" id="sumtotal">0.00</span>
+                                            <span class="total-price" id="sumtotal" ng-bind="totalpriceafterDiscount.toFixed(2)">0.00</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -320,7 +321,7 @@
                                     <div class="col-sm-5">
                                         <input type="number" step="1" class="form-control" min="1" id="item-qty" ng-model="qtyitemModal" ng-change="minvalidateqtyitemModal()">
                                     </div>
-                                    <label for="message-text" class="col-sm-1 col-form-label" id="item-unit" ng-bind="typeitemModal"></label>                                    
+                                    <label for="message-text" class="col-sm-1 col-form-label" id="item-unit" ng-bind="typeitemModal"></label>
                                 </div>
 
 
@@ -336,7 +337,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                            <button type="submit" class="btn btn-success" id="submittocart" data-dismiss="modal">เพิ่มในตะกร้า</button>
+                            <button type="submit" class="btn btn-success" ng-click="submititemtoCart()" id="submittocart" data-dismiss="modal">เพิ่มในตะกร้า</button>
                         </div>
                     </div>
                 </div>
@@ -348,7 +349,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="checkoutModalLabel">Title</h5>
+                            <h5 class="modal-title" id="checkoutModalLabel">สรุปราคา</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -358,7 +359,7 @@
                                 <div class="container">
                                     <div class="row">
                                         <h5>ยอดที่ต้องชำระ :&nbsp;</h5>
-                                        <h5 id="money-total"></h5>
+                                        <h5 id="money-total" ng-bind="totalpriceafterDiscount.toFixed(2)"></h5>
                                     </div>
                                 </div>
                                 <!--<label id="productname">ชื่อ : </label>-->
@@ -366,22 +367,39 @@
                                 <div class="form-group row">
                                     <label for="message-text" class="col-sm-2 col-form-label">ใส่จำนวนเงินที่ได้รับ :</label>
                                     <div class="col-sm-5">
-                                        <input type="number" step="20" class="form-control" id="money-received">
+                                        <input type="number" class="form-control" min="{{totalpriceafterDiscount}}" ng-keyup="calculateChange()" ng-model="moneyReceived">
                                     </div>
                                     <label for="message-text" class="col-sm-1 col-form-label">บาท</label>
                                 </div>
                                 <div class="form-group row">
                                     <label for="message-text" class="col-sm-2 col-form-label">เงินทอน :</label>
                                     <div class="col-sm-8">
-                                        <span class="input-group-text" id="money-change">0</span>
+                                        <span class="input-group-text" ng-bind="moneyChange" id="money-change">0</span>
                                     </div>
                                     <label for="message-text" class="col-sm-1 col-form-label">บาท</label>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="message-text" class="col-sm-4 col-form-label">ช่องทางการชำระ :</label>
+                                    <div class="row">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" ng-model="paymethod" value="cash" checked>
+                                            <label class="custom-control-label" for="customRadioInline1">เงินสด</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" ng-model="paymethod" value="promptpay">
+                                            <label class="custom-control-label" for="customRadioInline2">พร้อมเพย์</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" id="customRadioInline3" name="customRadioInline1" class="custom-control-input" ng-model="paymethod" value="qrcode">
+                                            <label class="custom-control-label" for="customRadioInline3">QR Code</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                            <button type="button" class="btn btn-success" id="submitcheckout" data-dismiss="modal">ยืนยัน</button>
+                            <button type="button" class="btn btn-success" ng-click="submitCheckout()" id="submitcheckout" data-dismiss="modal">ยืนยัน</button>
                         </div>
                     </div>
                 </div>
@@ -404,7 +422,7 @@
                                         <li class="dropdown-item"><button type="button" class="btn btn-light" ng-click="setcurrentMember(x.fname,x.lname,x.point,x.level,x.status,x.citizenid); memberstatusicon()" data-dismiss="modal">{{x.fname}} {{x.lname}}</button><span ng-show="false">{{x.phonenumber}}{{x.citizenid}}</span></li>
                                     </div>
                                 </div>
-                            </div><button class="btn btn-primary" id="newmemberbtn" type="button">สมัครสมาชิก</button></div>
+                            </div><button class="btn btn-primary" id="newmemberbtn" data-toggle="modal" data-target="#addnewmembermodal" type="button">สมัครสมาชิก</button></div>
                         <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">ปิด</button>
                         </div>
                     </div>
@@ -421,22 +439,22 @@
                             <form id="formnewmember">
                                 <div class="form-row newmemberrowbuffer">
                                     <div class="col"><label class="col-form-label">ชื่อ :</label></div>
-                                    <div class="col"><input type="text" class="form-control" style="width:171px;" id="newmemberfname" /></div>
+                                    <div class="col"><input type="text" class="form-control" style="width:171px;" ng-model="newmemberfname" id="newmemberfname" /></div>
                                     <div class="col"><label class="col-form-label">สกุล :</label></div>
-                                    <div class="col"><input type="text" class="form-control" style="width:180px;" id="newmemberlname" /></div>
+                                    <div class="col"><input type="text" class="form-control" style="width:180px;" ng-model="newmemberlname" id="newmemberlname" /></div>
                                 </div>
                                 <div class="form-row newmemberrowbuffer">
                                     <div class="col"><label class="col-form-label">เลขบัตรประชาชน :</label></div>
-                                    <div class="col"><input type="text" class="form-control" style="width:325px;" id="newmembercitizenid" /></div>
+                                    <div class="col"><input type="text" class="form-control" style="width:325px;" ng-model="newmembercitizenid" id="newmembercitizenid" /></div>
                                 </div>
                                 <div class="form-row newmemberrowbuffer">
                                     <div class="col"><label class="col-form-label">เบอร์โทรศัพท์ :</label></div>
-                                    <div class="col"><input type="text" class="form-control" style="width:345px;" id="newmemberphone" /></div>
+                                    <div class="col"><input type="text" class="form-control" style="width:345px;" ng-model="newmemberphone" id="newmemberphone" /></div>
                                 </div>
                                 <div class="form-row">
                                     <div class="col"><label class="col-form-label">เพศ :</label></div>
                                     <div class="col">
-                                        <select class="form-control" style="width:130px;" id="newmembergender">
+                                        <select class="form-control" style="width:130px;" ng-model="newmembergender" id="newmembergender">
                                     
                                         <option value="ชาย" selected>ชาย</option>
                                         <option value="หญิง">หญิง</option>
@@ -444,13 +462,13 @@
                                     </select>
                                     </div>
                                     <div class="col"><label class="col-form-label">วันเกิด :</label></div>
-                                    <div class="col"><input type="date" class="form-control" id="newmemberbirthday" /></div>
+                                    <div class="col"><input type="date" class="form-control" ng-model="newmemberbirthday" id="newmemberbirthday" /></div>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-light" type="button" data-dismiss="modal">ปิด</button>
-                            <button class="btn btn-primary" type="submit" id="submitnewmember" form="formnewmember">สมัคร</button>
+                            <button class="btn btn-primary" type="button" ng-click="regisnewMember()" id="submitnewmember" data-dismiss="modal">สมัคร</button>
                         </div>
                     </div>
                 </div>
@@ -473,34 +491,122 @@
                 $scope.currentstatusbool = true;
                 $scope.currentmemberboxbool = false;
                 $scope.addmemberbtnbool = true;
-                
-                $scope.setitemModal = function(lotno,pname,bname,type,price,sid,remain){
+                $scope.newmemberbirthday = new Date();
+                $scope.moneyChange = 0;
+                $scope.firsttotalPrice = 0;
+                $scope.totalpriceafterDiscount = 0;
+                $scope.totalpriceafterttax = 0;
+                $scope.paymethod = "cash";
+
+
+                $scope.setitemModal = function(lotno, pname, bname, type, price, sid, remain) {
                     $scope.lotnoitemModal = lotno;
                     $scope.pnameitemModal = pname;
                     $scope.bnameitemModal = bname;
                     $scope.typeitemModal = type;
-                    $scope.qtyitemModal = 1;                    
-                    $scope.priceitemModal = parseFloat(price);                    
-                    $scope.siditemModal = sid;                    
-                    $scope.remainitemModal = remain;                    
+                    $scope.qtyitemModal = 1;
+                    $scope.priceitemModal = parseFloat(price);
+                    $scope.siditemModal = sid;
+                    $scope.remainitemModal = remain;
                 }
-                
-                $scope.minvalidateqtyitemModal = function(){                    
-                    if($scope.qtyitemModal < 1 || $scope.qtyitemModal == undefined){                     
-                       $scope.qtyitemModal = 1;
-                       }
+
+                $scope.minvalidateqtyitemModal = function() {
+                    if ($scope.qtyitemModal < 1 || $scope.qtyitemModal == undefined) {
+                        $scope.qtyitemModal = 1;
+                    }
                 }
-                
-                $scope.submititemtoCart = function(){
-                    $http.post("php/deleteposItem.php", {
-                                    'stockid': $scope.siditemModal,
-                                    'price': $scope.priceitemModal,
-                                    'qty': $scope.qtyitemModal
-                                }).then(function(data) {
-                                    //$scope.id = null;
-                                    //$scope.posItem();
-                                    //location.reload(true);
-                                });
+
+                $scope.testpay = function() {
+                    console.log($scope.paymethod);
+                }
+
+                $scope.submititemtoCart = function() {
+                    $http.post("php/addtoCart.php", {
+                        'stockid': $scope.siditemModal,
+                        'price': $scope.priceitemModal,
+                        'qty': $scope.qtyitemModal
+                    }).then(function(data) {
+                        $scope.posItem();
+                    });
+                }
+
+                $scope.calculateallPrice = function() {
+                    $scope.firsttotalPrice = 0;
+                    for (var i = 0; i < $scope.positems.length; i++) {
+                        $scope.firsttotalPrice = $scope.firsttotalPrice + ($scope.positems[i].price * $scope.positems[i].qty);
+                    }
+                    $scope.totalDiscount = 0;
+                    $scope.totalpriceafterDiscount = $scope.firsttotalPrice - $scope.totalDiscount;
+                    $scope.totalpriceafterttax = $scope.totalpriceafterDiscount * 0.07;
+                    $scope.moneyReceived = $scope.totalpriceafterDiscount;
+                }
+
+                $scope.regisnewMember = function() {
+                    if ($scope.newmemberfname.length < 1) {
+                        sweetAlert("กรุณาใส่ชื่อสมาชิก", "", "warning");
+                    } else if ($scope.newmemberlname.length < 1) {
+                        sweetAlert("กรุณาใส่นามสกุลสมาชิก", "", "warning");
+                    } else if ($scope.newmembercitizenid.length != 13) {
+                        sweetAlert("กรุณาใส่เลขบัตรประชาชนให้ครบ", "", "warning");
+                    } else if (isNaN($scope.newmembercitizenid)) {
+                        sweetAlert("กรุณาใส่เลขบัตรประชาชนให้ถูกต้อง", "", "warning");
+                    } else {
+                        $http.post("php/insertnewmember.php", {
+                            'fname': $scope.newmemberfname,
+                            'lname': $scope.newmemberlname,
+                            'citizenid': $scope.newmembercitizenid,
+                            'phone': $scope.newmemberphone,
+                            'gender': $scope.newmembergender,
+                            'birthday': $scope.newmemberbirthday
+                        }).then(function(data) {
+                            //console.log(data.data);
+                            if (data.data == "Member Inserted") {
+                                swal("สมัครสมาชิกเสร็จสิ้น", "สามารถใช้งานสมาชิกได้ทันที", "success");
+                                $scope.newmemberfname = "";
+                                $scope.newmemberlname = "";
+                                $scope.newmembercitizenid = "";
+                                $scope.newmemberphone = "";
+                                $scope.newmembergender = "";
+                                $scope.newmemberbirthday = "";
+                            } else {
+                                swal("สมัครสมาชิกล้มเหลว!", "กรุณาตรวจสอบข้อมูลสมาชิก", "warning");
+                            }
+                            $scope.searchMember();
+                        });
+                    }
+                }
+
+                $scope.calculateChange = function() {
+                    //console.log("keywork");
+                    if ($scope.moneyReceived != undefined) {
+                        //console.log($scope.moneyReceived);
+                        $scope.moneyChange = $scope.moneyReceived - $scope.totalpriceafterDiscount;
+                    } else {
+                        $scope.moneyChange = 'จำนวนเงินไม่ถูกต้อง';
+                    }
+                }
+
+                $scope.submitCheckout = function() {
+                    if ($scope.moneyReceived == undefined) {
+                        swal("คิดเงินล้มเหลว!", "กรุณาตรวจสอบจำนวนเงินที่ได้รับ", "warning");
+                        $scope.moneyReceived = $scope.totalpriceafterDiscount;
+                    } else {
+                        $http.post("php/checkoutMaster.php", {
+                            'sumprice': $scope.totalpriceafterDiscount,
+                            'memberid': $scope.currentmemberid,
+                            'changemoney': $scope.moneyChange,
+                            'recivemoney': $scope.moneyReceived,
+                            'paymethod': $scope.paymethod
+                        }).then(function(data) {
+                            $scope.moneyChange = 0;
+                            $scope.firsttotalPrice = 0;
+                            $scope.totalpriceafterDiscount = 0;
+                            $scope.totalpriceafterttax = 0;
+                            $scope.paymethod = "cash";
+                            $scope.posItem();
+                            window.open('posbillout.php', '_blank');
+                        });
+                    }
                 }
 
                 $scope.memberstatusicon = function() {
@@ -511,6 +617,7 @@
                         $scope.currentstatusbool = false;
                     }
                 }
+
                 $scope.setcurrentMember = function(fname, lname, point, level, status, memberid) {
                     $scope.currentfname = fname;
                     $scope.currentlname = lname;
@@ -552,24 +659,14 @@
                     });
                 }
 
-                $scope.calculatePay = function(index) {
-                    var sum = 0;
-                    for (var i = 0; i <= index; i++) {
-                        sum += parseFloat($scope.orderedList[i].price * $scope.orderedList[i].qty);
-                    }
-                    $scope.pricetotal = sum;
-                    //console.log("gg" + $scope.pricetotal);
-                    //return sum;
-                }  
-                
                 $scope.datethaiformat = function(date) {
-                    var d = new Date(date);                    
+                    var d = new Date(date);
                     var year = d.getFullYear();
-                    year = year+543;
-                    var month = d.getMonth();                    
-                    var day = d.getDate();                    
-                    
-                    return day+"/"+month+"/"+year;
+                    year = year + 543;
+                    var month = d.getMonth();
+                    var day = d.getDate();
+
+                    return day + "/" + month + "/" + year;
                 }
 
                 $scope.searchProdect = function() {
@@ -642,8 +739,9 @@
                                     'id': $scope.id
                                 }).then(function(data) {
                                     $scope.id = null;
-                                    //$scope.posItem();
-                                    location.reload(true);
+                                    $scope.posItem();
+                                    $scope.calculateallPrice();
+                                    //location.reload(true);
                                 });
                             }
                         });
@@ -664,7 +762,7 @@
                 };
             });
 
-        </script>        
+        </script>
     </div>
 </body>
 <script src="dist/sweetalert.min.js"></script>

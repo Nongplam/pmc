@@ -7,10 +7,11 @@ $data=json_decode(file_get_contents("php://input"));
 $userid = $_SESSION["id"];
 $subbranchid = $_SESSION["subbranchid"];
 
-if(!empty($_POST["stockid"])){
-    $stockid = $_POST['stockid'];    
-    $price = $_POST['price'];    
-    $qty = $_POST['qty'];   
+    
+if($data){
+    $stockid=mysqli_real_escape_string($con, $data->stockid);
+$price=mysqli_real_escape_string($con, $data->price);
+$qty=mysqli_real_escape_string($con, $data->qty);
     
     
     $query="insert into pos(stockid,price,qty,userid,subbranchid) values('$stockid','$price','$qty','$userid','$subbranchid')";

@@ -3,19 +3,19 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 $data=json_decode(file_get_contents("php://input"));
-$subbranchid=$_SESSION["subbranchid"];
 
+$userid = $_SESSION["id"];
+$subbranchid = $_SESSION["subbranchid"];
 
-if(!empty($_POST["sumprice"])){
-    $sumprice = $_POST['sumprice'];        
-    $memberid = $_POST['memberid'];
-    echo $memberid;
-    $changemoney = $_POST['changemoney'];
-    $recivemoney = $_POST['recivemoney'];
-    $userid = $_POST['userid'];
-    $subbranchid = $_POST['subbranchid'];
+if($data){       
+    $sumprice=mysqli_real_escape_string($con, $data->sumprice);
+    $memberid=mysqli_real_escape_string($con, $data->memberid);
+    $changemoney=mysqli_real_escape_string($con, $data->changemoney);
+    $recivemoney=mysqli_real_escape_string($con, $data->recivemoney);
+    $paymethod=mysqli_real_escape_string($con, $data->paymethod);
     
-    $stm1="insert into dailysalemaster(sumprice,memberid,moneyreceive,moneychange,userid,subbranchid) values('$sumprice','$memberid','$recivemoney','$changemoney','$userid','$subbranchid')";
+    
+    $stm1="insert into dailysalemaster(sumprice,memberid,moneyreceive,moneychange,userid,subbranchid,paymethod) values('$sumprice','$memberid','$recivemoney','$changemoney','$userid','$subbranchid','$paymethod')";
         if(mysqli_query($con, $stm1)) {
             echo "Data Inserted";
         }
@@ -30,9 +30,6 @@ $salemasteridresult = mysqli_query($con,$salemasteridStm);
         array_push($salemasterid,$rows['dmid']);
     }
 $maxmasterid = max($salemasterid);
-printf("ค่าสูงสุดของ masterid คือ : ") ;
-printf($maxmasterid) ;
-printf("<br>") ;
 
 $stm2="select * from pos where pos.userid = '$userid'";
 
@@ -47,9 +44,6 @@ $qty = array();
     } 
  
 $poslist = count($stockid);
-printf("จำนวนรายการใน pos คือ : ") ;
-printf($poslist);
-printf("<br>") ;
 
 for($i = 0;$i < $poslist ;$i++){
     $stm3="insert into dailysaledetail(masterid,stockid,qty,price,userid,subbranchid) values('$maxmasterid','$stockid[$i]','$qty[$i]','$price[$i]','$userid','$subbranchid')";
