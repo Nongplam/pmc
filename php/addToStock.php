@@ -23,6 +23,7 @@ $retailprice=mysqli_real_escape_string($con, $data->retailprice);
 $wholesaleprice=mysqli_real_escape_string($con, $data->wholesaleprice);
 $receiveday=mysqli_real_escape_string($con, $data->receiveday);
 $expireday=mysqli_real_escape_string($con, $data->expireday);
+$barcode=mysqli_real_escape_string($con, $data->barcode);
 $userid = $_SESSION["id"];
 $subbranchid = $_SESSION["subbranchid"];
 $date1 = date_create($receiveday);
@@ -31,8 +32,8 @@ $date2 = date_create($expireday);
 $expireday = date_format($date2, 'Y-m-d H:i:s');
 
 
-$query1="INSERT INTO `stock`(`PO_No`,`productid`, `cid`, `remainfull`, `remain`, `lotno`, `stocktype`, `costprice`, `baseprice`, `boxprice`, `retailprice`, `wholesaleprice`, `receiveday`, `expireday`, `subbranchid`, `userid`) VALUES ('$poNO','$productid','$cid','$remain','$remain','$lotno','$stocktype','$costprice','$baseprice','$boxprice','$retailprice','$wholesaleprice','$receiveday','$expireday','$subbranchid','$userid')";
-$query="INSERT INTO stock
+$query1="INSERT INTO `stock`(`PO_No`,`productid`, `cid`, `remainfull`, `remain`, `lotno`, `stocktype`, `costprice`, `baseprice`, `boxprice`, `retailprice`, `wholesaleprice`, `receiveday`, `expireday`, `subbranchid`, `userid`,`barcode`) VALUES ('$poNO','$productid','$cid','$remain','$remain','$lotno','$stocktype','$costprice','$baseprice','$boxprice','$retailprice','$wholesaleprice','$receiveday','$expireday','$subbranchid','$userid','$barcode')";
+/*$query="INSERT INTO stock
         (
         productid,
         cid,remainfull,
@@ -59,7 +60,7 @@ $query="INSERT INTO stock
         $retailprice,
         $wholesaleprice,'$receiveday'
         ,'$userid','$subbranchid',
-        '$expireday'";
+        '$expireday'";*/
 //echo($query1);
 if(mysqli_query($con, $query1)) {
     echo "Data Inserted";
