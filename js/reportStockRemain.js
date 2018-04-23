@@ -14,8 +14,7 @@ app.controller("reportStockRemaincontroller", function ($scope, $http) {
 
     $scope.getAllStock = function(){
        
-        $http.get('php/getReportStockRemain.php?branch='+$scope.branch).then( function(response){
-    
+        $http.get('php/getReportStockRemain.php?branch='+$scope.branch).then( function(response){   
     
             $scope.stocks = response.data.records;
             
