@@ -13,22 +13,18 @@ $result = mysqli_query($con,$stm1);
 $dmid = $result->fetch_array(MYSQLI_ASSOC);
 $dmidtemp = $dmid['dmid'];
     
-$query="select * from dailysaledetail where masterid='$dmidtemp'";
+$query="select dailysaledetail.*,product.pname,dailysalemaster.moneyreceive,dailysalemaster.moneychange,subbranch.tel from dailysaledetail,product,stock,dailysalemaster,subbranch where dailysaledetail.stockid=stock.sid AND stock.productid=product.regno AND dailysaledetail.masterid=dailysalemaster.dmid AND dailysaledetail.subbranchid = subbranch.id AND masterid='$dmidtemp'";
 $result=mysqli_query($con, $query);
 if(mysqli_num_rows($result)>0) {
-    while ($rs = $result->fetch_array(MYSQLI_ASSOC)) {
-        if($output !="") {
-            $output .=",";
-        }
-        $output .='{"stockid":"' . $rs["stockid"] . '",';
-        $output .='"qty":"' . $rs["qty"] . '",';
-        $output .='"price":"' . $rs["price"] . '",';
-        $output .='"masterid":"' . $rs["masterid"] . '",';
-        $output .='"date":"' . $rs["date"] . '",';
-        $output .='"subbranchid":"' . $rs["subbranchid"] . '"}';        
+        
+    $res = array();
+    while ($rows = $result->fetch_array(MYSQLI_ASSOC)){
+    
+    $res[] = array('stockid' => $rows['stockid'],'qty'=>$rows['qty'],
+                  'price'=>$rows['price'],'masterid'=>$rows['masterid'],'date'=>$rows['date'],'subbranchid'=>$rows['subbranchid'],'pname'=>$rows['pname'],'moneyreceive'=>$rows['moneyreceive'],'moneychange'=>$rows['moneychange'],'tel'=>$rows['tel']);
     }
-    $output = '{"records":['.$output.']}';
-    echo($output);
+    $billitem['records'] = $res;
+    echo json_encode($billitem);
 }
 
 ?>
