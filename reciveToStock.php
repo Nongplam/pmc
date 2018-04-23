@@ -164,7 +164,7 @@ if (isset($_GET["no"])){
                                     <div class="form-group row">
                                         <label for="message-text" class="col-sm-3 col-form-label font-weight-bold">BARCODE</label>
                                         <div class="col-sm-7">
-                                            <input type="text" name="barcode" id="barcode" ng-model="barcode" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                            <input type="text" name="barcode" id="barcode" ng-model="barcode" class="form-control ng-pristine ng-untouched ng-valid ng-empty" ng-keyup="printbarcodeEnter($event)">
                                         </div>
                                     </div>
 
@@ -173,7 +173,7 @@ if (isset($_GET["no"])){
                                         <div class="col-sm-5">
                                             <span>     
                                    <img id="barcodeimg"/>                         
-                                    <button type="button" class="btn btn-primary">Print</button>
+                                    <button type="button" class="btn btn-primary" ng-click="openprintpage()">Print</button>
                                        </span>
                                         </div>
                                     </div>
@@ -249,10 +249,26 @@ if (isset($_GET["no"])){
 
 
                 };
+                
+                $scope.printbarcodeEnter = function(key){
+                    if(key.keyCode == 13){
+                        $scope.openprintpage();
+                    }                    
+                }
+                
+                $scope.openprintpage = function(){
+                    var urlstr = 'printBarcode.php?codenumber=';
+                    var code = $scope.barcode;
+                    if(code != null){
+                        window.open('printBarcode.php?codenumber='+code, '_blank');
+                    }else{
+                        sweetAlert("พิมพ์บารโคดผิดพลาด", "กรุณาใส่รหัสบาร์โคด", "warning");
+                    }
+                    
+                };
 
 
                 $scope.addToStock = function() {
-
 
                     if ($scope.remain == null) {
                         sweetAlert("บันทึกข้อมูลผิดพลาด", "กรุณาใส่จำนวน", "warning");
