@@ -95,7 +95,7 @@
                             <ul class="dropdown-menu w-100">
                                 <input class="form-control" id="myInput" ng-model="myInput" type="text" placeholder="Search.." autofocus>
                                 <div ng-repeat="x in stocks | filter: myInput">
-                                    <li class="dropdown-item"><button type="button" class="btn btn-light" data-toggle="modal" data-target="#additemModal" data-stockid="{{x.sid}}" data-lotnumber="{{x.lotno}}" data-productname="{{x.pname}}" data-productbrand="{{x.bname}}" data-retailprice="{{x.retailprice}}" data-unit="{{x.stocktype}}" data-remain="{{x.remain}}" data-baseprice="{{x.baseprice}}">เลขล็อต: {{x.lotno}} {{x.pname}} {{x.bname}} หน่วย: {{x.stocktype}} หมดอายุวันที่: {{datethaiformat(x.expireday)}}</button>
+                                    <li class="dropdown-item" ng-click="setitemModal(x.lotno,x.pname,x.bname,x.stocktype,x.retailprice,x.sid,x.remain)"><button type="button" class="btn btn-light" data-toggle="modal" data-target="#additemModal" data-stockid="{{x.sid}}" data-lotnumber="{{x.lotno}}" data-productname="{{x.pname}}" data-productbrand="{{x.bname}}" data-retailprice="{{x.retailprice}}" data-unit="{{x.stocktype}}" data-remain="{{x.remain}}" data-baseprice="{{x.baseprice}}">เลขล็อต: {{x.lotno}} {{x.pname}} {{x.bname}} หน่วย: {{x.stocktype}} หมดอายุวันที่: {{datethaiformat(x.expireday)}}</button>
                                         <!--<a href="#">เลขล็อต: {{x.lotno}} {{getPnames(x.sid)}} {{getPbrands(x.sid)}} หน่วย: {{x.type}} หมดอายุวันที่: {{datethaiformat(x.expireday)}}</a>--></li>
                                 </div>
                             </ul>
@@ -293,7 +293,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="additemModalLabel">Title</h5>
+                            <h5 class="modal-title" id="additemModalLabel">เพิ่มสินค้าในตะกร้า</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -303,13 +303,14 @@
                                 <div class="container">
                                     <div class="row">
                                         <h5>เลขล็อตที่ :&nbsp;</h5>
-                                        <h5 id="lotnumber"></h5>
+                                        <h5 id="lotnumber" ng-bind="lotnoitemModal"></h5>
                                     </div>
                                     <div class="row">
                                         <h5>ชื่อ :&nbsp;</h5>
-                                        <h5 id="productname"></h5>
-                                        <h5>&nbsp; แบรนด์ :&nbsp;</h5>
-                                        <h5 id="productbrand"></h5>
+                                        <h5 id="productname" ng-bind="pnameitemModal"></h5>
+                                        <br>
+                                        <h5>แบรนด์ :&nbsp;</h5>
+                                        <h5 id="productbrand" ng-bind="bnameitemModal"></h5>
                                     </div>
                                 </div>
                                 <!--<label id="productname">ชื่อ : </label>-->
@@ -317,18 +318,16 @@
                                 <div class="form-group row">
                                     <label for="message-text" class="col-sm-2 col-form-label">จำนวน:</label>
                                     <div class="col-sm-5">
-                                        <input type="number" step="1" class="form-control" id="item-qty" ng-model="itemqty">
+                                        <input type="number" step="1" class="form-control" min="1" id="item-qty" ng-model="qtyitemModal" ng-change="minvalidateqtyitemModal()">
                                     </div>
-                                    <label for="message-text" class="col-sm-1 col-form-label" id="item-unit">แผง</label>
-                                    <input type="hidden" id="stocknumber" ng-model="stocknumber">
-                                    <input type="hidden" id="stockremain" ng-model="stockremain">
+                                    <label for="message-text" class="col-sm-1 col-form-label" id="item-unit" ng-bind="typeitemModal"></label>                                    
                                 </div>
 
 
                                 <div class="form-group row">
                                     <label for="message-text" class="col-sm-2 col-form-label">ราคา:</label>
                                     <div class="col-sm-8">
-                                        <input type="number" required min="0" step="5" class="form-control" id="item-price" ng-model="itemprice">
+                                        <input type="number" required min="0" step="5" class="form-control" id="item-price" ng-model="priceitemModal" disabled>
                                     </div>
                                     <label for="message-text" class="col-sm-1 col-form-label">บาท</label>
                                     <input type="hidden" id="base-price">
@@ -382,7 +381,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                            <button type="submit" class="btn btn-success" id="submitcheckout" data-dismiss="modal">ยืนยัน</button>
+                            <button type="button" class="btn btn-success" id="submitcheckout" data-dismiss="modal">ยืนยัน</button>
                         </div>
                     </div>
                 </div>
@@ -474,6 +473,35 @@
                 $scope.currentstatusbool = true;
                 $scope.currentmemberboxbool = false;
                 $scope.addmemberbtnbool = true;
+                
+                $scope.setitemModal = function(lotno,pname,bname,type,price,sid,remain){
+                    $scope.lotnoitemModal = lotno;
+                    $scope.pnameitemModal = pname;
+                    $scope.bnameitemModal = bname;
+                    $scope.typeitemModal = type;
+                    $scope.qtyitemModal = 1;                    
+                    $scope.priceitemModal = parseFloat(price);                    
+                    $scope.siditemModal = sid;                    
+                    $scope.remainitemModal = remain;                    
+                }
+                
+                $scope.minvalidateqtyitemModal = function(){                    
+                    if($scope.qtyitemModal < 1 || $scope.qtyitemModal == undefined){                     
+                       $scope.qtyitemModal = 1;
+                       }
+                }
+                
+                $scope.submititemtoCart = function(){
+                    $http.post("php/deleteposItem.php", {
+                                    'stockid': $scope.siditemModal,
+                                    'price': $scope.priceitemModal,
+                                    'qty': $scope.qtyitemModal
+                                }).then(function(data) {
+                                    //$scope.id = null;
+                                    //$scope.posItem();
+                                    //location.reload(true);
+                                });
+                }
 
                 $scope.memberstatusicon = function() {
                     if ($scope.currentstatus == 'active') {
@@ -530,46 +558,9 @@
                         sum += parseFloat($scope.orderedList[i].price * $scope.orderedList[i].qty);
                     }
                     $scope.pricetotal = sum;
-                    console.log("gg" + $scope.pricetotal);
+                    //console.log("gg" + $scope.pricetotal);
                     //return sum;
-                };
-                /*$scope.showIt = function() {
-                    timer = $timeout(function() {
-                        $scope.hovering = true;
-                    }, 2500);
-                };*/
-
-                /*$scope.addtoCart = function() {
-
-
-                    var stocknumber = $scope.stocknumber;
-                    var price = $scope.itemprice;
-                    var qty = parseInt($scope.itemqty);
-                    var remain = parseInt($scope.stockremain);
-                    console.log(stocknumber);
-                    console.log(price);
-                    console.log(qty);
-                    console.log(remain);*/
-                /*if (remain >= qty) {
-                        $.ajax({
-                            type: 'post',
-                            url: "php/addtoCart.php",
-                            dataType: "json",
-                            data: {
-                                stockid: stocknumber,
-                                price: price,
-                                qty: qty
-                            },
-                            success: function(data) {
-                                console.log("success");
-                            }
-                        });
-
-                        location.reload();
-                    } else {
-                        sweetAlert("สินค้าไม่พอสำหรับจำหน่าย", "", "warning");
-                    }
-                }*/                
+                }  
                 
                 $scope.datethaiformat = function(date) {
                     var d = new Date(date);                    
@@ -673,248 +664,7 @@
                 };
             });
 
-        </script>
-        <script>
-            $(document).ready(function() {
-                $("#submittocart").click(function() {
-                    var stocknumber = $("#stocknumber").val();
-                    var price = $("#item-price").val();
-                    var qty = parseInt($("#item-qty").val());
-                    var remain = parseInt($("#stockremain").val());
-                    var subbranchid = <?php echo $_SESSION["subbranchid"]; ?>;
-                    var userid = <?php echo $_SESSION["id"]; ?>;
-                    if (remain >= qty) {
-                        $.ajax({
-                            type: 'post',
-                            url: "php/addtoCart.php",
-                            dataType: "json",
-                            data: {
-                                stockid: stocknumber,
-                                price: price,
-                                qty: qty,
-                                subbranchid: subbranchid,
-                                userid: userid
-                            },
-                            success: function(data) {
-                                console.log("success");
-                            }
-                        });
-
-                        location.reload();
-                    } else {
-                        sweetAlert("สินค้าไม่พอสำหรับจำหน่าย", "", "warning");
-                    }
-                });
-            });
-
-        </script>
-        <script>
-            $(document).ready(function() {
-                $("#submitcheckout").click(function() {
-                    var sumprice = parseFloat($("#sumtotal").text());
-                    var memberid = $("#curmemberid").text();
-                    var recivemoney = $("#money-received").val();
-                    var changemoney = $("#money-change").text();
-                    var subbranchid = <?php echo $_SESSION["subbranchid"]; ?>;
-                    var userid = <?php echo $_SESSION["id"]; ?>;
-                    if (recivemoney >= sumprice) {
-                        $.ajax({
-                            type: 'post',
-                            url: "php/checkoutMaster.php",
-                            dataType: "json",
-                            data: {
-                                sumprice: sumprice,
-                                recivemoney: recivemoney,
-                                changemoney: changemoney,
-                                memberid: memberid,
-                                subbranchid: subbranchid,
-                                userid: userid
-                            },
-                            success: function(data) {
-                                console.log("success");
-                            }
-                        });
-                        window.open('posbillout.php', '_blank');
-                        location.reload();
-                    } else {
-                        sweetAlert("ใส่ยอดเงินไม่ถูกต้อง", "", "warning");
-                    }
-
-                });
-            });
-
-        </script>
-        <script>
-            $(document).ready(function() {
-                $("#item-price").change(function() {
-                    var base = parseFloat($("#base-price").val());
-                    if (parseFloat(this.value) < base) {
-                        sweetAlert("ราคานี้ต่ำกว่าราคาที่มาตรฐานกำหนด", "", "warning");
-                        $("#item-price").val(base);
-                    }
-                });
-            });
-
-        </script>
-        <script>
-            $(document).ready(function() {
-                $(".pname").ready(setTimeout(function() {
-                    var total = 0;
-                    var totaltax = 0;
-                    var sumtotal = 0;
-                    $(".totalonlist").each(function() {
-                        total = total + parseFloat($(this).text());
-                    })
-                    $("#totalbefore").text(total.toFixed(2));
-                    //
-                    $("#discounttotal").ready(function() {
-                        total = total - parseFloat($("#discounttotal").text())
-                        $("#sumtotal").text(Math.ceil(total).toFixed(2));
-                        $("#totalafterdiscount").text(Math.ceil(total).toFixed(2));
-                        totaltax = total * 0.07;
-                        $("#totaltax").text(totaltax.toFixed(2));
-                    })
-
-                    //sumtotal = total + totaltax;
-
-                }, 500));
-            });
-
         </script>        
-        <script>
-            //modalControl
-            $(document).ready(function() {
-                $('#additemModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget) // Button that triggered the modal
-                    var price = button.data('retailprice')
-                    //var recipient = button.data('whatever') // Extract info from data-* attributes
-                    //lotnumber = "เลขล็อตที่ : " + lotnumber;
-                    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.                
-                    var modal = $(this)
-                    modal.find('.modal-title').html('<b>เพิ่มรายการขาย</b>')
-                    modal.find('.modal-body #item-qty').val("1")
-                    modal.find('.modal-body #stocknumber').val(button.data('stockid'))
-                    modal.find('.modal-body #stockremain').val(button.data('remain'))
-                    modal.find('.modal-body #item-price').val(price)
-                    modal.find('.modal-body #base-price').val(button.data('baseprice'))
-                    $("#lotnumber").text(button.data('lotnumber'))
-                    $("#productname").text(button.data('productname'))
-                    $("#productbrand").text(button.data('productbrand'))
-                    $("#item-unit").text(button.data('unit'))
-                    //$("#stocknumber").text(button.data('stockid'))
-                });
-            });
-
-        </script>
-        <script>
-            //modalControl
-            $(document).ready(function() {
-                $('.checkoutModal').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget) // Button that triggered the modal                    
-                    //var recipient = button.data('whatever') // Extract info from data-* attributes
-                    //lotnumber = "เลขล็อตที่ : " + lotnumber;
-                    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.                
-                    var modal = $(this)
-                    modal.find('.modal-title').html('<b>สรุปรายการ</b>')
-                });
-            });
-
-        </script>
-        <script>
-            $(document).ready(function() {
-                $(".pname").ready(function() {
-                    var naga = 0;
-                    var totaldiscount = 0;
-                    $(".discountonlist").each(function() {
-                        totaldiscount = totaldiscount + parseFloat($(this).text());
-                    })
-                    $("#discounttotal").text(Math.abs(totaldiscount).toFixed(2));
-                })
-            })
-
-        </script>
-        <script>
-            //modalcheckoutControl
-            $(document).ready(function() {
-                $(".pname").ready(setTimeout(function() {
-                    var sumtotal = parseFloat($("#sumtotal").text());
-                    console.log(sumtotal);
-                    $("#money-total").html(sumtotal);
-                    $("#money-received").val(sumtotal);
-                    $("#money-received").change(function() {
-                        var recive = $("#money-received").val();
-                        $("#money-change").text(recive - sumtotal)
-                    });
-                    $("#money-received").keyup(function() {
-                        var recive = $("#money-received").val();
-                        $("#money-change").text(recive - sumtotal)
-                    });
-
-                }, 1000));
-            });
-
-        </script>
-        <script>
-            $(document).ready(function() {
-                $("#openmemberbtn").click(function() {
-                    $("#membermodal").modal("show");
-                });
-            });
-
-        </script>
-        <script>
-            $(document).ready(function() {
-                $("#newmemberbtn").click(function() {
-                    $("#addnewmembermodal").modal("show");
-                });
-            });
-
-        </script>
-        <script>
-            $(document).ready(function() {
-                $("#submitnewmember").click(function() {
-                    var fname = $("#newmemberfname").val();
-                    var lname = $("#newmemberlname").val();
-                    var citizenid = $("#newmembercitizenid").val();
-                    var phone = $("#newmemberphone").val();
-                    var gender = $("#newmembergender").val();
-                    var birthday = $("#newmemberbirthday").val();
-                    if (fname.length < 1) {
-                        sweetAlert("กรุณาใส่ชื่อสมาชิก", "", "warning");
-                    } else if (lname.length < 1) {
-                        sweetAlert("กรุณาใส่นามสกุลสมาชิก", "", "warning");
-                    } else if (citizenid.length != 13) {
-                        sweetAlert("กรุณาใส่เลขบัตรประชาชนให้ครบ", "", "warning");
-                    } else if (isNaN(citizenid)) {
-                        sweetAlert("กรุณาใส่เลขบัตรประชาชนให้ถูกต้อง", "", "warning");
-                    } else {
-                        $.ajax({
-                            type: 'post',
-                            url: "php/insertnewmember.php",
-                            dataType: "json",
-                            data: {
-                                fname: fname,
-                                lname: lname,
-                                citizenid: citizenid,
-                                phone: phone,
-                                gender: gender,
-                                birthday: birthday
-                            },
-                            success: function(data) {
-                                console.log("success");
-                            }
-                        });
-                        location.reload();
-                    }
-                });
-            });
-
-        </script>
-
-
-
     </div>
 </body>
 <script src="dist/sweetalert.min.js"></script>
