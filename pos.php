@@ -92,17 +92,17 @@
                     <div class="card-body">
                         <div class="dropdown">
                             <button class="btn btn-primary dropdown-toggle w-100" id="searchBtn" type="button" data-toggle="dropdown">ค้นหาสินค้า<span class="caret"></span></button>
-                            <ul class="dropdown-menu w-100">
-                                <input class="form-control" id="myInput" ng-model="myInput" type="text" placeholder="Search.." autofocus>
+                            <ul class="dropdown-menu w-100" id="searchitemdropdown">
+                                <input class="form-control" id="myInput" ng-model="myInput" type="text" placeholder="Search.." ng-keyup="enterItembybarcode($event)" autofocus>
                                 <div ng-repeat="x in stocks | filter: myInput">
-                                    <li class="dropdown-item" ng-click="setitemModal(x.lotno,x.pname,x.bname,x.stocktype,x.retailprice,x.sid,x.remain)"><button type="button" class="btn btn-light" data-toggle="modal" data-target="#additemModal" data-stockid="{{x.sid}}" data-lotnumber="{{x.lotno}}" data-productname="{{x.pname}}" data-productbrand="{{x.bname}}" data-retailprice="{{x.retailprice}}" data-unit="{{x.stocktype}}" data-remain="{{x.remain}}" data-baseprice="{{x.baseprice}}">เลขล็อต: {{x.lotno}} {{x.pname}} {{x.bname}} หน่วย: {{x.stocktype}} หมดอายุวันที่: {{datethaiformat(x.expireday)}}</button>
-                                        <!--<a href="#">เลขล็อต: {{x.lotno}} {{getPnames(x.sid)}} {{getPbrands(x.sid)}} หน่วย: {{x.type}} หมดอายุวันที่: {{datethaiformat(x.expireday)}}</a>--></li>
+                                    <li class="dropdown-item" ng-click="setitemModal(x.lotno,x.pname,x.bname,x.stocktype,x.retailprice,x.sid,x.remain)"><button type="button" class="btn btn-light" data-toggle="modal" data-target="#additemModal" data-stockid="{{x.sid}}" data-lotnumber="{{x.lotno}}" data-productname="{{x.pname}}" data-productbrand="{{x.bname}}" data-retailprice="{{x.retailprice}}" data-unit="{{x.stocktype}}" data-remain="{{x.remain}}" data-baseprice="{{x.baseprice}}">{{x.pname}} {{x.bname}} หน่วย: {{x.stocktype}} หมดอายุวันที่: {{datethaiformat(x.expireday)}}</button>
+                                    </li>
                                 </div>
                             </ul>
                         </div>
                         <br>
                         <h1>รายการ : SR
-                            <!--<button class="btn btn-primary" ng-click="calculateallPrice()">Test</button>--></h1>
+                        </h1>
 
                         <table class="table col">
                             <thead class="thead-light">
@@ -309,9 +309,9 @@
                                     <div class="row">
                                         <h5>ชื่อ :&nbsp;</h5>
                                         <h5 id="productname" ng-bind="pnameitemModal"></h5>
-                                        <br>
+                                        <!--<br>
                                         <h5>แบรนด์ :&nbsp;</h5>
-                                        <h5 id="productbrand" ng-bind="bnameitemModal"></h5>
+                                        <h5 id="productbrand" ng-bind="bnameitemModal"></h5>-->
                                     </div>
                                 </div>
                                 <!--<label id="productname">ชื่อ : </label>-->
@@ -319,7 +319,7 @@
                                 <div class="form-group row">
                                     <label for="message-text" class="col-sm-2 col-form-label">จำนวน:</label>
                                     <div class="col-sm-5">
-                                        <input type="number" step="1" class="form-control" min="1" id="item-qty" ng-model="qtyitemModal" ng-change="minvalidateqtyitemModal()">
+                                        <input type="number" step="1" class="form-control" min="1" id="item-qty" ng-model="qtyitemModal" ng-keyup="submittocartenter($event)" ng-change="minvalidateqtyitemModal()">
                                     </div>
                                     <label for="message-text" class="col-sm-1 col-form-label" id="item-unit" ng-bind="typeitemModal"></label>
                                 </div>
@@ -480,7 +480,7 @@
 
         <script>
             var app = angular.module('posApp', []);
-            app.controller('productsCtrl', function($scope, $http) {
+            app.controller('productsCtrl', function($scope, $http, $timeout) {
                 var timer;
                 $scope.currentfname = '';
                 $scope.currentlname = '';
@@ -520,7 +520,14 @@
                     console.log($scope.paymethod);
                 }
 
+                $scope.submittocartenter = function(e) {
+                    if (e.keyCode == "13") {
+                        $scope.submititemtoCart();
+                    }
+                }
+
                 $scope.submititemtoCart = function() {
+                    $scope.myInput = "";
                     $http.post("php/addtoCart.php", {
                         'stockid': $scope.siditemModal,
                         'price': $scope.priceitemModal,
@@ -573,6 +580,26 @@
                             }
                             $scope.searchMember();
                         });
+                    }
+                }
+
+                $scope.enterItembybarcode = function(e) {
+                    if (e.keyCode == "13") {
+                        ///1111111111123
+                        //$scope.stocks["0"].barcode
+                        //$scope.stocks["0"].barcode
+                        var i = 0;
+                        var barcode = $scope.myInput;
+                        var isfound = false;
+                        for (i = 0; i < $scope.stocks.length; i++) {
+                            if ($scope.stocks[i].barcode == barcode) {
+                                isfound = true;
+                                $scope.setitemModal($scope.stocks[i].lotno, $scope.stocks[i].pname, $scope.stocks[i].bname, $scope.stocks[i].stocktype, $scope.stocks[i].retailprice, $scope.stocks[i].sid, $scope.stocks[i].remain);
+                            }
+                        }
+                        if (!isfound) {
+                            swal("รหัสสินค้าผิดพลาด!", "กรุณาสแกนบาร์โคดใหม่", "warning");
+                        }
                     }
                 }
 
@@ -761,6 +788,33 @@
                     }
                 };
             });
+
+        </script>
+        <script>
+            $(document).ready(function() {
+                $("#searchBtn").click(function() {
+                    setTimeout(function() {
+                        $('#myInput').focus()
+                    }, 200);
+                })
+
+                $("#myInput").keyup(function(key) {
+                    var code = $("#myInput").val();
+                    if (key.keyCode == 13 && code.length == 13) {
+                        $("#additemModal").modal("show");
+                    }
+                })
+
+                $("#item-qty").keyup(function(key) {
+                    var code = $("#item-qty").val();
+                    if (key.keyCode == 13) {
+                        $("#additemModal").modal("hide");
+                    }
+                })
+                $('#additemModal').on('shown.bs.modal', function() {
+                    $('#item-qty').trigger('select')
+                })
+            })
 
         </script>
     </div>
