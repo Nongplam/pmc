@@ -367,7 +367,7 @@
                                 <div class="form-group row">
                                     <label for="message-text" class="col-sm-2 col-form-label">ใส่จำนวนเงินที่ได้รับ :</label>
                                     <div class="col-sm-5">
-                                        <input type="number" class="form-control" min="{{totalpriceafterDiscount}}" ng-keyup="calculateChange()" ng-model="moneyReceived">
+                                        <input type="number" id="recivmoney" class="form-control" min="{{totalpriceafterDiscount}}" ng-keyup="calculateChange()" ng-model="moneyReceived">
                                     </div>
                                     <label for="message-text" class="col-sm-1 col-form-label">บาท</label>
                                 </div>
@@ -813,6 +813,9 @@
                 })
                 $('#additemModal').on('shown.bs.modal', function() {
                     $('#item-qty').trigger('select')
+                })
+                $('#checkoutModal').on('shown.bs.modal', function() {
+                    $('#recivmoney').trigger('select')
                 })
             })
 
