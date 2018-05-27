@@ -631,7 +631,7 @@
                             $scope.totalpriceafterttax = 0;
                             $scope.paymethod = "cash";
                             $scope.posItem();
-                            window.open('posbillout.php', '_blank');
+                            window.open('newposbillout.php', '_blank');
                         });
                     }
                 }
