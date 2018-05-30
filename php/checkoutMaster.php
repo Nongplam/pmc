@@ -13,9 +13,16 @@ if($data){
     $changemoney=mysqli_real_escape_string($con, $data->changemoney);
     $recivemoney=mysqli_real_escape_string($con, $data->recivemoney);
     $paymethod=mysqli_real_escape_string($con, $data->paymethod);
+    $billkey = uniqid();
+    
+    $maxbillnoquery="SELECT MAX(billno) as billno FROM dailysalemaster WHERE dailysalemaster.subbranchid = '$subbranchid';";
+    $maxbillnoresult = mysqli_query($con, $maxbillnoquery);
+    $maxbillnorows = mysqli_fetch_assoc($maxbillnoresult);
+    $newbillid = sprintf("%010d", $maxbillnorows['billno']+1);
     
     
-    $stm1="insert into dailysalemaster(sumprice,memberid,moneyreceive,moneychange,userid,subbranchid,paymethod) values('$sumprice','$memberid','$recivemoney','$changemoney','$userid','$subbranchid','$paymethod')";
+    
+    $stm1="insert into dailysalemaster(billno,sumprice,memberid,moneyreceive,moneychange,userid,subbranchid,paymethod,refkey) values('$newbillid','$sumprice','$memberid','$recivemoney','$changemoney','$userid','$subbranchid','$paymethod','$billkey')";
         if(mysqli_query($con, $stm1)) {
             echo "Data Inserted";
         }
@@ -55,13 +62,59 @@ for($i = 0;$i < $poslist ;$i++){
         }
     $qtytemp=$qty[$i];
     $stocktemp=$stockid[$i];
-    $stm4="UPDATE shelf SET shelf.shelfremain = shelf.shelfremain-$qtytemp WHERE shelf.stockid = '$stocktemp' AND shelf.subbranchid = '$subbranchid'";
-    if(mysqli_query($con, $stm4)) {
+    echo $stocktemp;
+    echo $qtytemp;
+    $maxshelfidnoquery="SELECT MAX(shelfid) as maxshelfid FROM shelf WHERE shelf.stockid = '$stocktemp' AND shelf.subbranchid = '$subbranchid';";
+    $maxshelfidnoresult = mysqli_query($con, $maxshelfidnoquery);
+    $maxshelfidnorows = mysqli_fetch_assoc($maxshelfidnoresult);
+    $maxshelfid = $maxshelfidnorows['maxshelfid'];
+    
+    
+    
+    $shelfremainquery="SELECT shelf.shelfremain FROM shelf WHERE shelf.shelfid = '$maxshelfid'";
+    $shelfremainresult = mysqli_query($con, $shelfremainquery);
+    $shelfremainrows = mysqli_fetch_assoc($shelfremainresult);
+    $shelfremain = $shelfremainrows['shelfremain'];
+    
+    if($shelfremain == ""){
+        $updatequery3="UPDATE stock SET stock.remain = stock.remain-$qtytemp WHERE stock.sid = '$stocktemp'";
+        if(mysqli_query($con, $updatequery3)) {
             echo "detail Updated";            
         }
         else {
             echo "detail Error";
         }
+        
+    }else if($shelfremain >= $qtytemp){
+        //$shelfremain = $shelfremain - $qtytemp;
+        $updatequery="UPDATE shelf SET shelf.shelfremain = shelf.shelfremain-$qtytemp WHERE shelf.shelfid = '$maxshelfid'";
+        if(mysqli_query($con, $updatequery)) {
+            echo "detail Updated";            
+        }
+        else {
+            echo "detail Error";
+        }
+        
+    }else{
+        $qtyaftershelf = $shelfremain - $qtytemp;
+        $updatequery1="UPDATE shelf SET shelf.shelfremain = 0 WHERE shelf.shelfid = '$maxshelfid'";
+        if(mysqli_query($con, $updatequery1)) {
+            echo "detail Updated";            
+        }
+        else {
+            echo "detail Error";
+        }
+        
+        $updatequery2="UPDATE stock SET stock.remain = stock.remain+$qtyaftershelf WHERE stock.sid = '$stocktemp'";
+        if(mysqli_query($con, $updatequery2)) {
+            echo "detail Updated";            
+        }
+        else {
+            echo "detail Error";
+        }
+        
+        
+    }
     
     
 }

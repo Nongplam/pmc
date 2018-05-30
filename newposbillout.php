@@ -1,5 +1,8 @@
-<?php session_start(); ?>
+<?php 
+session_start(); 
+?>
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -14,7 +17,7 @@
     <style>
         @font-face {
             font-family: myFirstFont;
-            src: url(dist/Waree-Bold.woff);            
+            src: url(dist/Waree-Bold.woff);
         }
 
         .fonthere {
@@ -29,14 +32,14 @@
     <div class="col" ng-app="billApp" ng-controller="billsCtrl" ng-init="billItem()">
 
         <div style="width:300px;">
-           <div class="fonthere">
-            <div class="row d-flex justify-content-center"><span><?php echo $_SESSION["subbranchname"]; ?></span><span>(<?php echo $_SESSION["subbranchid"]; ?>)</span></div>
-            <div class="row d-flex justify-content-center"><span>TAX detailed</span></div>
-            <div class="row d-flex justify-content-center"><span>ใบเสร็จรับเงิน</span></div>
-            <div class="row" style="margin-bottom: -20px;">
-                <div class="table-responsive">
-                    <table class="table">
-                        <!--<thead>
+            <div class="fonthere">
+                <div class="row d-flex justify-content-center"><span>สาขา&nbsp;<?php echo $_SESSION["subbranchname"]; ?></span><span>(<?php echo $_SESSION["subbranchid"]; ?>)</span></div>
+                <div class="row d-flex justify-content-center"><span>TAX detailed</span></div>
+                <div class="row d-flex justify-content-center"><span>ใบเสร็จรับเงิน</span></div>
+                <div class="row" style="margin-bottom: -20px;">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <!--<thead>
                             <tr>
                                 <th>qty</th>
                                 <th>name</th>
@@ -44,35 +47,39 @@
                                 <th>total</th>
                             </tr>
                         </thead>-->
-                        <tbody>
-                            <tr ng-repeat="x in bills" ng-init="setdetail()" style="margin-bottom: -10px;margin-top: -10px;font-size: 80%;">
-                                <td>{{x.qty}}</td>
-                                <td>{{x.pname}}</td>
-                                <td class="money">{{getdecimalFormat(x.price)}}</td>
-                                <td class="money">{{getdecimalFormat(x.price*x.qty)}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            <tbody>
+                                <tr ng-repeat="x in bills" ng-init="setdetail()" style="margin-bottom: -10px;margin-top: -10px;font-size: 80%;">
+                                    <td>{{x.qty}}</td>
+                                    <td>{{x.pname}}</td>
+                                    <td class="money">{{getdecimalFormat(x.price)}}</td>
+                                    <td class="money">{{getdecimalFormat(x.price*x.qty)}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col"><span style="font-size: 80%;">ยอดสุทธิ</span></div>
-                <div class="col"><span>{{qtytotal}} ชิ้น</span></div>
-                <div class="col money"><span>{{getdecimalFormat(sumpricetotal)}}</span></div>
-            </div>
-            <div class="row">
-                <div class="col col-5"><span style="font-size: 80%;">เงินสด/เงินทอน</span></div>
-                <div class="col col-3"><span class="money">{{getdecimalFormat(billmoneyreceive)}}</span></div>
-                <div class="col col-3"><span class="money">{{getdecimalFormat(billmoneychange)}}</span></div>
-            </div>
-            <div class="row">
-                <div class="col col-5" style="font-size: 80%;"><span>R#0001 B:01</span></div>
-                <!--<div class="col"><span>22/2/18  06:21</span></div>-->
-                <div class="col col-7"><span>{{saledate}} {{saletime}}</span></div>
-            </div>
-            <div class="row">
-                <div class="col d-flex justify-content-center"><span>*ติดต่อสอบถาม {{tel}}*</span></div>
-            </div>
+                <div class="row">
+                    <div class="col"><span style="font-size: 80%;">ยอดสุทธิ</span></div>
+                    <div class="col"><span>{{qtytotal}} ชิ้น</span></div>
+                    <div class="col money"><span>{{getdecimalFormat(sumpricetotal)}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col col-5"><span style="font-size: 80%;">เงินสด/เงินทอน</span></div>
+                    <div class="col col-3"><span class="money">{{getdecimalFormat(billmoneyreceive)}}</span></div>
+                    <div class="col col-3"><span class="money">{{getdecimalFormat(billmoneychange)}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col col-5" style="font-size: 80%;"><span>R#{{billno}}<?php //echo $maxbillnorows['billno']; ?></span></div>
+                    <!--<div class="col"><span>22/2/18  06:21</span></div>-->
+                    <div class="col col-7"><span>{{saledate}} {{saletime}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-start"><span style="font-size: 12px;">REF:{{refkey}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-center"><span>*ติดต่อสอบถาม {{tel}}*</span></div>
+                </div>
+                
             </div>
             <div class="row">
                 <div class="col d-flex justify-content-center"><span>..............................................................................</span></div>
@@ -94,6 +101,8 @@
 
         $scope.billmoneyreceive = 0;
         $scope.billmoneychange = 0;
+        $scope.billno = '';
+        $scope.refkey = '';
 
         $scope.qtytotal = 0;
         $scope.sumpricetotal = 0;
@@ -103,13 +112,15 @@
         $scope.billItem = function() {
             $http.get("php/billItem.php").then(function(response) {
                 $scope.bills = response.data.records;
-            });
+            });            
         }
         $scope.getdecimalFormat = function(money) {
             return parseFloat(money).toFixed(2);
         }
 
         $scope.setdetail = function() {
+            $scope.billno = $scope.bills["0"].billno;
+            $scope.refkey = $scope.bills["0"].refkey;
             $scope.qtytotal = 0;
             $scope.sumpricetotal = 0;
             //console.log($scope.bills["0"].qty);
@@ -134,13 +145,13 @@
     });
 
 </script>
-<script>
+<!--<script>
     $(document).ready(setTimeout(function() {
         window.print();
         
     }, 1000));
 
-</script>
+</script>-->
 
 
 </html>

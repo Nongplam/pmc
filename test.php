@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <body>
+    <?php 
+session_start();
+header('Content-Type: text/html; charset=utf-8');
+include 'php/connectDB.php';
 
-<canvas id="myCanvas" width="300" height="150" style="border:1px solid #d3d3d3;">
-Your browser does not support the HTML5 canvas tag.</canvas>
+        
+    
+    
+    
 
-<script>
-
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-ctx.beginPath();
-ctx.rect(20, 20, 150, 100);
-ctx.fillStyle = "black";
-ctx.fill();
-
-/*ctx.beginPath();
-ctx.rect(40, 40, 150, 100);
-ctx.fillStyle = "blue";
-ctx.fill();*/
-
-</script> 
+?>
 
 </body>
+
 </html>
