@@ -134,13 +134,13 @@
     });
 
 </script>
-<script>
+<!--<script>
     $(document).ready(setTimeout(function() {
         window.print();
         
     }, 1000));
 
-</script>
+</script>-->
 
 
 </html>

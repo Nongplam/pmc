@@ -1,5 +1,33 @@
 <!DOCTYPE html>
 <html>
+<?php
+$thai_day_arr=array("อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์");
+$thai_month_arr=array(
+    "0"=>"",
+    "1"=>"มกราคม",
+    "2"=>"กุมภาพันธ์",
+    "3"=>"มีนาคม",
+    "4"=>"เมษายน",
+    "5"=>"พฤษภาคม",
+    "6"=>"มิถุนายน", 
+    "7"=>"กรกฎาคม",
+    "8"=>"สิงหาคม",
+    "9"=>"กันยายน",
+    "10"=>"ตุลาคม",
+    "11"=>"พฤศจิกายน",
+    "12"=>"ธันวาคม"                 
+);
+function thai_date($time){
+    global $thai_day_arr,$thai_month_arr;
+    $thai_date_return="วัน".$thai_day_arr[date("w",$time)];
+    $thai_date_return.= "ที่ ".date("j",$time);
+    $thai_date_return.=" เดือน".$thai_month_arr[date("n",$time)];
+    $thai_date_return.= " พ.ศ.".(intval(date("Yํ",$time))+543);
+    //$thai_date_return.= "  ".date("H:i",$time)." น.";
+    return $thai_date_return;
+}
+    $eng_date=time();
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -10,6 +38,7 @@
     <script src="js/lib/jquery-3.3.1.min.js"></script>
     <script src="js/lib/popper.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
+    
 
     <style>
         /* Style the input field */
@@ -82,7 +111,7 @@
         <div class="container-fluid border border-dark rounded">
             <br>
             <nav class="navbar navbar-dark bg-primary rounded">
-                <span class="navbar-brand mb-0 h1"><?php echo $_SESSION["subbranchname"]; ?></span>
+                <span class="navbar-brand mb-0 h1"><?php echo $_SESSION["subbranchname"]; ?> <span><?php echo thai_date($eng_date); ?></span></span>
                 <span class="ml-auto navbar-text" style="color:rgb(248,249,250);">ยินดีต้อนรับ <?php echo " "; echo $_SESSION["fname"]; echo " "; echo $_SESSION["lname"];?></span>
                 <a href="logout.php"><button class="btn bg-light" type="button" id="logoutbtn">logout</button></a>
             </nav>
