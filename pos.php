@@ -396,7 +396,7 @@ function thai_date($time){
                                 <div class="form-group row">
                                     <label for="message-text" class="col-sm-2 col-form-label">ใส่จำนวนเงินที่ได้รับ :</label>
                                     <div class="col-sm-5">
-                                        <input type="number" id="recivmoney" class="form-control" min="{{totalpriceafterDiscount}}" ng-keyup="calculateChange()" ng-model="moneyReceived">
+                                        <input type="number" id="recivmoney" class="form-control" min="{{totalpriceafterDiscount}}" ng-keyup="calculateChange($event)" ng-model="moneyReceived">
                                     </div>
                                     <label for="message-text" class="col-sm-1 col-form-label">บาท</label>
                                 </div>
@@ -632,7 +632,7 @@ function thai_date($time){
                     }
                 }
 
-                $scope.calculateChange = function() {
+                $scope.calculateChange = function(e) {
                     //console.log("keywork");
                     if ($scope.moneyReceived != undefined) {
                         //console.log($scope.moneyReceived);
@@ -640,7 +640,11 @@ function thai_date($time){
                     } else {
                         $scope.moneyChange = 'จำนวนเงินไม่ถูกต้อง';
                     }
-                }
+                    if(e.keyCode == 13){
+                       $scope.submitCheckout();
+                       }
+                }                
+                
 
                 $scope.submitCheckout = function() {
                     if ($scope.moneyReceived == undefined) {
@@ -840,6 +844,14 @@ function thai_date($time){
                         $("#additemModal").modal("hide");
                     }
                 })
+                
+                $("#recivmoney").keyup(function(key) {
+                    //var code = $("#item-qty").val();
+                    if (key.keyCode == 13) {
+                        $("#checkoutModal").modal("hide");
+                    }
+                })
+                
                 $('#additemModal').on('shown.bs.modal', function() {
                     $('#item-qty').trigger('select')
                 })
