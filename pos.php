@@ -192,7 +192,7 @@ function thai_date($time){
                                     <div class="row">
                                         <button class="btn btn-primary" data-toggle="modal" data-target="#membermodal" id="openmemberbtn" type="button" style="height:45px;width:400px;" ng-show="addmemberbtnbool">เพิ่มสมาชิก +</button>
                                         <button class="btn btn-danger" type="button" style="height:45px;width:400px;" ng-show="!addmemberbtnbool" ng-click="cancelcurrentMember()">ยกเลิก</button>
-                                        <button class="btn btn-danger" type="button" style="height:45px;width:100px;" data-toggle="modal" data-target="#returnproductmodal">คืนสินค้า</button>
+                                        <button class="btn btn-danger" id="openreturnmodalbtn" type="button" style="height:45px;width:100px;" data-toggle="modal" data-target="#returnproductmodal">คืนสินค้า</button>
                                         <br><br>
                                         <div class="container border border-primary rounded" ng-show="currentmemberboxbool">
                                             <table class="table table-hover">
@@ -506,18 +506,44 @@ function thai_date($time){
                 <!--......................................endmodal...................................-->
                 <!--....................................returnsmodalstart.............................-->
                 <div role="dialog" tabindex="-1" class="modal fade show" id="returnproductmodal">
-                    <div class="modal-dialog" role="document">
+                    <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title">คืนสินค้า</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                             </div>
-                            <div class="modal-body d-flex justify-content-center">
-                                <input class="input-group-text col-7" type="text" placeholder="กรุณาใส่รหัสผ่าน" />
-                                <button class="btn btn-primary col-2" type="button">ยืนยัน</button>
+                            <div class="modal-body d-flex justify-content-center" ng-show="showreturnmgrkey">
+                                <input class="input-group-text col-7" id="mgrkey" type="text" ng-model="mgrpass" ng-keyup="returnmgrkeyEnter($event)" placeholder="กรุณาใส่รหัสผ่าน" />
+                                <button class="btn btn-primary col-2" type="button" ng-click="returnmgrkey(mgrpass)">ยืนยัน</button>
+                            </div>
+                            <div class="modal-body d-flex justify-content-center" ng-show="showreturnrefkey">
+                                <input class="input-group-text col-7" type="text" id="refkey" ng-model="refkey" placeholder="กรุณารหัสอ้างอิง" ng-keyup="returnrefkeyEnter($event)" />
+                                <button class="btn btn-success col-2" type="button" ng-click="returnrefkey(refkey)">ยืนยัน</button>
+                            </div>
+                            <div class="modal-body d-flex justify-content-center" ng-show="showreturnitem">
+                                <table class="table table-bordered" ng-init="getreturnsItem()">
+                                    <thead>
+                                        <tr>
+                                            <th>ชื่อสินค้า</th>
+                                            <th>จำนวน</th>
+                                            <th>ราคาต่อชิ้น</th>
+                                            <th>ราคารวม</th>
+                                            <th>คืนสินค้า</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in returnitems">
+                                            <td>{{item.pname}}</td>
+                                            <td>{{item.qty}}</td>
+                                            <td>{{item.price}}</td>
+                                            <td>{{item.qty*item.price}} บาท</td>
+                                            <td><button class="btn btn-danger">ตกลง</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-light" type="button" data-dismiss="modal">ปิด</button>
+                                <button class="btn btn-light" type="button" data-dismiss="modal" ng-click="resetreturnitem()">ปิด</button>
                             </div>
                         </div>
                     </div>
@@ -529,7 +555,7 @@ function thai_date($time){
 
             <script>
                 var app = angular.module('posApp', []);
-                app.controller('productsCtrl', function($scope, $http, $timeout) {
+                app.controller('productsCtrl', function($scope, $http, $timeout, $window) {
                     var timer;
                     $scope.currentfname = '';
                     $scope.currentlname = '';
@@ -546,6 +572,11 @@ function thai_date($time){
                     $scope.totalpriceafterDiscount = 0;
                     $scope.totalpriceafterttax = 0;
                     $scope.paymethod = "cash";
+                    $scope.showreturnmgrkey = true;
+                    $scope.showreturnrefkey = false;
+                    $scope.showreturnitem = false;
+
+
 
 
                     $scope.setitemModal = function(lotno, pname, bname, type, price, sid, remain) {
@@ -559,20 +590,10 @@ function thai_date($time){
                         $scope.remainitemModal = remain;
                     }
 
-                    $scope.minvalidateqtyitemModal = function() {
-                        if ($scope.qtyitemModal < 1 || $scope.qtyitemModal == undefined) {
-                            $scope.qtyitemModal = 1;
-                        }
-                    }
-
-                    $scope.testpay = function() {
-                        console.log($scope.paymethod);
-                    }
-
-                    $scope.submittocartenter = function(e) {
-                        if (e.keyCode == "13") {
-                            $scope.submititemtoCart();
-                        }
+                    $scope.getreturnsItem = function() {
+                        $http.get("php/getreturnitem.php?refkey=5b0e847c24117").then(function(response) {
+                            $scope.returnitems = response.data.records;
+                        });
                     }
 
                     $scope.submititemtoCart = function() {
@@ -689,14 +710,7 @@ function thai_date($time){
                         }
                     }
 
-                    $scope.memberstatusicon = function() {
-                        if ($scope.currentstatus == 'active') {
-                            $scope.currentstatusbool = true;
 
-                        } else if ($scope.currentstatus == 'inactive') {
-                            $scope.currentstatusbool = false;
-                        }
-                    }
 
                     $scope.setcurrentMember = function(fname, lname, point, level, status, memberid) {
                         $scope.currentfname = fname;
@@ -827,9 +841,82 @@ function thai_date($time){
                             });
                     }
 
+                    //-------------------------------------Misc.------------------------------------------//
+
+                    $scope.resetreturnitem = function() {
+                        $scope.showreturnmgrkey = true;
+                        $scope.showreturnrefkey = false;
+                        $scope.showreturnitem = false;
+                        $scope.mgrpass = '';
+                        $scope.refkey = '';
+                    }
+
+                    $scope.returnmgrkey = function(key) {
+                        if (key == '555') {
+                            $scope.showreturnmgrkey = false;
+                            $scope.showreturnrefkey = true;
+                            $scope.showreturnitem = false;
+                            $scope.focusrefKey();
+                        }
+                    }
+
+                    $scope.returnrefkey = function(key) {
+                        if (key == '555') {
+                            $scope.showreturnmgrkey = false;
+                            $scope.showreturnrefkey = false;
+                            $scope.showreturnitem = true;
+                        }
+                    }
+
+                    $scope.focusrefKey = function() {
+                        var refkey = $window.document.getElementById('refkey');
+                        setTimeout(function() {
+                            refkey.focus();
+                        }, 200);
+                    }
+
+                    $scope.returnmgrkeyEnter = function(e) {
+                        if (e.keyCode == '13') {
+                            $scope.returnmgrkey($scope.mgrpass);
+                        }
+                    }
+
+                    $scope.returnrefkeyEnter = function(e) {
+                        if (e.keyCode == '13') {
+                            $scope.returnrefkey($scope.refkey);
+                        }
+                    }
+
+                    $scope.memberstatusicon = function() {
+                        if ($scope.currentstatus == 'active') {
+                            $scope.currentstatusbool = true;
+
+                        } else if ($scope.currentstatus == 'inactive') {
+                            $scope.currentstatusbool = false;
+                        }
+                    }
+
+                    $scope.minvalidateqtyitemModal = function() {
+                        if ($scope.qtyitemModal < 1 || $scope.qtyitemModal == undefined) {
+                            $scope.qtyitemModal = 1;
+                        }
+                    }
+
+                    $scope.testpay = function() {
+                        console.log($scope.paymethod);
+                    }
+
+                    $scope.submittocartenter = function(e) {
+                        if (e.keyCode == "13") {
+                            $scope.submititemtoCart();
+                        }
+                    }
+
                     $scope.logtest = function() {
                         console.log("this thing worked!");
                     }
+
+                    //-------------------------------------Misc.------------------------------------------//
                 });
                 app.directive("repeatEnd", function() {
                     return {
@@ -877,6 +964,9 @@ function thai_date($time){
                     })
                     $('#checkoutModal').on('shown.bs.modal', function() {
                         $('#recivmoney').trigger('select')
+                    })
+                    $('#returnproductmodal').on('shown.bs.modal', function() {
+                        $('#mgrkey').trigger('focus')
                     })
                 })
 
