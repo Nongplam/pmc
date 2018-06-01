@@ -22,6 +22,7 @@ if(mysqli_num_rows($result)>0) {
         $output .='"costprice":"' . $rs["costprice"] . '",';
         $output .='"baseprice":"' . $rs["baseprice"] . '",'; 
         $output .='"boxprice":"' . $rs["boxprice"] . '",'; 
+        $output .='"barcode":"' . $rs["barcode"] . '",'; 
         $output .='"retailprice":"' . $rs["retailprice"] . '",'; 
         $output .='"wholesaleprice":"' . $rs["wholesaleprice"] . '",'; 
         $output .='"receiveday":"' . $rs["receiveday"] . '",'; 

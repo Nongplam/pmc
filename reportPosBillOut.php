@@ -55,8 +55,8 @@
             </tr>
             <tr ng-repeat="bill in bills">
                 <td>{{$index + 1}}</td>
-                <td>{{bill.billno}}</td>
-                <td>{{bill.memberid}}</td>
+                <td>{{billidCheck(bill.billno)}}</td>
+                <td>{{memidCheck(bill.memberid)}}</td>
                 <td ng-init="sumTotalPrice(bill.sumprice)">{{bill.sumprice}}</td>
                 <td>{{bill.masterdate | date:'dd/MM/yyyy h:mma'}}</td>
             </tr>
@@ -78,12 +78,11 @@
 
         $scope.branch = <?=$_SESSION["subbranchid"]?>;
         $scope.date1 =  new Date();
+        
         $scope.totalPrice = 0.00;
         $scope.selectBranch = function(){
 
             $http.get('php/subbranchSelect.php').then( function(response){
-
-
                 $scope.branchs = response.data.records;
             });
 
@@ -112,9 +111,21 @@
         $http.get('php/getReportPosBillOut.php?branch='+$scope.branch+'&date='+  $scope.formatDate(date)).then(function(res){
             $scope.bills = res.data.records;
         });
+            
+        $scope.memidCheck = function(id){
+            if(id == ""){
+               return "ไม่ใช่สมาชิก";
+               }
+            return id;
+        };
+            
+        $scope.billidCheck = function(id){
+            if(id == null){
+               return "ยังไม่มีเลขที่บิล";
+               }
+            return id;
+        };
     }
-
-
     });
 
 
