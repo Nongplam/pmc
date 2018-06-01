@@ -117,10 +117,10 @@ function thai_date($time){
                 </nav>
                 <br>
                 <div class="container-fluid row justify-content-between">
-                    <div class="card col" ng-init="searchStock()">
+                    <div class="card col" ng-init="">
                         <div class="card-body">
                             <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle w-100" id="searchBtn" type="button" data-toggle="dropdown">ค้นหาสินค้า<span class="caret"></span></button>
+                                <button class="btn btn-primary dropdown-toggle w-100" id="searchBtn" type="button" data-toggle="dropdown" ng-click="searchStock()">ค้นหาสินค้า<span class="caret"></span></button>
                                 <ul class="dropdown-menu w-100" id="searchitemdropdown">
                                     <input class="form-control" id="myInput" ng-model="myInput" type="text" placeholder="Search.." ng-keyup="enterItembybarcode($event)" autofocus>
                                     <div ng-repeat="x in stocks | filter: myInput">
@@ -438,14 +438,14 @@ function thai_date($time){
                 <!--....................................membermodalstart.............................-->
                 <div role="dialog" tabindex="-1" class="modal fade show" id="membermodal">
                     <div class="modal-dialog" role="document">
-                        <div class="modal-content" ng-init="searchMember()">
+                        <div class="modal-content" ng-init="">
                             <div class="modal-header">
                                 <h4 class="modal-title">สมาชิก</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                             </div>
                             <div class="modal-body d-flex justify-content-center">
                                 <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button" style="width:300px;background-color:rgb(72,150,232);">ค้นหาสมาชิก</button>
+                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button" style="width:300px;background-color:rgb(72,150,232);" ng-click="searchMember()">ค้นหาสมาชิก</button>
                                     <div role="menu" class="dropdown-menu">
                                         <input class="form-control" id="mymemberInput" ng-model="mymemberInput" type="text" placeholder="Search..">
                                         <div ng-repeat="x in members | filter: mymemberInput">
@@ -591,9 +591,9 @@ function thai_date($time){
                     }
 
                     $scope.getreturnsItem = function() {
-                        $http.get("php/getreturnitem.php?refkey=5b0e847c24117").then(function(response) {
+                        /*$http.get("php/getreturnitem.php?refkey=5b0e847c24117").then(function(response) {
                             $scope.returnitems = response.data.records;
-                        });
+                        });*/
                     }
 
                     $scope.submititemtoCart = function() {
