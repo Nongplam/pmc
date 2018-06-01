@@ -518,7 +518,7 @@ function thai_date($time){
                             </div>
                             <div class="modal-body d-flex justify-content-center" ng-show="showreturnrefkey">
                                 <input class="input-group-text col-7" type="text" id="refkey" ng-model="refkey" placeholder="กรุณารหัสอ้างอิง" ng-keyup="returnrefkeyEnter($event)" />
-                                <button class="btn btn-success col-2" type="button" ng-click="returnrefkey(refkey)">ยืนยัน</button>
+                                <button class="btn btn-success col-2" type="button" ng-click="returnrefkey(refkey); getreturnsItem()">ยืนยัน</button>
                             </div>
                             <div class="modal-body d-flex justify-content-center" ng-show="showreturnitem">
                                 <table class="table table-bordered" ng-init="getreturnsItem()">
@@ -537,10 +537,14 @@ function thai_date($time){
                                             <td>{{item.qty}}</td>
                                             <td>{{item.price}}</td>
                                             <td>{{item.qty*item.price}} บาท</td>
-                                            <td><button class="btn btn-danger">ตกลง</button></td>
+                                            <td><input type="checkbox" name="returnitem" value="{{item.ddid}}" />
+                                                <!--<button class="btn btn-danger">ตกลง</button>--></td>
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="modal-body d-flex justify-content-end" ng-show="showreturnitem">
+                                <button class="btn btn-success col-2" type="button" ng-click="returnsCheckout('returnitem')">คืนสินค้า</button>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-light" type="button" data-dismiss="modal" ng-click="resetreturnitem()">ปิด</button>
@@ -576,6 +580,23 @@ function thai_date($time){
                     $scope.showreturnrefkey = false;
                     $scope.showreturnitem = false;
 
+                    $scope.returnsCheckout = function(checkboxName) {
+                        var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'),
+                            values = [];
+                        var str = '';
+                        Array.prototype.forEach.call(checkboxes, function(el) {
+                            //values.push(el.value);
+                            str = str + el.value + ",";
+                        });
+                        //console.log(values)
+                        if (str == '') {
+                            swal("รายการคืนสินค้าว่างเปล่า!", "กรุณาเลือกสินค้าที่ต้องการคืน", "warning");
+                        } else {
+                            alert(str);
+                        }
+
+                    }
+
 
 
 
@@ -591,9 +612,9 @@ function thai_date($time){
                     }
 
                     $scope.getreturnsItem = function() {
-                        /*$http.get("php/getreturnitem.php?refkey=5b0e847c24117").then(function(response) {
+                        $http.get("php/getreturnitem.php?refkey=5b0e613a57b1d").then(function(response) {
                             $scope.returnitems = response.data.records;
-                        });*/
+                        });
                     }
 
                     $scope.submititemtoCart = function() {
