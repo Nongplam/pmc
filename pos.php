@@ -518,10 +518,10 @@ function thai_date($time){
                             </div>
                             <div class="modal-body d-flex justify-content-center" ng-show="showreturnrefkey">
                                 <input class="input-group-text col-7" type="text" id="refkey" ng-model="refkey" placeholder="กรุณารหัสอ้างอิง" ng-keyup="returnrefkeyEnter($event)" />
-                                <button class="btn btn-success col-2" type="button" ng-click="returnrefkey(refkey); getreturnsItem()">ยืนยัน</button>
+                                <button class="btn btn-success col-2" type="button" ng-click="returnrefkey(); getreturnsItem()">ยืนยัน</button>
                             </div>
                             <div class="modal-body d-flex justify-content-center" ng-show="showreturnitem">
-                                <table class="table table-bordered" ng-init="getreturnsItem()">
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>ชื่อสินค้า</th>
@@ -544,7 +544,7 @@ function thai_date($time){
                                 </table>
                             </div>
                             <div class="modal-body d-flex justify-content-end" ng-show="showreturnitem">
-                                <button class="btn btn-success col-2" type="button" ng-click="returnsCheckout('returnitem')">คืนสินค้า</button>
+                                <button class="btn btn-success col-2" type="button" data-dismiss="modal" ng-click="returnsCheckout('returnitem'); resetreturnitem()">คืนสินค้า</button>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-light" type="button" data-dismiss="modal" ng-click="resetreturnitem()">ปิด</button>
@@ -579,6 +579,7 @@ function thai_date($time){
                     $scope.showreturnmgrkey = true;
                     $scope.showreturnrefkey = false;
                     $scope.showreturnitem = false;
+                    $scope.mgrpass = '';
 
                     $scope.returnsCheckout = function(checkboxName) {
                         var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'),
@@ -592,7 +593,12 @@ function thai_date($time){
                         if (str == '') {
                             swal("รายการคืนสินค้าว่างเปล่า!", "กรุณาเลือกสินค้าที่ต้องการคืน", "warning");
                         } else {
-                            alert(str);
+                            $http.post("php/returnsitemCheckout.php", {
+                                'ddid': str
+                            }).then(function(data) {
+                                swal("การคืนสินค้าเสร็จสิ้น", "ข้อมูลการคืนสินค้าถูกบันทึก กรุณาเก็บใบเสร็จจากลูกค้า", "success");
+                                window.open('newposbillout.php', '_blank');
+                            });
                         }
 
                     }
@@ -612,7 +618,8 @@ function thai_date($time){
                     }
 
                     $scope.getreturnsItem = function() {
-                        $http.get("php/getreturnitem.php?refkey=5b0e613a57b1d").then(function(response) {
+                        var refkey = $scope.refkey;
+                        $http.get("php/getreturnitem.php?refkey=" + refkey).then(function(response) {
                             $scope.returnitems = response.data.records;
                         });
                     }
@@ -872,21 +879,32 @@ function thai_date($time){
                         $scope.refkey = '';
                     }
 
-                    $scope.returnmgrkey = function(key) {
-                        if (key == '555') {
-                            $scope.showreturnmgrkey = false;
-                            $scope.showreturnrefkey = true;
-                            $scope.showreturnitem = false;
-                            $scope.focusrefKey();
+                    $scope.returnmgrkey = function(mgrkey) {
+                        if (mgrkey == '') {
+                            swal("รหัสผ่านผิด!", "กรุณาติดต่อผู้จัดการสาขา", "warning");
+                        } else {
+                            $http.post("php/isMgr.php", {
+                                'mgrkey': mgrkey
+                            }).then(function(data) {
+                                if (data.data == "Wrong") {
+                                    swal("รหัสผ่านผิด!", "กรุณาติดต่อผู้จัดการสาขา", "warning");
+                                } else {
+                                    $scope.showreturnmgrkey = false;
+                                    $scope.showreturnrefkey = true;
+                                    $scope.showreturnitem = false;
+                                    $scope.focusrefKey();
+                                }
+                            });
                         }
                     }
 
-                    $scope.returnrefkey = function(key) {
-                        if (key == '555') {
-                            $scope.showreturnmgrkey = false;
-                            $scope.showreturnrefkey = false;
-                            $scope.showreturnitem = true;
-                        }
+                    $scope.returnrefkey = function() {
+                        $scope.getreturnsItem();
+
+                        $scope.showreturnmgrkey = false;
+                        $scope.showreturnrefkey = false;
+                        $scope.showreturnitem = true;
+
                     }
 
                     $scope.focusrefKey = function() {
@@ -904,7 +922,7 @@ function thai_date($time){
 
                     $scope.returnrefkeyEnter = function(e) {
                         if (e.keyCode == '13') {
-                            $scope.returnrefkey($scope.refkey);
+                            $scope.returnrefkey();
                         }
                     }
 

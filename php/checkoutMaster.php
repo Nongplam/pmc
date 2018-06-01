@@ -18,7 +18,11 @@ if($data){
     $maxbillnoquery="SELECT MAX(billno) as billno FROM dailysalemaster WHERE dailysalemaster.subbranchid = '$subbranchid';";
     $maxbillnoresult = mysqli_query($con, $maxbillnoquery);
     $maxbillnorows = mysqli_fetch_assoc($maxbillnoresult);
-    $newbillid = sprintf("%010d", $maxbillnorows['billno']+1);
+    if($maxbillnorows['billno'] == NULL){
+        $newbillid = sprintf("%010d", 1);
+    }else{
+        $newbillid = sprintf("%010d", $maxbillnorows['billno']+1);
+    }    
     
     
     
@@ -29,7 +33,7 @@ if($data){
         else {
             echo "Error";
         }
-    $salemasteridStm="select * from dailysalemaster";
+    $salemasteridStm="select * from dailysalemaster WHERE dailysalemaster.userid = '$userid' AND dailysalemaster.subbranchid = '$subbranchid'";
 
 $salemasteridresult = mysqli_query($con,$salemasteridStm);
     $salemasterid=array();
