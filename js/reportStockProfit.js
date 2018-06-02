@@ -11,7 +11,7 @@ app.controller("reportStockProfitcontroller", function ($scope, $http) {
         $scope.branchs = response.data.records;
     });
  
- }
+ };
 
     $scope.getAllStock = function(){        
         $scope.date1.setHours(00);
@@ -30,7 +30,7 @@ app.controller("reportStockProfitcontroller", function ($scope, $http) {
         
         
 
- }
+ };
 
 
 
