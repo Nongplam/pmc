@@ -47,6 +47,7 @@ include 'php/connectDB.php';
                 <a href="logout.php"><button class="btn btn-light ml-auto" type="button" style="color:rgb(0,123,255);">Logout</button></a></div>
         </div>
     </nav>
+    <br>
     <!--<button type="button" class="btn btn-danger" id="testbtn">Test BTN</button>-->
 
     <?php         

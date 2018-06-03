@@ -13,7 +13,7 @@ if($data) {
 
 
     $sql = "SELECT rpt_stocktobranchstock.*,rpt_stocktobranchstockdetail.*,product.pname,stock.productid,stock.stocktype FROM rpt_stocktobranchstock,rpt_stocktobranchstockdetail,product,stock  
-            WHERE product.regno = stock.productid AND rpt_stocktobranchstockdetail.stockid = stock.sid AND rpt_stocktobranchstock.rptsTbs_id = rpt_stocktobranchstockdetail.rptsTbs_id AND rpt_stocktobranchstockdetail.sts = '1'  AND rpt_stocktobranchstock.rptsTbs_no =  '$sTbs_no'" ;
+            WHERE product.regno = stock.productid AND rpt_stocktobranchstockdetail.stockid = stock.sid AND rpt_stocktobranchstock.rptsTbs_id = rpt_stocktobranchstockdetail.rptsTbs_id AND rpt_stocktobranchstockdetail.sts = '1'  AND rpt_stocktobranchstock.rptsTbs_no =  '$sTbs_no' AND rpt_stocktobranchstock.subbranchid = '$subid'" ;
     $res = array();
     //echo  $sql;
     if($result = mysqli_query($con,$sql)){
