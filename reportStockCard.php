@@ -6,8 +6,18 @@
  * Time: 4:15 PM
  */
 
-$pname = $_GET['pname'];
-$type = $_GET['type'];
+if (isset($_GET['pname']) && isset( $_GET['type'])){
+    $pname = $_GET['pname'];
+    $type = $_GET['type'];
+} else{
+
+    header("Location: bStockCard.php");
+}
+
+
+
+
+
 ?>
 <html>
 
@@ -23,21 +33,13 @@ $type = $_GET['type'];
 
 <body ng-app="reportStockCardApp" ng-controller="reportStockCardcontroller">
         <?php
-          /*  include 'mainbartest.php';
-            $role=$_SESSION["role"];
-            $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
-            $allowqueryresult=mysqli_query($con,$allowquery);
-            $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);
-            $allowrule = explode(",",$allowruleraw["rule"]);
-            if (!in_array("10", $allowrule)){
-                header("Location: auth.php");
-            }*/
+            include 'mainbartest.php';
         ?>
 
 
 <div class="container">
 
-
+    <h3 align="center">สต๊อกการ์ด</h3>
     <table class="table table-bordered">
         <tr>
             <th><?=$pname?></th>

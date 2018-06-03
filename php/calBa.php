@@ -10,7 +10,7 @@ include 'connectDB.php';
 $data=json_decode(file_get_contents("php://input"));
 
 session_start();
-
+$subbranchid = $_SESSION["subbranchid"];
 $pname = mysqli_real_escape_string($con, $data->pname);
 $type = mysqli_real_escape_string($con, $data->type);
 
@@ -20,11 +20,13 @@ WHERE dailysalemaster.dmid = dailysaledetail.masterid
 AND dailysaledetail.stockid = stock.sid 
 AND stock.productid = product.regno 
 AND product.pname LIKE '%$pname%' 
-AND stock.stocktype LIKE '%$type%')
+AND stock.stocktype LIKE '%$type%'
+AND dailysalemaster.subbranchid = $subbranchid)
  UNION (SELECT stock.receiveday AS date,stock.PO_No,stock.lotno,null AS billno,stock.expireday,stock.baseprice AS price ,stock.costprice, concat('+', stock.remainfull) AS qty,stock.stocktype 
  FROM stock,product 
  WHERE product.pname LIKE '%$pname%' 
- AND stock.stocktype LIKE '%$type%') 
+ AND stock.stocktype LIKE '%$type%'
+ AND stock.subbranchid = $subbranchid) 
  ORDER BY date";
 
 
