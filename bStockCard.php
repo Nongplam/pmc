@@ -21,8 +21,20 @@
     <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>
 </head>
 <body ng-app="selectBstockCardApp" ng-controller="selectBstockCardcontroller">
-
+<?php
+  include 'mainbartest.php';
+  $role=$_SESSION["role"];
+  $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+  $allowqueryresult=mysqli_query($con,$allowquery);
+  $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);
+  $allowrule = explode(",",$allowruleraw["rule"]);
+  if (!in_array("25", $allowrule)){
+      header("Location: auth.php");
+  }
+?>
     <div class="container">
+
+         <h3 align="center">เลือกสต๊อกการ์ด</h3>
         <input type="text" id="pname" name="pname" ng-model="pname" class="form-control" >
 
 
