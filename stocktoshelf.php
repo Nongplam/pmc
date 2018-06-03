@@ -30,7 +30,7 @@
 
         <div ng-app="stockApp" ng-controller="stockcontroller" class="ng-scope">
             <br>
-            <h3 align="center">จัดสินค้าเข้าชั้นวาง</h3>            
+            <h3 align="center">จัดสินค้าเข้าชั้นวาง</h3>
             <hr>
             <h4 align="center">สินค้าที่จะนำเข้าชั้น</h4>
             <hr>
@@ -172,6 +172,7 @@
             $scope.displayStock = function() {
                 $http.get("php/stockSelect.php").then(function(response) {
                     $scope.stocks = response.data.records;
+                    $scope.updateremain();
                 });
             }
             $scope.displayshelfChoose = function() {
@@ -183,6 +184,21 @@
                 $http.get("php/preshelfSelect.php").then(function(response) {
                     $scope.preshelfs = response.data.records;
                 });
+            }
+            $scope.updateremain = function() {
+                var i = 0;
+                for (i = 0; i < $scope.preshelfs.length; i++) {
+                    var j = 0;
+                    for (j = 0; j < $scope.stocks.length; j++) {
+                        if ($scope.preshelfs[i]['stockid'] == $scope.stocks[j]['sid']) {
+                            var stockqty = parseInt($scope.stocks[j]['remain']);
+                            var preshelfsqty = parseInt($scope.preshelfs[i]['qty']);
+                            var newremain = stockqty - preshelfsqty;
+                            $scope.stocks[j]['remain'] = newremain;
+                        }
+                    }
+
+                }
             }
             $scope.setpreshelfModal = function(sid, lotno, pname, type) {
                 $scope.sidonmodal = sid;

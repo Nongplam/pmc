@@ -26,6 +26,3 @@ include 'connectDB.php';
 
 
             }
-
-
-
