@@ -30,7 +30,8 @@ wholesaleprice,
 receiveday,
 expireday,
 subbranchid,
-userid) SELECT stock.productid,stock.cid,$qty as remainfull,$qty as remain,stock.lotno,stock.stocktype,stock.costprice,stock.baseprice,stock.boxprice,stock.retailprice,stock.wholesaleprice,NOW(),stock.expireday,$subid as subbranchid,$userid as userid FROM stock,rpt_stocktobranchstockdetail 
+userid,
+fromstockid) SELECT stock.productid,stock.cid,$qty as remainfull,$qty as remain,stock.lotno,stock.stocktype,stock.costprice,stock.baseprice,stock.boxprice,stock.retailprice,stock.wholesaleprice,NOW(),stock.expireday,$subid as subbranchid,$userid as userid,$stockid as fromstockid FROM stock,rpt_stocktobranchstockdetail 
 WHERE rpt_stocktobranchstockdetail.stockid = stock.sid AND rpt_stocktobranchstockdetail.stockid = $stockid 
 AND rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rptsTbs_id FROM rpt_stocktobranchstock where rpt_stocktobranchstock.rptsTbs_no = '$rtsTbsNo')";
 
@@ -74,5 +75,3 @@ AND rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rpt
         echo  json_encode($result);
 
 }
-
-
