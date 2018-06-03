@@ -11,7 +11,6 @@
         .modal-lg {
             max-width: 70%;
         }
-
     </style>
 </head>
 
@@ -142,7 +141,7 @@
                                     <th>สาขา</th>
                                     <th>เลขที่สต๊อกในสาขา</th>
                                     <th>ชื่อสินค้า</th>
-                                    <th>จำนวนนำเข้า</th>
+                                    <th>จำนวนที่ส่งไป</th>
                                     <th>จำนวนคงเหลือ</th>
                                     <th>หน่วย</th>
                                     <th>ราคาขายหน้าร้าน</th>
@@ -267,7 +266,6 @@
                 return newdate;
             }
         });
-
     </script>
 </body>
 <script src="dist/sweetalert.min.js"></script>
