@@ -23,6 +23,7 @@
 <body ng-app="selectBstockCardApp" ng-controller="selectBstockCardcontroller">
 <?php
   include 'mainbartest.php';
+ /*
   $role=$_SESSION["role"];
   $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
   $allowqueryresult=mysqli_query($con,$allowquery);
@@ -30,7 +31,8 @@
   $allowrule = explode(",",$allowruleraw["rule"]);
   if (!in_array("25", $allowrule)){
       header("Location: auth.php");
-  }
+  }*/
+
 ?>
     <div class="container">
 
