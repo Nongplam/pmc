@@ -66,8 +66,6 @@ for($i = 0;$i < $poslist ;$i++){
         }
     $qtytemp=$qty[$i];
     $stocktemp=$stockid[$i];
-    echo $stocktemp;
-    echo $qtytemp;
     $maxshelfidnoquery="SELECT MAX(shelfid) as maxshelfid FROM shelf WHERE shelf.stockid = '$stocktemp' AND shelf.subbranchid = '$subbranchid';";
     $maxshelfidnoresult = mysqli_query($con, $maxshelfidnoquery);
     $maxshelfidnorows = mysqli_fetch_assoc($maxshelfidnoresult);
