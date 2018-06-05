@@ -50,35 +50,38 @@ if($data) {
     $priceMIdicount = mysqli_real_escape_string($con, $data->priceMIdicount);
     $pricevat = mysqli_real_escape_string($con, $data->pricevat);
     $totalprice = mysqli_real_escape_string($con, $data->totalprice);
+    $note  = mysqli_real_escape_string($con,$data->note);
 
-
-    $sqlInPO = "INSERT INTO rpt_PO(rptPO_no, rptPO_date, cid, rptPO_agent, rptPO_lo, rptPO_tel, rptPO_mail,  rptPO_losend, rptPO_datesend, pricesum, pricediscount, priceMIdicount, pricevat,totalprice, rptPO_status,subbranchid, userid) 
-   VALUES ('$po_no','$po_date',$cid,'$po_agent','$po_lo','$po_tel','$po_mail','$po_sendlo','$po_datesend',$pricesum,$pricediscount,$priceMIdicount,$pricevat,$totalprice,'1',$subid,$userid)";
+    $sqlInPO = "INSERT INTO rpt_PO(rptPO_no, rptPO_date, cid, rptPO_agent, rptPO_lo, rptPO_tel, rptPO_mail,  rptPO_losend, rptPO_datesend, pricesum, pricediscount, priceMIdicount, pricevat,totalprice,note, rptPO_status,subbranchid, userid) 
+   VALUES ('$po_no','$po_date',$cid,'$po_agent','$po_lo','$po_tel','$po_mail','$po_sendlo','$po_datesend',$pricesum,$pricediscount,$priceMIdicount,$pricevat,$totalprice,'$note','1',$subid,$userid)";
 
     $result = array();
     if (mysqli_query($con, $sqlInPO)) {
-        $result[0]['addrpt_PO'] = 'Successed';
+        $result[0]['addrpt_PO'] = true;
+
+        $sqlInPOD = "INSERT INTO rpt_POdetail( rptPO_no, productid, remain, type, pricePerType, note, priceall, sts,subbranchid, userid) SELECT '$po_no',productid, remain, type, pricePerType, note, priceall,'1',$subid,$userid FROM prePo WHERE prePo.subbranchid = $subid";
+
+        if (mysqli_query($con, $sqlInPOD)) {
+            $result[0]['addrpt_POD'] = true;
+        } else {
+            $result[0]['addrpt_POD'] = 'Failed = '.mysqli_error($con)."------".$sqlInPOD;
+        }
+
+        $sqlDelPrePO = "DELETE FROM prePo WHERE subbranchid = $subid";
+
+
+        if (mysqli_query($con, $sqlDelPrePO)) {
+            $result[0]['DelPrePO'] = true;
+        } else {
+            $result[0]['DelPrePO'] = 'Failed = '.mysqli_error($con)."------".$sqlDelPrePO;
+        }
+
+
     } else {
         $result[0]['addrpt_PO'] = 'Failed = '.mysqli_error($con)."------".$sqlInPO;
     }
 
-    $sqlInPOD = "INSERT INTO rpt_POdetail( rptPO_no, productid, remain, type, pricePerType, discount, priceall, sts,subbranchid, userid) SELECT '$po_no',productid, remain, type, pricePerType, discount, priceall,'1',$subid,$userid FROM prePo WHERE prePo.subbranchid = $subid";
+            $res["records"] = $result;
 
-    if (mysqli_query($con, $sqlInPOD)) {
-        $result[0]['addrpt_POD'] = 'Successed';
-    } else {
-        $result[0]['addrpt_POD'] = 'Failed = '.mysqli_error($con)."------".$sqlInPOD;
-    }
-
-    $sqlDelPrePO = "DELETE FROM prePo WHERE subbranchid = $subid";
-
-
-    if (mysqli_query($con, $sqlDelPrePO)) {
-        $result[0]['DelPrePO'] = 'Successed';
-    } else {
-        $result[0]['DelPrePO'] = 'Failed = '.mysqli_error($con)."------".$sqlDelPrePO;
-    }
-
-
-echo   json_encode($result);
+echo   json_encode($res);
 }

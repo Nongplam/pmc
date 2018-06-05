@@ -11,7 +11,7 @@ $result = mysqli_query($con,$query);
 $res = array();
 while ($rows = $result->fetch_array(MYSQLI_ASSOC)){
     
-    $res[] = array('cid' =>$rows['cid'] , 'cname' => $rows['cname'],'ccon'=>$rows['contact']);
+    $res[] = $rows;
 }
 $brand['records'] = $res;
 echo json_encode($brand);

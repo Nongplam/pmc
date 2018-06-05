@@ -13,12 +13,10 @@ if($data) {
     $type =   mysqli_real_escape_string($con,$data ->po_type );
     $remain =  mysqli_real_escape_string($con,$data -> po_remain);
     $pricePtype =  mysqli_real_escape_string($con,$data -> po_pricePerType);
-    $po_discount =  mysqli_real_escape_string($con,$data -> po_discount);
+    $po_notePro =  mysqli_real_escape_string($con,$data -> po_notePro);
     $pricetotal = $remain*$pricePtype;
-    $pricedis = ($pricetotal*$po_discount)/100;
 
-    $priceall = ($pricetotal)-$pricedis;
-    $sqlIn = "INSERT INTO prePo( productid, remain, type, pricePerType,discount ,priceall, subbranchid, userid) VALUES ($productid,$remain,'$type',$pricePtype,$po_discount,$priceall,$subid,$userid)";
+    $sqlIn = "INSERT INTO prePo( productid, remain, type, pricePerType,note ,priceall, subbranchid, userid) VALUES ($productid,$remain,'$type',$pricePtype,'$po_notePro',$pricetotal,$subid,$userid)";
     if(mysqli_query($con,$sqlIn)){
 
 

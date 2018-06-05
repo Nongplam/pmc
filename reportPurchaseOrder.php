@@ -26,6 +26,7 @@ if($result = mysqli_query($con,$sql)){
     $priceMIdicount = $row["priceMIdicount"];
     $pricevat = $row["pricevat"];
     $totalprice = $row["totalprice"];
+    $note = $row["note"];
     $rptPO_status = $row["rptPO_status"];
 
 }
@@ -90,8 +91,8 @@ ob_start();
             <th>จำนวน</th>
             <th>หน่วย</th>
             <th>ราคา/หน่วย</th>
-            <th>ส่วนลด</th>
             <th>จำนวนเงิน</th>
+            <th>หมายเหตุ</th>
         </tr>
         </thead>
         <tbody>
@@ -108,8 +109,8 @@ ob_start();
                     <td align="center"><?=$rowD["remain"]?></td>
                     <td align="center"><?=$rowD["type"]?></td>
                     <td align="center"><?=$rowD["pricePerType"]?></td>
-                    <td align="center"><?=$rowD["discount"]?></td>
                     <td align="center"><?=$rowD["priceall"]?></td>
+                    <td align="center"><?=$rowD["note"]?></td>
                 </tr>
                 <?php
             }
@@ -118,31 +119,46 @@ ob_start();
              </tbody>
         </table>
 
-    <table align="right " lang="th">
 
-        <tbody>
+
+
+    <table lang="th">
         <tr>
-            <th align="right">รวมเงิน : </th>
-            <td><?=$pricesum?></td>
+            <td width="70%">
+
+                <span style="color: red">หมายเหตุ*</span>
+                <span style="color: red"><?=$note?></span>
+            </td>
+            <td width="30%">
+                <table align="right " lang="th">
+                    <tbody>
+                    <tr>
+                        <th align="right">รวมเงิน : </th>
+                        <td><?=$pricesum?></td>
+                    </tr>
+                    <tr>
+                        <th align="right">ส่วนลด : </th>
+                        <td><?=$pricediscount?></td>
+                    </tr>
+                    <tr>
+                        <th align="right">หลังหักส่วนลด : </th>
+                        <td><?=$priceMIdicount?></td>
+                    </tr>
+                    <tr>
+                        <th align="right">ภาษีมูลค่าเพิม : </th>
+                        <td><?=$pricevat?></td>
+                    </tr>
+                    <tr>
+                        <th align="right">จำนวนเงินทั้งสิ้น : </th>
+                        <td><?=$totalprice?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
         </tr>
-        <tr>
-            <th align="right">ส่วนลด : </th>
-            <td><?=$pricediscount?></td>
-        </tr>
-        <tr>
-            <th align="right">หลังหักส่วนลด : </th>
-            <td><?=$priceMIdicount?></td>
-        </tr>
-        <tr>
-            <th align="right">ภาษีมูลค่าเพิม : </th>
-            <td><?=$pricevat?></td>
-        </tr>
-        <tr>
-            <th align="right">จำนวนเงินทั้งสิ้น : </th>
-            <td><?=$totalprice?></td>
-        </tr>
-        </tbody>
     </table>
+
+
 
 
 
