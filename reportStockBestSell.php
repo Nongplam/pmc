@@ -26,7 +26,7 @@
             <form>
 
                 สาขา :
-                <select id="branch" name="branch" ng-model="branch" class="form-control custom-select" ng-init="selectBranch()">
+                <select id="branch" name="branch" ng-model="branch" class="form-control custom-select col-sm-4" ng-init="selectBranch()">
 <option ng-repeat="branch in branchs" value="{{branch.id}}">{{branch.name}}</option>
     
 </select>
@@ -54,24 +54,11 @@
                         <td>{{stock.remainall}}</td>
                         <td>{{stock.stocktype}}</td>
                         <td>{{stock.receiveday}}</td>
-
-
-
-
-
-
                     </tr>
-
                 </tbody>
             </table>
-
-
         </div>
     </div>
-
-
-
-
     <script src="js/reportStockBestSell.js"></script>
     <script src="dist/sweetalert.min.js"></script>
 </body>

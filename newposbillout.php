@@ -34,7 +34,7 @@ session_start();
         <div style="width:300px;">
             <div class="fonthere">
                 <div class="row d-flex justify-content-center"><span>สาขา&nbsp;<?php echo $_SESSION["subbranchname"]; ?></span><span>(<?php echo $_SESSION["subbranchid"]; ?>)</span></div>
-                <div class="row d-flex justify-content-center"><span>TAX detailed</span></div>
+                <div class="row d-flex justify-content-center"><span>Taxid : {{taxid}}</span></div>
                 <div class="row d-flex justify-content-center"><span>ใบเสร็จรับเงิน</span></div>
                 <div class="row" style="margin-bottom: -20px;">
                     <div class="table-responsive">
@@ -79,7 +79,7 @@ session_start();
                 <div class="row">
                     <div class="col d-flex justify-content-center"><span>*ติดต่อสอบถาม {{tel}}*</span></div>
                 </div>
-                
+
             </div>
             <div class="row">
                 <div class="col d-flex justify-content-center"><span>..............................................................................</span></div>
@@ -112,7 +112,7 @@ session_start();
         $scope.billItem = function() {
             $http.get("php/billItem.php").then(function(response) {
                 $scope.bills = response.data.records;
-            });            
+            });
         }
         $scope.getdecimalFormat = function(money) {
             return parseFloat(money).toFixed(2);
@@ -121,6 +121,7 @@ session_start();
         $scope.setdetail = function() {
             $scope.billno = $scope.bills["0"].billno;
             $scope.refkey = $scope.bills["0"].refkey;
+            $scope.taxid = $scope.bills["0"].taxid;
             $scope.qtytotal = 0;
             $scope.sumpricetotal = 0;
             //console.log($scope.bills["0"].qty);

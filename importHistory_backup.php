@@ -11,7 +11,6 @@
         .modal-lg {
             max-width: 70%;
         }
-
     </style>
 </head>
 
@@ -62,9 +61,9 @@
                         <th>จำนวนนำเข้า</th>
                         <th>จำนวนคงเหลือ</th>
                         <th>หน่วย</th>
-                        <!--<th>ราคาทุนต่อหน่วย</th>
+                        <th>ราคาทุนต่อหน่วย</th>
                         <th>ราคาขายต่อหน่วย</th>
-                        <th>กำไรต่อหน่วย</th>-->
+                        <th>กำไรต่อหน่วย</th>
                         <th>วันที่รับเข้า</th>
                         <th>เวลาที่บันทึก</th>
                         <th>ติดตามสิ้นค้า</th>
@@ -80,9 +79,9 @@
                         <td>{{item.remainfull}}</td>
                         <td>{{item.remain}}</td>
                         <td>{{item.stocktype}}</td>
-                        <!--<td>{{item.costprice}}</td>
+                        <td>{{item.costprice}}</td>
                         <td>{{item.retailprice}}</td>
-                        <td>{{item.retailprice-item.costprice}}</td>-->
+                        <td>{{item.retailprice-item.costprice}}</td>
                         <td>{{item.receiveday}}</td>
                         <td>{{item.logdatetime}}</td>
                         <td><button class="btn btn-info" ng-click="getstockTrail(item.sid,item.pname)">✓</button></td>
@@ -143,9 +142,9 @@
                                     <th>เลขที่สต๊อกในสาขา</th>
                                     <th>ชื่อสินค้า</th>
                                     <th>จำนวนที่ส่งไป</th>
-                                    <!--<th>จำนวนคงเหลือ</th>-->
+                                    <th>จำนวนคงเหลือ</th>
                                     <th>หน่วย</th>
-                                    <!--<th>ราคาขายหน้าร้าน</th>-->
+                                    <th>ราคาขายหน้าร้าน</th>
                                     <th>ชื่อ - สกุล ผู้รับสินค้า</th>
                                     <th>วันที่รับเข้า</th>
                                     <th>วันที่บันทึกสินค้า</th>
@@ -157,9 +156,9 @@
                                     <td>{{item.sid}}</td>
                                     <td>{{item.pname}}</td>
                                     <td>{{item.remainfull}}</td>
-                                    <!--<td>{{item.remain}}</td>-->
+                                    <td>{{item.remain}}</td>
                                     <td>{{item.stocktype}}</td>
-                                    <!--<td>{{item.retailprice}}</td>-->
+                                    <td>{{item.retailprice}}</td>
                                     <td>{{item.fname +' '+item.lname}}</td>
                                     <td>{{item.receiveday}}</td>
                                     <td>{{item.logdatetime}}</td>
@@ -267,7 +266,6 @@
                 return newdate;
             }
         });
-
     </script>
 </body>
 <script src="dist/sweetalert.min.js"></script>
