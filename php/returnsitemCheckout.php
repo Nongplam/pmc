@@ -24,7 +24,13 @@ if($data){
         $moneyreturntotal = $moneyreturntotal + $moneybacktemp;
         $masterid = $dailydrows['masterid'];
         $addtoreturnslistquery="INSERT INTO returnitem(ddid, qty, price, moneyback, stockid, userid, subbranchid) VALUES ('$ddidtemp','$qtytemp','$pricetemp','$moneybacktemp','$stockidtemp','$userid','$subbranchid')";
-        mysqli_query($con, $addtoreturnslistquery);
+        echo $addtoreturnslistquery;
+        if(mysqli_query($con, $addtoreturnslistquery)) {
+            echo "return Inserted";            
+        }
+        else {
+            echo "return Error";
+        }
         $updatedailydquery="UPDATE dailysaledetail SET dailysaledetail.status = '2' WHERE dailysaledetail.ddid = '$ddidtemp'";
         mysqli_query($con, $updatedailydquery);
     }

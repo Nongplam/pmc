@@ -2,7 +2,7 @@
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 
-$output="";
+//$output="";
 
 $query="select product.*,brand.bname from product LEFT JOIN brand on product.brandid = brand.bid";
 $result=mysqli_query($con, $query);
