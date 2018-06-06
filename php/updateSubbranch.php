@@ -9,8 +9,9 @@ if($data){
     $name=mysqli_real_escape_string($con, $data->name);
     $tel=mysqli_real_escape_string($con, $data->tel);
     $info=mysqli_real_escape_string($con, $data->info);
+    $taxid=mysqli_real_escape_string($con, $data->taxid);
         
-    $query="update subbranch set name='$name',tel='$tel',info='$info' where id='$id'";
+    $query="update subbranch set name='$name',tel='$tel',info='$info',taxid='$taxid' where id='$id'";
     
     if(mysqli_query($con, $query)) {
             echo "Data Updated";            
