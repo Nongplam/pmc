@@ -9,8 +9,9 @@ if($data){
     $name=mysqli_real_escape_string($con, $data->name);
     $tel=mysqli_real_escape_string($con, $data->tel);    
     $info=mysqli_real_escape_string($con, $data->info);
+    $taxid=mysqli_real_escape_string($con, $data->taxid);
         
-    $stm1="insert into subbranch(mid,name,tel,info) values('$masterbranchid','$name','$tel','$info')";
+    $stm1="insert into subbranch(mid,name,tel,info,taxid) values('$masterbranchid','$name','$tel','$info','$taxid')";
     if(mysqli_query($con, $stm1)) {
             echo "Data Inserted";            
         }

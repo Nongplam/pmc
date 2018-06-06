@@ -61,7 +61,8 @@
                         </div>
                         <div class="col"><button class="btn btn-primary" type="button" id="addsubbranch">เพิ่มสาขา</button></div>
                     </div>
-                    <div class="row"><label>รายชื่อสาขา</label>
+                    <div class="row">
+                        <h2> &nbsp;รายชื่อสาขา</h2>
                         <div class="table-responsive" ng-init="getallSubbranch()">
                             <table class="table">
                                 <thead>
@@ -70,6 +71,7 @@
                                         <th>ชื่อสาขา</th>
                                         <th>ข้อมูลสาขา</th>
                                         <th>โทรศัพท์</th>
+                                        <th>เลขประจำตัวผู้เสียภาษี</th>
                                         <th style="width:66px;">แก้ไข</th>
                                         <th style="width:66px;">ลบ</th>
                                     </tr>
@@ -80,7 +82,8 @@
                                         <td>{{x.name}}</td>
                                         <td>{{x.info}}</td>
                                         <td>{{x.tel}}</td>
-                                        <td><button class="editsubbranchbtn btn btn-info" id="editsubbranchbtn" ng-click="seteditsubbranchvalue(x.id,x.name,x.tel,x.info)" data-target="#editsubbranchmodal" data-toggle="modal">Edit</button></td>
+                                        <td>{{x.taxid}}</td>
+                                        <td><button class="editsubbranchbtn btn btn-info" id="editsubbranchbtn" ng-click="seteditsubbranchvalue(x.id,x.name,x.tel,x.info,x.taxid)" data-target="#editsubbranchmodal" data-toggle="modal">Edit</button></td>
                                         <td><button class="btn btn-danger" ng-click="deleteSubbranch(x.id)" type="button">ลบสาขา</button></td>
                                     </tr>
                                 </tbody>
@@ -104,7 +107,11 @@
                                 </div>
                                 <div class="form-row newsubbranchrowbuffer">
                                     <div class="col"><label class="col-form-label">เบอร์โทรศัพท์ :</label></div>
-                                    <div class="col"><input type="text" class="form-control" ng-model="newsubbranchtel" maxlength="10" style="width:auto;" id="newsubbranchlname" /></div>
+                                    <div class="col"><input type="text" class="form-control" ng-model="newsubbranchtel" maxlength="10" style="width:auto;" id="newsubbranchltel" /></div>
+                                </div>
+                                <div class="form-row newsubbranchrowbuffer">
+                                    <div class="col"><label class="col-form-label">เลขประจำตัวผู้เสียภาษี :</label></div>
+                                    <div class="col"><input type="text" class="form-control" ng-model="newsubbranchtaxid" maxlength="20" style="width:auto;" id="newsubbranchltaxid" /></div>
                                 </div>
                                 <div class="form-row newsubbranchrowbuffer">
                                     <div class="col"><label class="col-form-label">ข้อมูลสาขา :</label></div>
@@ -139,6 +146,10 @@
                                     <div class="col"><input type="text" class="form-control" ng-model="editsubbranchtel" maxlength="10" style="width:auto;" id="editsubbranchlname" /></div>
                                 </div>
                                 <div class="form-row newsubbranchrowbuffer">
+                                    <div class="col"><label class="col-form-label">เลขประจำตัวผู้เสียภาษี :</label></div>
+                                    <div class="col"><input type="text" class="form-control" ng-model="editsubbranchtaxid" maxlength="20" style="width:auto;" id="editsubbranchltaxid" /></div>
+                                </div>
+                                <div class="form-row newsubbranchrowbuffer">
                                     <div class="col"><label class="col-form-label">ข้อมูลสาขา :</label></div>
                                     <div class="col"><textarea type="text" class="form-control" ng-model="editsubbranchinfo" style="width:345px;" id="editsubbranchinfo">ข้อมูลสาขา</textarea></div>
                                 </div>
@@ -168,35 +179,40 @@
                     $http.post("php/insertnewSubbranch.php", {
                         'name': $scope.newsubbranchname,
                         'tel': $scope.newsubbranchtel,
-                        'info': $scope.newsubbranchinfo
+                        'info': $scope.newsubbranchinfo,
+                        'taxid': $scope.newsubbranchtaxid
                     }).then(function(data) {
                         $scope.newsubbranchname = null;
                         $scope.newsubbranchtel = null;
                         $scope.newsubbranchinfo = null;
+                        $scope.newsubbranchtaxid = null;
                         $scope.getallSubbranch();
                         //location.reload();
                     });
                 }
-                $scope.seteditsubbranchvalue = function(id, name, tel, info) {
+                $scope.seteditsubbranchvalue = function(id, name, tel, info, taxid) {
                     $scope.editsubbranchid = id;
                     $scope.editsubbranchname = name;
                     $scope.editsubbranchtel = tel;
                     $scope.editsubbranchinfo = info;
+                    $scope.editsubbranchtaxid = taxid;
                 }
                 $scope.submiteditSubbranch = function() {
                     $http.post("php/updateSubbranch.php", {
                         'id': $scope.editsubbranchid,
                         'name': $scope.editsubbranchname,
                         'tel': $scope.editsubbranchtel,
-                        'info': $scope.editsubbranchinfo
+                        'info': $scope.editsubbranchinfo,
+                        'taxid': $scope.editsubbranchtaxid
 
                     }).then(function(data) {
                         $scope.editsubbranchid = null;
                         $scope.editsubbranchname = null;
                         $scope.editsubbranchtel = null;
                         $scope.editsubbranchinfo = null;
-                        //$scope.getallSubbranch();
-                        location.reload();
+                        $scope.editsubbranchtaxid = null;
+                        $scope.getallSubbranch();
+                        //location.reload();
                     });
                 }
                 $scope.deleteSubbranch = function(subbranchid) {

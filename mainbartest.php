@@ -7,7 +7,10 @@ include 'php/connectDB.php';
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
     $allowrule = explode(",",$allowruleraw["rule"]);  
+//echo $role;
 ?>
+
+
 
 
     <nav class="navbar navbar-dark navbar-expand-md bg-primary rounded-bottom">
@@ -17,32 +20,113 @@ include 'php/connectDB.php';
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav">
                     <?php 
+                    $menuarr = array();
+                    foreach ($allowrule as $value) {
+                            $rulequery="select * from privilege where privilege.id = '$value'";
+                            $ruleresult=mysqli_query($con,$rulequery);
+                            $ruledetail=$ruleresult->fetch_array(MYSQLI_ASSOC);
+                            if($ruledetail['inmenu'] != null){
+                            array_push($menuarr,$ruledetail['inmenu']);
+                            }                            
+                        }
+                    $menuarr = array_unique($menuarr);
+                    foreach($menuarr as $menuid){
+                        echo "<div class='dropdown'>";
+                        echo "<button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
+                        $menunamequery="SELECT menutype.menuname FROM menutype WHERE menutype.menuid = $menuid";
+                        $menunameresult = mysqli_query($con, $menunamequery);
+                        $menunamerows = mysqli_fetch_assoc($menunameresult);
+                        $menuname = $menunamerows['menuname'];
+                        echo $menuname;    
+                        echo "</button>";
+                        echo "<div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>";
+                        $minimenuquery="SELECT * FROM privilege WHERE privilege.inmenu = '$menuid' AND LOCATE(privilege.id,(SELECT rolesetting.rule FROM rolesetting WHERE rolesetting.rolename = '$role')) > 0";
+                        $minimenuresult=mysqli_query($con,$minimenuquery);
+                        while ($rows = $minimenuresult->fetch_array(MYSQLI_ASSOC)){                            
+                            //array_push($product,$rows['bname']);
+                            echo "<a class='dropdown-item' href='";
+                            echo $rows['file'];
+                            echo "'>";
+                            echo $rows['rulethai'];
+                            echo "</a>";
+                        }
+                        echo "</div>";
+                        echo "</div>";
+                        
+                    }
                         foreach ($allowrule as $value) {
                             $rulequery="select * from privilege where privilege.id = '$value'";
                             $ruleresult=mysqli_query($con,$rulequery);
                             $ruledetail=$ruleresult->fetch_array(MYSQLI_ASSOC);                            
-                            echo '<li role="presentation" class="nav-item" value="';
+                            if($ruledetail['inmenu'] == null){
+                                echo '<li role="presentation" class="nav-item" value="';
                             echo $value;
                             echo '"><a href="';
                             echo $ruledetail['file'];
-                            echo '" id="menuitem" class="nav-link" value="';                            
+                            echo '" id="menuitem" class="nav-link text-light" value="';                            
                             echo $value;
                             echo '">';
-                            echo $ruledetail['rulethai'];                            
+                            //echo "<button class='btn btn-primary'>";
+                            echo $ruledetail['rulethai'];  
+                            //echo "</button>";
                             echo '</a></li>';
+                            }                            
                         }
                     ?>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link">
-                    แจ้งเตือน
-                </a>
 
-                    </li>
                 </ul>
 
+                <span class="ml-auto mr-sm-2" style="color:rgb(248,249,250);"><?php echo $_SESSION["roledesc"]; echo " "; echo $_SESSION["fname"]; echo " "; echo $_SESSION["lname"];?></span>
+                <div class="">
+                    <button class="btn btn-light mr-sm-2 text-primary" data-toggle="modal" data-target="#notiModal">แจ้งเตือน
+                        <span class="badge badge-warning" id="notinumber"></span>
+                    </button>
+                    <div id='notidropdown'>
+                        <!--<div class="dropdown-menu">
+                            <button class="dropdown-item" href="#">#1 : สินค้าไม่ถูกจัดขึ้นชั้นวาง</button>
+                        </div>-->
+                    </div>
 
-                <span class="ml-auto navbar-text" style="color:rgb(248,249,250);">ยินดีต้อนรับ <?php echo $_SESSION["roledesc"]; echo " "; echo $_SESSION["fname"]; echo " "; echo $_SESSION["lname"];?></span>
-                <a href="logout.php"><button class="btn btn-light ml-auto" type="button" style="color:rgb(0,123,255);">Logout</button></a></div>
+                </div>
+                <a href="logout.php"><button class="btn btn-light ml-auto" type="button" style="color:rgb(0,123,255);">Logout</button></a>
+
+            </div>
         </div>
     </nav>
     <br>
+
+    <!-- Modal -->
+    <div class="modal fade" id="notiModal" tabindex="-1" role="dialog" aria-labelledby="notiModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-light" id="notiModalLabel">รายการแจ้งเตือน</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                </div>
+                <div class="modal-body">
+                    <div id="notitable">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var notiCount = 0;
+            $("#notidropdown").ready(function() {
+                $.get("php/getNoti.php", function(data) {
+                    $("#notitable").html(data);
+                    notiCount = $('.notirow').length;
+                    $("#notinumber").text(notiCount);
+                });
+            });
+        });
+
+    </script>
