@@ -31,7 +31,7 @@
                 <form>
 
                     สาขา :
-                    <select id="branch" name="branch" ng-model="branch" class="form-control custom-select" ng-init="selectBranch()">
+                    <select id="branch" name="branch" ng-model="branch" class="form-control custom-select col-sm-4" ng-init="selectBranch()">
 <option ng-repeat="branch in branchs" value="{{branch.id}}">{{branch.name}}</option>
     
 </select>
