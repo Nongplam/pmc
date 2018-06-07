@@ -130,7 +130,7 @@ function thai_date($time){
                                 </ul>
                             </div>
                             <br>
-                            <h1>รายการ : SR
+                            <h1>รายการ : {{newbill}}
                             </h1>
 
                             <table class="table col">
@@ -513,7 +513,7 @@ function thai_date($time){
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                             </div>
                             <div class="modal-body d-flex justify-content-center" ng-show="showreturnmgrkey">
-                                <input class="input-group-text col-7" id="mgrkey" type="text" ng-model="mgrpass" ng-keyup="returnmgrkeyEnter($event)" placeholder="กรุณาใส่รหัสผ่าน" />
+                                <input class="input-group-text col-7" id="mgrkey" type="password" ng-model="mgrpass" ng-keyup="returnmgrkeyEnter($event)" placeholder="กรุณาใส่รหัสผ่าน" />
                                 <button class="btn btn-primary col-2" type="button" ng-click="returnmgrkey(mgrpass)">ยืนยัน</button>
                             </div>
                             <div class="modal-body d-flex justify-content-center" ng-show="showreturnrefkey">
@@ -621,6 +621,12 @@ function thai_date($time){
                         var refkey = $scope.refkey;
                         $http.get("php/getreturnitem.php?refkey=" + refkey).then(function(response) {
                             $scope.returnitems = response.data.records;
+                        });
+                    }
+
+                    $scope.getnewbill = function() {
+                        $http.get("php/getnextbillNo.php").then(function(response) {
+                            $scope.newbill = response.data;
                         });
                     }
 
@@ -797,6 +803,7 @@ function thai_date($time){
                         });
                     }
                     $scope.posItem = function() {
+                        $scope.getnewbill();
                         $http.get("php/cartItem.php").then(function(response) {
                             $scope.positems = response.data.records;
                         });
