@@ -10,7 +10,6 @@ $poNO = $_GET["NO"];
 $sql = "SELECT rpt_PO.*,company.cname FROM rpt_PO,company WHERE company.cid = rpt_PO.cid  AND rptPO_no = '$poNO'";
 if($result = mysqli_query($con,$sql)){
     $row = $result->fetch_array(1);
-
     $rptPO_no = $row["rptPO_no"];
     $cname = $row["cname"];
     $rptPO_agent = $row["rptPO_agent"];
@@ -27,54 +26,73 @@ if($result = mysqli_query($con,$sql)){
     $pricevat = $row["pricevat"];
     $totalprice = $row["totalprice"];
     $rptPO_status = $row["rptPO_status"];
-
 }
 
 ob_start();
 ?>
 
-<div  lang="th">
+    <div lang="th">
 
-        <h4  lang="th" align="center"> ใบสั่งซื้อ </h4>
-       <h4 lang="th"> บริษัท สุมิตรเภสัช</h4>
-         
-                <table align="right" border="1" lang="th" >
-                <tbody>
-                    <tr>
-                        <th>เลขที่ใบสั่งซื้อ</th>
-                        <td><?=$rptPO_no?></td>
-                    </tr>
-                    <tr>
-                        <th>วันที่</th>
-                        <td><?=$rptPO_date?></td>
-                    </tr>
-                     </tbody>
-                </table>
-        <table  border="1" lang="th" style="width: 100%;">
-         <tbody>
-            <tr>
-                <td style="width: 50%;">
-                    <p>บริษัทผู้ขาย : <?=$cname?></p>
-                    <br>
-                    <p>ตัวแทน : <?=$rptPO_agent?></p>
-                    <br>
-                    <p>ที่อยู่  : <?=$rptPO_lo?></p>
-                    <br>
-                    <p>โทร  : <?=$rptPO_tel?></p>
-                    <br>
-                    <p>mail  : <?=$rptPO_mail?></p>
-                </td>
-                <td style="width: 50%;">
-                    <p>เลขที่ใบกำกับภาษี  : <?=$rptPO_vatNo?></p>
-                    <br>
-                    <p>ที่อยู่จัดส่ง  : <?=$rptPO_losend?></p>
-                    <br>
-                    <p>กำหนดส่ง : <?=$rptPO_datesend?></p>
+        <h4 lang="th" align="center"> ใบสั่งซื้อ </h4>
+        <h4 lang="th"> บริษัท สุมิตรเภสัช</h4>
+
+        <table align="right" border="1" lang="th">
+            <tbody>
+                <tr>
+                    <th>เลขที่ใบสั่งซื้อ</th>
+                    <td>
+                        <?=$rptPO_no?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>วันที่</th>
+                    <td>
+                        <?=$rptPO_date?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table border="1" lang="th" style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="width: 50%;">
+                        <p>บริษัทผู้ขาย :
+                            <?=$cname?>
+                        </p>
+                        <br>
+                        <p>ตัวแทน :
+                            <?=$rptPO_agent?>
+                        </p>
+                        <br>
+                        <p>ที่อยู่ :
+                            <?=$rptPO_lo?>
+                        </p>
+                        <br>
+                        <p>โทร :
+                            <?=$rptPO_tel?>
+                        </p>
+                        <br>
+                        <p>mail :
+                            <?=$rptPO_mail?>
+                        </p>
+                    </td>
+                    <td style="width: 50%;">
+                        <p>เลขที่ใบกำกับภาษี :
+                            <?=$rptPO_vatNo?>
+                        </p>
+                        <br>
+                        <p>ที่อยู่จัดส่ง :
+                            <?=$rptPO_losend?>
+                        </p>
+                        <br>
+                        <p>กำหนดส่ง :
+                            <?=$rptPO_datesend?>
+                        </p>
 
 
-                </td>
-            </tr>
-             </tbody>
+                    </td>
+                </tr>
+            </tbody>
         </table>
 
 
@@ -82,86 +100,104 @@ ob_start();
 
 
 
-    <table border="1" lang="th" style="width: 100%;">
-        <thead>
-        <tr class="headerrow">
-            <th>#</th>
-            <th>ชื่อ</th>
-            <th>จำนวน</th>
-            <th>หน่วย</th>
-            <th>ราคา/หน่วย</th>
-            <th>ส่วนลด</th>
-            <th>จำนวนเงิน</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
+        <table border="1" lang="th" style="width: 100%;">
+            <thead>
+                <tr class="headerrow">
+                    <th>#</th>
+                    <th>ชื่อ</th>
+                    <th>จำนวน</th>
+                    <th>หน่วย</th>
+                    <th>ราคา/หน่วย</th>
+                    <th>ส่วนลด</th>
+                    <th>จำนวนเงิน</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
 
         $sqlDe = "SELECT rpt_POdetail.*,product.pname FROM rpt_POdetail,product WHERE rpt_POdetail.productid = product.regno AND rpt_POdetail.rptPO_no = $poNO ORDER BY product.pname ASC";
             $c =0 ;
         if($result2 = mysqli_query($con,$sqlDe)){
             while ($rowD = $result2->fetch_array(1)) {
                 ?>
-                <tr>
-                    <td><?=$c=$c+1?></td>
-                    <td><?=$rowD["pname"]?></td>
-                    <td align="center"><?=$rowD["remain"]?></td>
-                    <td align="center"><?=$rowD["type"]?></td>
-                    <td align="center"><?=$rowD["pricePerType"]?></td>
-                    <td align="center"><?=$rowD["discount"]?></td>
-                    <td align="center"><?=$rowD["priceall"]?></td>
-                </tr>
-                <?php
+                    <tr>
+                        <td>
+                            <?=$c=$c+1?>
+                        </td>
+                        <td>
+                            <?=$rowD["pname"]?>
+                        </td>
+                        <td align="center">
+                            <?=$rowD["remain"]?>
+                        </td>
+                        <td align="center">
+                            <?=$rowD["type"]?>
+                        </td>
+                        <td align="center">
+                            <?=$rowD["pricePerType"]?>
+                        </td>
+                        <td align="center">
+                            <?=$rowD["discount"]?>
+                        </td>
+                        <td align="center">
+                            <?=$rowD["priceall"]?>
+                        </td>
+                    </tr>
+                    <?php
             }
         }
             ?>
-             </tbody>
+            </tbody>
         </table>
 
-    <table align="right " lang="th">
+        <table align="right " lang="th">
 
-        <tbody>
-        <tr>
-            <th align="right">รวมเงิน : </th>
-            <td><?=$pricesum?></td>
-        </tr>
-        <tr>
-            <th align="right">ส่วนลด : </th>
-            <td><?=$pricediscount?></td>
-        </tr>
-        <tr>
-            <th align="right">หลังหักส่วนลด : </th>
-            <td><?=$priceMIdicount?></td>
-        </tr>
-        <tr>
-            <th align="right">ภาษีมูลค่าเพิม : </th>
-            <td><?=$pricevat?></td>
-        </tr>
-        <tr>
-            <th align="right">จำนวนเงินทั้งสิ้น : </th>
-            <td><?=$totalprice?></td>
-        </tr>
-        </tbody>
-    </table>
-
-
-
-
-
-
-
-
-
-
-
-
+            <tbody>
+                <tr>
+                    <th align="right">รวมเงิน : </th>
+                    <td>
+                        <?=$pricesum?>
+                    </td>
+                </tr>
+                <tr>
+                    <th align="right">ส่วนลด : </th>
+                    <td>
+                        <?=$pricediscount?>
+                    </td>
+                </tr>
+                <tr>
+                    <th align="right">หลังหักส่วนลด : </th>
+                    <td>
+                        <?=$priceMIdicount?>
+                    </td>
+                </tr>
+                <tr>
+                    <th align="right">ภาษีมูลค่าเพิม : </th>
+                    <td>
+                        <?=$pricevat?>
+                    </td>
+                </tr>
+                <tr>
+                    <th align="right">จำนวนเงินทั้งสิ้น : </th>
+                    <td>
+                        <?=$totalprice?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
 
-        
 
-</div>
 
-<?php
+
+
+
+
+
+
+    </div>
+
+    <?php
 
 $html = ob_get_contents();
 

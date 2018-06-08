@@ -330,7 +330,7 @@ function thai_date($time){
         </button>
                             </div>
                             <div class="modal-body">
-                                <form id="modalform">
+                                <form id="modalformadditem">
                                     <div class="container">
                                         <div class="row">
                                             <h5>เลขล็อตที่ :&nbsp;</h5>
