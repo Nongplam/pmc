@@ -25,6 +25,7 @@ if($result = mysqli_query($con,$sql)){
     $priceMIdicount = $row["priceMIdicount"];
     $pricevat = $row["pricevat"];
     $totalprice = $row["totalprice"];
+    $note = $row["note"];
     $rptPO_status = $row["rptPO_status"];
 }
 
@@ -100,57 +101,88 @@ ob_start();
 
 
 
-        <table border="1" lang="th" style="width: 100%;">
-            <thead>
-                <tr class="headerrow">
-                    <th>#</th>
-                    <th>ชื่อ</th>
-                    <th>จำนวน</th>
-                    <th>หน่วย</th>
-                    <th>ราคา/หน่วย</th>
-                    <th>ส่วนลด</th>
-                    <th>จำนวนเงิน</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
+
+    <table border="1" lang="th" style="width: 100%;">
+        <thead>
+        <tr class="headerrow">
+            <th>#</th>
+            <th>ชื่อ</th>
+            <th>จำนวน</th>
+            <th>หน่วย</th>
+            <th>ราคา/หน่วย</th>
+            <th>จำนวนเงิน</th>
+            <th>หมายเหตุ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+
 
         $sqlDe = "SELECT rpt_POdetail.*,product.pname FROM rpt_POdetail,product WHERE rpt_POdetail.productid = product.regno AND rpt_POdetail.rptPO_no = $poNO ORDER BY product.pname ASC";
             $c =0 ;
         if($result2 = mysqli_query($con,$sqlDe)){
             while ($rowD = $result2->fetch_array(1)) {
                 ?>
-                    <tr>
-                        <td>
-                            <?=$c=$c+1?>
-                        </td>
-                        <td>
-                            <?=$rowD["pname"]?>
-                        </td>
-                        <td align="center">
-                            <?=$rowD["remain"]?>
-                        </td>
-                        <td align="center">
-                            <?=$rowD["type"]?>
-                        </td>
-                        <td align="center">
-                            <?=$rowD["pricePerType"]?>
-                        </td>
-                        <td align="center">
-                            <?=$rowD["discount"]?>
-                        </td>
-                        <td align="center">
-                            <?=$rowD["priceall"]?>
-                        </td>
-                    </tr>
-                    <?php
+
+                <tr>
+                    <td><?=$c=$c+1?></td>
+                    <td><?=$rowD["pname"]?></td>
+                    <td align="center"><?=$rowD["remain"]?></td>
+                    <td align="center"><?=$rowD["type"]?></td>
+                    <td align="center"><?=$rowD["pricePerType"]?></td>
+                    <td align="center"><?=$rowD["priceall"]?></td>
+                    <td align="center"><?=$rowD["note"]?></td>
+                </tr>
+                <?php
+
             }
         }
             ?>
             </tbody>
         </table>
 
-        <table align="right " lang="th">
+
+
+
+    <table lang="th">
+        <tr>
+            <td width="70%">
+
+                <span style="color: red">หมายเหตุ*</span>
+                <span style="color: red"><?=$note?></span>
+            </td>
+            <td width="30%">
+                <table align="right " lang="th">
+                    <tbody>
+                    <tr>
+                        <th align="right">รวมเงิน : </th>
+                        <td><?=$pricesum?></td>
+                    </tr>
+                    <tr>
+                        <th align="right">ส่วนลด : </th>
+                        <td><?=$pricediscount?></td>
+                    </tr>
+                    <tr>
+                        <th align="right">หลังหักส่วนลด : </th>
+                        <td><?=$priceMIdicount?></td>
+                    </tr>
+                    <tr>
+                        <th align="right">ภาษีมูลค่าเพิม : </th>
+                        <td><?=$pricevat?></td>
+                    </tr>
+                    <tr>
+                        <th align="right">จำนวนเงินทั้งสิ้น : </th>
+                        <td><?=$totalprice?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+
+
+
 
             <tbody>
                 <tr>
@@ -185,6 +217,7 @@ ob_start();
                 </tr>
             </tbody>
         </table>
+
 
 
 

@@ -20,14 +20,14 @@
 <body>
     <?php 
     include 'mainbartest.php';
-    $role=$_SESSION["role"];
+    /*$role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
     $allowrule = explode(",",$allowruleraw["rule"]);
         if (!in_array("21", $allowrule)){
             header("Location: auth.php");
-        }
+        }*/
      ?>
     <div ng-controller="purchaseOrdercontroller" class="ng-scope">
         <div class="container">
@@ -62,7 +62,7 @@
                             <input type="text" id="cname" name="cname" ng-model="cname" ng-init="selectCompany()" aria-label="Small" aria-describedby="inputGroup-sizing-sm" data-toggle="dropdown" class="form-control dropdown-toggle w-100 ">
                             <ul class="dropdown-menu w-100">
                                 <div ng-repeat="company in companys | filter:cname">
-                                    <li class="dropdown-item" ng-click="setCompany(company.cid,company.cname)"><a>{{company.cname}}</a></li>
+                                    <li class="dropdown-item" ng-click="setCompany(company.cid,company.cname,company.agent,company.contact,company.tel,company.mail)"><a>{{company.cname}}</a></li>
                                 </div>
                             </ul>
                         </div>
@@ -151,7 +151,7 @@
             </div>
             <div class="btn-group offset-sm-9" role="group">
 
-                <a href="showAllPurchaseOrder.php?no={{no}}"><button class="btn btn-success mr-2" ng-click="addToRptPO()" >สร้างใบสั่งสินค้า&#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button></a>
+                <a href="#" <!--showAllPurchaseOrder.php?no={{no}}--> ><button class="btn btn-success mr-2" ng-click="addToRptPO()" >สร้างใบสั่งสินค้า&#160;<span class="icon ion-android-checkbox-outline font-weight-bold"></span></button></a>
 
 
                 <button class="btn btn-primary " data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
@@ -165,8 +165,8 @@
                         <th>จำนวน</th>
                         <th>หน่วย</th>
                         <th>ราคา/หน่วย</th>
-                        <th>ส่วนลด</th>
                         <th>จำนวนเงิน</th>
+                        <th>หมายเหตุ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -176,8 +176,8 @@
                         <td>{{producrPO.remain}}</td>
                         <td>{{producrPO.type}}</td>
                         <td>{{producrPO.pricePerType}}</td>
-                        <td>{{producrPO.discount}}</td>
                         <td ng-init="sumallprice(producrPO.priceall)"> {{producrPO.priceall}}</td>
+                        <td>{{producrPO.note}}</td>
                         <td><button class="btn btn-danger" ng-click="delProPrePO(producrPO.prePo_id)">ลบ&#160;<span class="icon ion-android-remove-circle font-weight-bold"></span> </button> </td>
                     </tr>
                 </tbody>
@@ -200,9 +200,15 @@
                 </div>
             </div>
 
+            <div class="form-group input-group input-group   ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text  font-weight-bold" id="inputGroup-sizing">หมายเหตุ</span>
+                </div>
+                <textarea name="po_note" rows="5" id="po_note" ng-model="po_note" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing"></textarea>
 
+            </div>
 
-            <!--..................................modal selectPro start........................................-->
+            <!--..................................modal add detail product start........................................-->
             <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
                 <div class="modal-dialog  modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -234,18 +240,22 @@
 
                                     </div>
                                     <div class="form-group row">
-                                        <div class="input-group input-group-sm   col-sm-6">
+                                        <div class="input-group input-group-sm   col-sm-12">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm">ราคาต่อหน่วย</span>
                                             </div>
                                             <input type="text" name="po_pricePerType" id="po_pricePerType" ng-model="po_pricePerType" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                                         </div>
-                                        <div class="input-group input-group-sm   col-sm-6">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm">ส่วนลด</span>
-                                            </div>
-                                            <input type="text" name="po_discount" id="po_discount" ng-model="po_discount" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+
+                                    </div>
+
+                                    <div class="form-group input-group input-group-sm   ">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm">หมายเหตุ</span>
                                         </div>
+
+                                        <textarea name="po_notePro" rows="5" id="po_notePro" ng-model="po_notePro" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></textarea>
+                                        <!--<input type="text" name="po_discount" id="po_discount" ng-model="po_discount" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">-->
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +272,7 @@
                 </div>
             </div>
 
-            <!--..................................modal selectPro start........................................-->
+            <!--..................................modal selectProกduct start........................................-->
             <div class="modal fade" id="selectProductModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -341,7 +351,7 @@
                             <h5 class="modal-title  font-weight-bold">เพิ่มบริษัท</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                        </button>
+                            </button>
                         </div>
 
                         <div class="modal-body">
@@ -351,7 +361,7 @@
                                     <div class="input-group-prepend ">
                                         <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">ชื่อบริษัท</span>
                                     </div>
-                                    <input type="text" name="cname" id="cname" ng-model="cname" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                    <input type="text" name="acname" id="acname" ng-model="acname" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                                 </div>
                                 <div class="input-group input-group-sm  mb-2">
                                     <div class="input-group-prepend ">
@@ -378,16 +388,16 @@
                                     <input type="text" name="mail" id="mail" ng-model="mail" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                                 </div>
 
-                                <div></div></div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-lg btn-danger" data-dismiss="modal">ยกเลิก</button>
-                                <button class="btn  btn-lg btn-success" ng-click="addCompany()">บันทึก</button>
                             </div>
                         </div>
-
+                        <div class="modal-footer">
+                            <button class="btn btn-lg btn-danger" data-dismiss="modal">ยกเลิก</button>
+                            <button class="btn  btn-lg btn-success" ng-click="addCompany()">บันทึก</button>
+                        </div>
                     </div>
+                </div>
+
+            </div>
 
 
 
@@ -434,7 +444,6 @@
 
                         $scope.discOfPrice();
                     };
-
                     $scope.setPage = function(pageNo) {
                         $scope.currentPage = pageNo;
                     };
@@ -455,20 +464,52 @@
                     };
                     $scope.addToPrePO = function() {
 
+
+                        if($scope.po_remain == null){
+                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกจำนวนสินค้า", "warning");
+                            return;
+                        }
+                        if($scope.po_type == null ){
+                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกหน่วยสินค้า", "warning");
+                            return;
+                        }
+                        if( $scope.po_pricePerType == null){
+                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกราคาต่อหน่วย", "warning");
+                            return;
+                        }
+
+                        if ($scope.po_notePro == null){
+                            $scope.po_notePro = "-";
+                        }
+
+
+
+
                         $http.post('php/addToPrePO.php', {
                             'po_productid': po_productid,
                             'po_remain': $scope.po_remain,
                             'po_type': $scope.po_type,
                             'po_pricePerType': $scope.po_pricePerType,
-                            'po_discount': $scope.po_discount
+                            'po_notePro': $scope.po_notePro
                         }).then(function(res) {
+
+                            const toast = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toast({
+                                type: 'success',
+                                title: 'add successfully'
+                            });
                             po_productid = null;
                             $scope.po_remain = null;
                             $scope.po_type = null;
                             $scope.po_pricePerType = null;
-                            $scope.po_discount = 0;
+                            $scope.po_notePro = null;
                             $scope.totalprice = 0.00;
-
                             $scope.selectPrePO();
 
                         });
@@ -516,14 +557,23 @@
                             $scope.companys = response.data.records;
                         });
                     };
-                    $scope.setCompany = function(id, name) {
+                    $scope.setCompany = function(id, name,agent,conn,tel,mail) {
+                        $scope.cid = null;
+                        $scope.cname = null;
+                        $scope.po_agent = null;
+                        $scope.po_lo = null
+                        $scope.po_tel =  null;
+                        $scope.po_mail =   null ;
+
+
                         $scope.cid = id;
                         $scope.cname = name;
-
+                        $scope.po_agent = agent;
+                        $scope.po_lo = conn;
+                        $scope.po_tel =  tel;
+                        $scope.po_mail =   mail ;
 
                     };
-
-
                     $scope.discOfPrice = function() {
                         if ($scope.po_disc > 100) {
                             $scope.po_disc = 0;
@@ -549,10 +599,6 @@
                         $scope.totalPAll = parseFloat(parseFloat($scope.priceallMidisc) + parseFloat($scope.vatofprice)).toFixed(2);
 
                     };
-
-
-
-
                     $scope.formatDate = function(date) {
                         var d = new Date(date),
                             month = '' + (d.getMonth() + 1),
@@ -564,7 +610,6 @@
 
                         return [year, month, day].join('-');
                     };
-
                     $scope.addToRptPO = function() {
 
 
@@ -593,7 +638,9 @@
                         if ($scope.po_datesend == null) {
                             date2 = "0000/00/00"
                         }
-
+                        if($scope.po_note == null){
+                            $scope.po_note = "-";
+                        }
                         $http.post('php/addToRptPO.php', {
                             'po_no': $scope.po_no,
                             'po_date': $scope.formatDate(date1),
@@ -609,31 +656,39 @@
                             'pricediscount': $scope.discofprice,
                             'priceMIdicount': $scope.priceallMidisc,
                             'pricevat': $scope.vatofprice,
-                            'totalprice': $scope.totalPAll
+                            'totalprice': $scope.totalPAll,
+                            'note' : $scope.po_note
                         }).then(function(res) {
+                            var temp = angular.fromJson(res.data);
+                            console.log(temp.addrpt_PO ,temp.addrpt_POD,temp.DelPrePO);
+                            if(temp.records["0"].DelPrePO == true && temp.records["0"].addrpt_PO== true && temp.records["0"].addrpt_POD== true){
+                                $scope.genPO_NO();
+                                $scope.selectPrePO();
+                                $scope.cname = null;
+                                $scope.cid = null;
+                                $scope.po_agent = null;
+                                $scope.po_lo = null;
+                                $scope.po_tel = null;
+                                $scope.po_mail = null;
 
-                            $scope.genPO_NO();
-                            $scope.selectPrePO();
-                            $scope.cname = null;
-                            $scope.cid = null;
-                            $scope.po_agent = null;
-                            $scope.po_lo = null;
-                            $scope.po_tel = null;
-                            $scope.po_mail = null;
+                                $scope.po_sendlo = null;
+                                $scope.note = null;
+                                $scope.po_discount = 0;
+                                $scope.countPro = 0;
+                                $scope.po_date = new Date();
+                                $scope.po_datesend = new Date();
+                                $scope.po_vat = 7;
+                                $scope.po_disc = 0;
+                                $scope.discofprice = 0.00;
+                                $scope.totalprice = 0.00;
+                                $scope.vatofprice = 0.00;
+                                $scope.priceallMidisc = 0.00;
+                                $scope.totalPAll = 0.00;
 
-                            $scope.po_sendlo = null;
-                            $scope.po_discount = 0;
-                            $scope.countPro = 0;
-                            $scope.po_date = new Date();
-                            $scope.po_datesend = new Date();
-                            $scope.po_vat = 7;
-                            $scope.po_disc = 0;
-                            $scope.discofprice = 0.00;
-                            $scope.totalprice = 0.00;
-                            $scope.vatofprice = 0.00;
-                            $scope.priceallMidisc = 0.00;
-                            $scope.totalPAll = 0.00;
-                            swal("บันทึกข้อมูลเสร็จสิ้น", "บันทึกข้อมูลแล้ว", "success");
+
+                                swal("บันทึกข้อมูลเสร็จสิ้น", "บันทึกข้อมูลแล้ว", "success");
+                            }
+
 
                         });
 
@@ -646,6 +701,54 @@
                             $scope.entryLimit = 5; //max no of items to display in a page
                             $scope.filteredItems = $scope.list.length; //Initially for no filter
                             $scope.totalItems = $scope.list.length;
+                        });
+                    };
+
+                    $scope.addCompany = function(){
+
+                        if($scope.acname == null){
+                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกชื่อบริษัท", "warning");
+                            return;
+                        }
+                        if($scope.agent == null){
+                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตัวแทน", "warning");
+                            return;
+                        }
+                        if($scope.contact == null){
+                            $scope.contact = "-";
+                        }
+                        if( $scope.tel == null){
+                            $scope.tel = "-";
+                        }
+                        if(  $scope.mail == null){
+                            $scope.mail = "-";
+                        }
+
+
+
+
+                        $http.post('php/addCompany.php',{
+                            'cname':$scope.acname,
+                            'agent':$scope.agent,
+                            'contact':$scope.contact,
+                            'tel':$scope.tel,
+                            'mail':$scope.mail
+                        }).then(function(res){
+                            var temp = angular.fromJson(res.data);
+                            if(temp.Insert == true ){
+                                swal("บันทึกข้อมูลเสร็จสิ้น", "บันทึกข้อมูลแล้ว", "success");
+                                $scope.cid = temp.cid;
+                                $scope.cname = $scope.acname;
+                                $scope.po_agent =  $scope.agent;
+                                $scope.po_lo = $scope.contact;
+                                $scope.po_tel =  $scope.tel;
+                                $scope.po_mail =   $scope.mail ;
+                                $scope.acname = null;
+                                $scope.agent = null;
+                                $scope.contact = null;
+                                $scope.tel = null;
+                                $scope.mail = null;
+                            }
                         });
                     };
                 });

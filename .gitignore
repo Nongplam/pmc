@@ -2,3 +2,4 @@
 *.xml
 .vscode/settings.json
 php/testapi.php
+php/connectDB.php
