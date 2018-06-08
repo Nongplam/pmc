@@ -15,8 +15,9 @@ $role=$_SESSION["role"];
             $id=$_GET['branch'];
     $query="SELECT  stock.sid,product.pname,product.realregno ,stock.productid,company.cname,stock.remainfull,stock.remain,stock.stocktype,stock.costprice,stock.lotno,stock.receiveday,stock.expireday 
     FROM stock,product,company WHERE (stock.productid = product.regno AND stock.cid = company.cid) 
-    AND DATE(stock.expireday) >= NOW() AND stock.remain != 0 AND stock.subbranchid = ".$id." ORDER BY stock.remain ASC";
+    AND DATE(stock.expireday) >= NOW() AND stock.subbranchid = ".$id." ORDER BY stock.remain ASC";
     $result = mysqli_query($con,$query);    
+            //AND stock.remain != 0 
 
 
     $res = array();

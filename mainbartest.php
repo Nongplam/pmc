@@ -15,8 +15,8 @@ include 'php/connectDB.php';
 
     <nav class="navbar navbar-dark navbar-expand-md bg-primary rounded-bottom">
         <div class="container-fluid">
-            <a href="auth.php" class="navbar-brand">
-                <?php echo strtoupper( $_SESSION["role"]); ?> Menu</a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <a href="auth.php" class="navbar-brand"><!--
+                <?php echo strtoupper( $_SESSION["role"]); ?> Menu--><img src="img/icon/druglogo.png" height="35" width="84"/></a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav">
                     <?php 
@@ -97,7 +97,7 @@ include 'php/connectDB.php';
 
     <!-- Modal -->
     <div class="modal fade" id="notiModal" tabindex="-1" role="dialog" aria-labelledby="notiModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary">
                     <h5 class="modal-title text-light" id="notiModalLabel">รายการแจ้งเตือน</h5>
