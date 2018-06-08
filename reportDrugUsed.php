@@ -55,8 +55,8 @@ function thai_date($time){
                     </h3>
                 </div>
                 <br>
-                <div>
-                    <!--<div class="form-group row d-flex justify-content-center">
+
+                <!--<div class="form-group row d-flex justify-content-center">
 
                     <label class="col-sm-1 col-form-label font-weight-bold text-right " for="branch"> สาขา :</label>
                     <select id="branch" name="branch" ng-model="branch" class="form-control col-sm-3 mr-2" ng-init="selectBranch()">
@@ -70,7 +70,6 @@ function thai_date($time){
                     <input type="submit" name="" ng-click="getimportHistory()" class="btn btn-success col-sm-1" value="ตกลง" style="width: 117px;">
                     <input type="submit" name="" ng-click="formateDate(date1)" class="btn btn-success col-sm-1" value="ตกลง" style="width: 117px;">
                 </div>-->
-                </div>
 
                 <div class="container col-12" ng-init="getusedperday()">
                     <div class="d-flex justify-content-end">
@@ -91,7 +90,7 @@ function thai_date($time){
                                 <th>คลังใหญ่ (ชิ้น)</th>
                                 <th>คงเหลือสาขา (ชิ้น)</th>
                                 <th>เฉลี่ยขายต่อวัน</th>
-                                <th>สินค้าจะหมดใน (วัน)<span ng-click="orderbyemptyindayToggle()"><img src="svg/si-glyph-disc-play-2.svg" height="15" width="15"/></span>
+                                <th ng-click="orderbyemptyindayToggle()">สินค้าจะหมดใน (วัน)<span><img src="svg/si-glyph-disc-play-2.svg" height="15" width="15"/></span>
                                     <!--<button type="button" class="btn btn-default btn-sm">
            Sort
         </button>--></th>
@@ -99,15 +98,17 @@ function thai_date($time){
                             </tr>
                         </thead>
                         <tbody>
+
                             <tr ng-repeat="item in usedperdays | orderBy:['name',orderbyemptyinday]">
+
                                 <td>{{item.name}}</td>
                                 <td>{{item.mainpid}}</td>
                                 <td>{{item.pname}}</td>
                                 <td>{{item.mainstocktype}}</td>
                                 <td>{{item.mainbranchremain}}</td>
-                                <td>{{item.branchremain}}</td>
+                                <td>{{checkbranchEmpty(item.branchremain)}}</td>
                                 <td>{{item.aveusedperday}}</td>
-                                <td>{{item.emptyinday}}</td>
+                                <td>{{checkbranchEmpty(item.emptyinday)}}</td>
                                 <!--<th>{{formattofix2(item.branchremain/item.aveusedperday)}}</th>-->
                                 <td>
                                     <button class="btn btn-primary"><input type="text" class="input-group input-group-text" /><span>&nbsp;จัดส่ง</span></button>
@@ -121,36 +122,21 @@ function thai_date($time){
         <script>
             var app = angular.module("drugusedApp", []);
             app.controller("drugusedmainController", function($scope, $http, $window) {
-                /*$scope.date1 = new Date();
-                $scope.date1.setHours(0);
-                $scope.date1.setMinutes(0);
-                $scope.date2 = new Date();
-                $scope.date2.setHours(23);
-                $scope.date2.setMinutes(59);*/
 
-                /*$scope.selectBranch = function() {
-                    $http.get('php/subbranchSelect.php').then(function(response) {
-                        $scope.branchs = response.data.records;
-                    });
-                };*/
                 $scope.orderbyemptyinday = 'emptyinday';
 
                 $scope.getusedperday = function() {
                     $http.get('php/getReportDrugUsed.php').then(function(response) {
                         $scope.usedperdays = response.data.records;
-                        //console.log($scope.usedperdays);
                         for (var i = 0; i < $scope.usedperdays.length; i++) {
-                            //console.log($scope.usedperdays[i]['branchremain']);
                             $scope.usedperdays[i]['emptyinday'] = $scope.usedperdays[i]['branchremain'] / $scope.usedperdays[i]['aveusedperday'];
-                            $scope.usedperdays[i]['emptyinday'] = $scope.usedperdays[i]['emptyinday'].toFixed(2);
+                            $scope.usedperdays[i]['emptyinday'] = parseFloat($scope.usedperdays[i]['emptyinday'].toFixed(2)); //.toFixed(2);
                         }
                     });
                 }
-
                 $scope.logtest = function() {
                     alert("Workd");
                 }
-
                 $scope.orderbyemptyindayToggle = function() {
                     if ($scope.orderbyemptyinday == 'emptyinday') {
                         $scope.orderbyemptyinday = '-emptyinday';
@@ -159,12 +145,13 @@ function thai_date($time){
                     }
 
                 }
-
-                /*$scope.formattofix2 = function(num) {
-                    return num.toFixed(2);
-
-                }*/
-
+                $scope.checkbranchEmpty = function(remain) {
+                    if (remain < 1) {
+                        return 'สินค้าหมด';
+                    } else {
+                        return remain;
+                    }
+                }
 
 
             });
