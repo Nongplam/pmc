@@ -25,6 +25,7 @@ function thai_date($time){
     return $thai_date_return;
 }
     $eng_date=time();
+
 ?>
     <html>
 
@@ -44,6 +45,17 @@ function thai_date($time){
     </head>
 
     <body>
+        <?php 
+    include 'mainbartest.php';
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);
+        if (!in_array("27", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
         <div ng-app="drugusedApp" ng-controller="drugusedmainController" class="ng-scope">
             <div class="container">
                 <div class="d-flex justify-content-center">
@@ -55,7 +67,6 @@ function thai_date($time){
                     </h3>
                 </div>
                 <br>
-
                 <!--<div class="form-group row d-flex justify-content-center">
 
                     <label class="col-sm-1 col-form-label font-weight-bold text-right " for="branch"> สาขา :</label>
@@ -70,14 +81,12 @@ function thai_date($time){
                     <input type="submit" name="" ng-click="getimportHistory()" class="btn btn-success col-sm-1" value="ตกลง" style="width: 117px;">
                     <input type="submit" name="" ng-click="formateDate(date1)" class="btn btn-success col-sm-1" value="ตกลง" style="width: 117px;">
                 </div>-->
-
                 <div class="container col-12" ng-init="getusedperday()">
                     <div class="d-flex justify-content-end">
                         <!--<h3>Print</h3>-->
                         <button type="button" class="btn btn-default">
           <span><img src="svg/si-glyph-print.svg" height="15" width="15"/></span> Print
-        </button>
-
+                        </button>
                     </div>
                     <br>
                     <table class="table table table-bordered">
@@ -91,16 +100,12 @@ function thai_date($time){
                                 <th>คงเหลือสาขา (ชิ้น)</th>
                                 <th>เฉลี่ยขายต่อวัน</th>
                                 <th ng-click="orderbyemptyindayToggle()">สินค้าจะหมดใน (วัน)<span><img src="svg/si-glyph-disc-play-2.svg" height="15" width="15"/></span>
-                                    <!--<button type="button" class="btn btn-default btn-sm">
-           Sort
-        </button>--></th>
-                                <th>Action</th>
+                                </th>
+                                <th style="width:15%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr ng-repeat="item in usedperdays | orderBy:['name',orderbyemptyinday]">
-
                                 <td>{{item.name}}</td>
                                 <td>{{item.mainpid}}</td>
                                 <td>{{item.pname}}</td>
@@ -109,34 +114,97 @@ function thai_date($time){
                                 <td>{{checkbranchEmpty(item.branchremain)}}</td>
                                 <td>{{item.aveusedperday}}</td>
                                 <td>{{checkbranchEmpty(item.emptyinday)}}</td>
-                                <!--<th>{{formattofix2(item.branchremain/item.aveusedperday)}}</th>-->
                                 <td>
-                                    <button class="btn btn-primary"><input type="text" class="input-group input-group-text" /><span>&nbsp;จัดส่ง</span></button>
+                                    <div class="input-group">
+                                        <input type="text" ng-model="sendqtyintable[$index]" ng-keyup="setmodalbyEnter($event,item.pname,sendqtyintable[$index],item.name,item.mainstocktype,item.mainbranchremain)" class="form-control" placeholder="จำนวน">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" ng-click="setsenditemmodal(item.pname,sendqtyintable[$index],item.name,item.mainstocktype,item.mainbranchremain)">จัดส่ง</button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+            <!------------------------------------ Modal ------------------------------------>
+            <div class="modal fade" id="sendtouserModal" tabindex="-1" role="dialog" aria-labelledby="sendtouserModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <h5 class="modal-title text-light" id="exampleModalLongTitle">ส่งสินค้า</h5>
+                            <button type="button" class="close" ng-click="resetmodal()" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                        </div>
+                        <div class="modal-body" ng-init="getalluser()">
+                            <form>
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">เลือกผู้รับผิดชอบ :</label>
+                                    <select id="reciveuserid" name="reciveuserid" ng-model="reciveuserid" class="form-control col-sm mr-2" ng-init="selectBranch()">
+                <option ng-repeat="user in users | orderBy:'rolethai'" value="{{user.id}}">{{user.fname}} {{user.lname}} หน้าที่ : {{user.rolethai}}</option>
+                </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">ข้อความ :</label>
+                                    <textarea class="form-control" id="message-text" ng-model="textonsendmodal"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" ng-click="resetmodal()" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success" ng-click="resetmodal()" data-dismiss="modal">ตกลง</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!----------------------------------- endModal ---------------------------------->
         </div>
         <script>
             var app = angular.module("drugusedApp", []);
             app.controller("drugusedmainController", function($scope, $http, $window) {
 
                 $scope.orderbyemptyinday = 'emptyinday';
+                $scope.sendqtyintable = [];
 
                 $scope.getusedperday = function() {
                     $http.get('php/getReportDrugUsed.php').then(function(response) {
                         $scope.usedperdays = response.data.records;
                         for (var i = 0; i < $scope.usedperdays.length; i++) {
                             $scope.usedperdays[i]['emptyinday'] = $scope.usedperdays[i]['branchremain'] / $scope.usedperdays[i]['aveusedperday'];
-                            $scope.usedperdays[i]['emptyinday'] = parseFloat($scope.usedperdays[i]['emptyinday'].toFixed(2)); //.toFixed(2);
+                            $scope.usedperdays[i]['emptyinday'] = parseFloat($scope.usedperdays[i]['emptyinday'].toFixed(2));
                         }
                     });
                 }
-                $scope.logtest = function() {
-                    alert("Workd");
+
+                $scope.setsenditemmodal = function(pname, qty, branchname, stocktype, mainbranchremain) {
+                    if (qty == undefined) {
+                        swal("กรุณาใส่จำนวนสินค้าที่ต้องการส่ง!", "", "warning");
+                    } else {
+                        if (parseInt(qty) > parseInt(mainbranchremain)) {
+                            swal("ท่านกำลังส่งสินค้ามากกว่าที่มีในสาขาใหญ่!", "", "warning");
+                            $scope.pnameonmodal = pname;
+                            $scope.qtyonmodal = qty;
+                            $scope.branchnameonmodal = branchname;
+                            $scope.stocktypeonmodal = stocktype;
+                            $scope.textonsendmodal = 'ส่ง ' + pname + ' จำนวน ' + qty + ' ' + stocktype + ' ' + 'ไปที่สาขา ' + branchname;
+                            $('#sendtouserModal').modal('show')
+                        } else {
+                            $scope.pnameonmodal = pname;
+                            $scope.qtyonmodal = qty;
+                            $scope.branchnameonmodal = branchname;
+                            $scope.stocktypeonmodal = stocktype;
+                            $scope.textonsendmodal = 'ส่ง ' + pname + ' จำนวน ' + qty + ' ' + stocktype + ' ' + 'ไปที่สาขา ' + branchname;
+                            $('#sendtouserModal').modal('show')
+                        }
+                    }
+                    $scope.sendqtyintable = [];
                 }
+
+                $scope.logtest = function() {
+                    console.log($scope.reciveuserid);
+                }
+
                 $scope.orderbyemptyindayToggle = function() {
                     if ($scope.orderbyemptyinday == 'emptyinday') {
                         $scope.orderbyemptyinday = '-emptyinday';
@@ -153,10 +221,33 @@ function thai_date($time){
                     }
                 }
 
+                $scope.getalluser = function() {
+                    $http.get('php/getalluserinmainBranch.php').then(function(response) {
+                        $scope.users = response.data.records;
+                        $scope.reciveuserid = $scope.users[0]['id'];
+                    })
+                }
+
+                $scope.setmodalbyEnter = function(e, pname, qty, branchname, stocktype, mainbranchremain) {
+                    if (e.keyCode == 13) {
+                        $scope.setsenditemmodal(pname, qty, branchname, stocktype, mainbranchremain);
+                    }
+                }
+
+                $scope.resetmodal = function() {
+                    $scope.textonsendmodal = null;
+                    $scope.reciveuserid = $scope.users[0]['id'];
+                }
+
+                $scope.sendtouser = function() {
+
+
+                }
 
             });
 
         </script>
     </body>
+    <script src="dist/sweetalert.min.js"></script>
 
     </html>

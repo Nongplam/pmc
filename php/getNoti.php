@@ -16,18 +16,7 @@ if($result=  mysqli_query($con,$stocknotinshelfquery)){
                 while ($row = $result->fetch_array(1)){
                     $res[] = $row;
                 }
-                $noti['records'] = $res;
-                //echo json_encode($noti);
-    //print_r($noti);
-    //echo $noti['records'][0]['lotno'];
-    //echo count($noti['records']);
-    /*echo "<table class='table table'>";
-    for($i = 0;$i < count($noti['records']);$i++){
-        //echo $noti['records'][$i]['lotno'];
-        echo "<a class='dropdown-item' href='#'>#1 : สินค้าไม่ถูกจัดขึ้นชั้นวาง</a>";
-    }
-    
-    echo "</div>";*/
+                $noti['records'] = $res;                
     
     echo "<table class='table table-bordered'>";
         echo "<thead class='bg-info'>";    
@@ -51,7 +40,7 @@ for($i = 0;$i < count($noti['records']);$i++){
     
 }else{
     
-    echo "<h1> คุณไม่มีรายการแจ้งเตือน </h1>";
+    echo "<h3> คุณไม่มีรายการแจ้งเตือน </h3>";
     
 }
 

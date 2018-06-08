@@ -76,19 +76,17 @@ include 'php/connectDB.php';
 
                 </ul>
 
-                <span class="ml-auto mr-sm-2" style="color:rgb(248,249,250);"><?php echo $_SESSION["roledesc"]; echo " "; echo $_SESSION["fname"]; echo " "; echo $_SESSION["lname"];?></span>
+                <span class="ml-auto mr-sm-2" style="color:rgb(248,249,250);"><?php echo $_SESSION["roledesc"]; echo "<br>"; echo $_SESSION["fname"]; echo " "; echo $_SESSION["lname"];?></span>
                 <div class="">
-                    <button class="btn btn-light mr-sm-2 text-primary" data-toggle="modal" data-target="#notiModal">แจ้งเตือน
+                    <button class="btn btn-light mr-sm-2 text-primary" data-toggle="modal" data-target="#notiModal">แจ้งเตือน | Todo
                         <span class="badge badge-warning" id="notinumber"></span>
                     </button>
                     <div id='notidropdown'>
-                        <!--<div class="dropdown-menu">
-                            <button class="dropdown-item" href="#">#1 : สินค้าไม่ถูกจัดขึ้นชั้นวาง</button>
-                        </div>-->
                     </div>
 
                 </div>
                 <a href="logout.php"><button class="btn btn-light ml-auto" type="button" style="color:rgb(0,123,255);">Logout</button></a>
+
 
             </div>
         </div>
@@ -106,7 +104,13 @@ include 'php/connectDB.php';
         </button>
                 </div>
                 <div class="modal-body">
-                    <div id="notitable">
+                    <div id="notitable" class="container">
+
+                    </div>
+                    <div class="container">
+                        <hr>
+                    </div>
+                    <div id="todohere">
 
                     </div>
                 </div>
@@ -119,14 +123,29 @@ include 'php/connectDB.php';
 
     <script>
         $(document).ready(function() {
-            var notiCount = 0;
+
             $("#notidropdown").ready(function() {
                 $.get("php/getNoti.php", function(data) {
                     $("#notitable").html(data);
-                    notiCount = $('.notirow').length;
-                    $("#notinumber").text(notiCount);
+                    $.get("php/todolist.php", function(data) {
+                        $("#todohere").html(data);
+                    });
+                    /*setTimeout(function() {
+                        var notiCount = 0;
+                        var noticounter = 0;
+                        notiCount = $('.notirow').length;
+                        var arrlength = $('.todorows').length;
+                        for (var j = 0; j < arrlength; j++) {
+                            if ($('.todorows')[j].lastChild.children["0"].value.split(",")[0] == '1') {
+                                noticounter = noticounter + 1;
+                            }
+                        }
+                        noticounter = noticounter + notiCount;
+                        $("#notinumber").text(noticounter);
+                    }, 400);*/
                 });
             });
+
         });
 
     </script>

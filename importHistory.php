@@ -190,6 +190,7 @@
             $scope.selectBranch = function() {
                 $http.get('php/subbranchSelect.php').then(function(response) {
                     $scope.branchs = response.data.records;
+                    $scope.branch = $scope.branchs[0]['id'];
                 });
             };
 
