@@ -16,7 +16,8 @@ if($result = mysqli_query($con,$sql)){
     $rptPO_lo = $row["rptPO_lo"];
     $rptPO_tel = $row["rptPO_tel"];
     $rptPO_mail = $row["rptPO_mail"];
-    $rptPO_vatNo = $row["rptPO_vatNo"];
+    $discount = $row["discount"];
+    $vat = $row["vat"];
     $rptPO_losend = $row["rptPO_losend"];
     $rptPO_date = $row["rptPO_date"];
     $rptPO_datesend = $row["rptPO_datesend"];
@@ -34,24 +35,50 @@ ob_start();
 
     <div lang="th">
 
-        <h4 lang="th" align="center"> ใบสั่งซื้อ </h4>
-        <h4 lang="th"> บริษัท สุมิตรเภสัช</h4>
 
-        <table align="right" border="1" lang="th">
-            <tbody>
-                <tr>
-                    <th>เลขที่ใบสั่งซื้อ</th>
-                    <td>
-                        <?=$rptPO_no?>
-                    </td>
-                </tr>
-                <tr>
-                    <th>วันที่</th>
-                    <td>
-                        <?=$rptPO_date?>
-                    </td>
-                </tr>
-            </tbody>
+        <h4  lang="th" align="center"> ใบสั่งซื้อ </h4>
+       <h4 lang="th"> บริษัท สุมิตรเภสัช 21 หมู่ 6 ถ.ศรีจันทร์ ต.ในเมือง อ.เมือง  ขอนแก่น 40000</h4>
+         
+                <table align="right" border="1" lang="th" >
+                <tbody>
+                    <tr>
+                        <th>เลขที่ใบสั่งซื้อ</th>
+                        <td><?=$rptPO_no?></td>
+                    </tr>
+                    <tr>
+                        <th>วันที่</th>
+                        <td><?=$rptPO_date?></td>
+                    </tr>
+                     </tbody>
+                </table>
+        <table  border="1" lang="th" style="width: 100%;">
+         <tbody>
+            <tr>
+                <td style="width: 50%;">
+                    <p>บริษัทผู้ขาย : <?=$cname?></p>
+                    <br>
+                    <p>ตัวแทน : <?=$rptPO_agent?></p>
+                    <br>
+                    <p>ที่อยู่  : <?=$rptPO_lo?></p>
+                    <br>
+                    <p>โทร  : <?=$rptPO_tel?></p>
+                    <br>
+                    <p>mail  : <?=$rptPO_mail?></p>
+                </td>
+                <td style="width: 50%;">
+                    <p>ส่วนลด  : <?=$discount?> %</p>
+                    <br>
+                    <p>ภาษี  : <?=$vat?> %</p>
+                    <br>
+                    <p>ที่อยู่จัดส่ง  : <?=$rptPO_losend?></p>
+                    <br>
+                    <p>กำหนดส่ง : <?=$rptPO_datesend?></p>
+
+
+                </td>
+            </tr>
+             </tbody>
+
         </table>
         <table border="1" lang="th" style="width: 100%;">
             <tbody>
@@ -182,53 +209,8 @@ ob_start();
 
 
 
+</div>
 
-
-            <tbody>
-                <tr>
-                    <th align="right">รวมเงิน : </th>
-                    <td>
-                        <?=$pricesum?>
-                    </td>
-                </tr>
-                <tr>
-                    <th align="right">ส่วนลด : </th>
-                    <td>
-                        <?=$pricediscount?>
-                    </td>
-                </tr>
-                <tr>
-                    <th align="right">หลังหักส่วนลด : </th>
-                    <td>
-                        <?=$priceMIdicount?>
-                    </td>
-                </tr>
-                <tr>
-                    <th align="right">ภาษีมูลค่าเพิม : </th>
-                    <td>
-                        <?=$pricevat?>
-                    </td>
-                </tr>
-                <tr>
-                    <th align="right">จำนวนเงินทั้งสิ้น : </th>
-                    <td>
-                        <?=$totalprice?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-
-
-
-
-
-
-
-
-
-
-    </div>
 
     <?php
 
