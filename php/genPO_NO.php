@@ -2,9 +2,9 @@
 session_start();
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
+$subid = $_SESSION['subbranchid'];
 
-
-$sql = "SELECT MAX(rpt_PO.rptPO_no) as rptPO_no FROM rpt_PO";
+$sql = "SELECT MAX(rpt_PO.rptPO_no) as rptPO_no FROM rpt_PO WHERE subbranchid = $subid";
 $result = mysqli_query($con,$sql) ;
 
 

@@ -17,7 +17,8 @@ if($result = mysqli_query($con,$sql)){
     $rptPO_lo = $row["rptPO_lo"];
     $rptPO_tel = $row["rptPO_tel"];
     $rptPO_mail = $row["rptPO_mail"];
-    $rptPO_vatNo = $row["rptPO_vatNo"];
+    $discount = $row["discount"];
+    $vat = $row["vat"];
     $rptPO_losend = $row["rptPO_losend"];
     $rptPO_date = $row["rptPO_date"];
     $rptPO_datesend = $row["rptPO_datesend"];
@@ -28,7 +29,6 @@ if($result = mysqli_query($con,$sql)){
     $totalprice = $row["totalprice"];
     $note = $row["note"];
     $rptPO_status = $row["rptPO_status"];
-
 }
 
 ob_start();
@@ -37,7 +37,7 @@ ob_start();
 <div  lang="th">
 
         <h4  lang="th" align="center"> ใบสั่งซื้อ </h4>
-       <h4 lang="th"> บริษัท สุมิตรเภสัช</h4>
+       <h4 lang="th"> บริษัท สุมิตรเภสัช 21 หมู่ 6 ถ.ศรีจันทร์ ต.ในเมือง อ.เมือง  ขอนแก่น 40000</h4>
          
                 <table align="right" border="1" lang="th" >
                 <tbody>
@@ -66,7 +66,9 @@ ob_start();
                     <p>mail  : <?=$rptPO_mail?></p>
                 </td>
                 <td style="width: 50%;">
-                    <p>เลขที่ใบกำกับภาษี  : <?=$rptPO_vatNo?></p>
+                    <p>ส่วนลด  : <?=$discount?> %</p>
+                    <br>
+                    <p>ภาษี  : <?=$vat?> %</p>
                     <br>
                     <p>ที่อยู่จัดส่ง  : <?=$rptPO_losend?></p>
                     <br>
@@ -158,22 +160,6 @@ ob_start();
         </tr>
     </table>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
 
 </div>
 
