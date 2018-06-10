@@ -1,13 +1,6 @@
 <?php
 	include 'connectDB.php';
 	
-    $maxbillnoquery="SELECT MAX(billno) as billno FROM dailysalemaster WHERE dailysalemaster.subbranchid = 2;";
-    $maxbillnoresult = mysqli_query($con, $maxbillnoquery);
-    $maxbillnorows = mysqli_fetch_assoc($maxbillnoresult);
-if($maxbillnorows['billno'] == NULL){
-    echo "null";
-}
-    echo $maxbillnorows['billno'];
-    //newbillid = sprintf("%010d", $maxbillnorows['billno']+1);
+    $reportdrugused="SELECT T.*,T2.* FROM (SELECT stock.subbranchid,subbranch.name,stock.productid AS mainpid,product.pname AS pname ,stock.stocktype AS mainstocktype,(SELECT SUM(stock.remain) FROM stock WHERE stock.subbranchid = '72' AND stock.productid = mainpid AND stock.stocktype = mainstocktype) AS mainbranchremain,SUM(stock.remain) AS branchremain FROM stock,product,subbranch WHERE product.regno = stock.productid AND subbranch.id = stock.subbranchid AND stock.subbranchid = '74' GROUP BY product.pname,stock.stocktype) T, (SELECT product.pname AS branchpname,IF(SUM(dailysaledetail.qty)/(SELECT DATEDIFF(NOW(),MIN(dailysaledetail.date)) FROM dailysaledetail,stock,product WHERE dailysaledetail.subbranchid = '74' AND product.regno = stock.productid AND stock.sid = dailysaledetail.stockid AND product.pname = branchpname)>0,SUM(dailysaledetail.qty)/(SELECT DATEDIFF(NOW(),MIN(dailysaledetail.date)) FROM dailysaledetail,stock,product WHERE dailysaledetail.subbranchid = '74' AND product.regno = stock.productid AND stock.sid = dailysaledetail.stockid AND product.pname = branchpname),SUM(dailysaledetail.qty)/1) AS aveusedperday,stock.stocktype AS stocktype FROM dailysaledetail,stock,product WHERE dailysaledetail.subbranchid = '74' AND product.regno = stock.productid AND stock.sid = dailysaledetail.stockid GROUP BY product.pname,stock.stocktype) T2 WHERE T.pname = T2.branchpname AND T.mainstocktype = T2.stocktype";   
 
 ?>

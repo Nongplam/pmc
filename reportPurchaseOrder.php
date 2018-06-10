@@ -10,7 +10,6 @@ $poNO = $_GET["NO"];
 $sql = "SELECT rpt_PO.*,company.cname FROM rpt_PO,company WHERE company.cid = rpt_PO.cid  AND rptPO_no = '$poNO'";
 if($result = mysqli_query($con,$sql)){
     $row = $result->fetch_array(1);
-
     $rptPO_no = $row["rptPO_no"];
     $cname = $row["cname"];
     $rptPO_agent = $row["rptPO_agent"];
@@ -34,7 +33,8 @@ if($result = mysqli_query($con,$sql)){
 ob_start();
 ?>
 
-<div  lang="th">
+    <div lang="th">
+
 
         <h4  lang="th" align="center"> ใบสั่งซื้อ </h4>
        <h4 lang="th"> บริษัท สุมิตรเภสัช 21 หมู่ 6 ถ.ศรีจันทร์ ต.ในเมือง อ.เมือง  ขอนแก่น 40000</h4>
@@ -78,7 +78,51 @@ ob_start();
                 </td>
             </tr>
              </tbody>
+
         </table>
+        <table border="1" lang="th" style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="width: 50%;">
+                        <p>บริษัทผู้ขาย :
+                            <?=$cname?>
+                        </p>
+                        <br>
+                        <p>ตัวแทน :
+                            <?=$rptPO_agent?>
+                        </p>
+                        <br>
+                        <p>ที่อยู่ :
+                            <?=$rptPO_lo?>
+                        </p>
+                        <br>
+                        <p>โทร :
+                            <?=$rptPO_tel?>
+                        </p>
+                        <br>
+                        <p>mail :
+                            <?=$rptPO_mail?>
+                        </p>
+                    </td>
+                    <td style="width: 50%;">
+                        <p>เลขที่ใบกำกับภาษี :
+                            <?=$rptPO_vatNo?>
+                        </p>
+                        <br>
+                        <p>ที่อยู่จัดส่ง :
+                            <?=$rptPO_losend?>
+                        </p>
+                        <br>
+                        <p>กำหนดส่ง :
+                            <?=$rptPO_datesend?>
+                        </p>
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
 
 
 
@@ -100,11 +144,13 @@ ob_start();
         <tbody>
         <?php
 
+
         $sqlDe = "SELECT rpt_POdetail.*,product.pname FROM rpt_POdetail,product WHERE rpt_POdetail.productid = product.regno AND rpt_POdetail.rptPO_no = $poNO ORDER BY product.pname ASC";
             $c =0 ;
         if($result2 = mysqli_query($con,$sqlDe)){
             while ($rowD = $result2->fetch_array(1)) {
                 ?>
+
                 <tr>
                     <td><?=$c=$c+1?></td>
                     <td><?=$rowD["pname"]?></td>
@@ -115,10 +161,11 @@ ob_start();
                     <td align="center"><?=$rowD["note"]?></td>
                 </tr>
                 <?php
+
             }
         }
             ?>
-             </tbody>
+            </tbody>
         </table>
 
 
@@ -161,9 +208,11 @@ ob_start();
     </table>
 
 
+
 </div>
 
-<?php
+
+    <?php
 
 $html = ob_get_contents();
 

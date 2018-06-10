@@ -45,8 +45,8 @@
 
                 <input type="submit" name="" ng-click="disPlayData()" class="btn btn-success col-sm-1" value="ตกลง" style="width: 117px;">
             </div>
-            <table class="table table-info table-bordered" ng-init="disPlayData()">
-                <tbody>
+            <table class="table table-bordered" ng-init="disPlayData()">
+                <thead class="table-info">
                     <tr>
                         <th>#</th>
                         <th>เลขที่บิล</th>
@@ -58,6 +58,8 @@
 
 
                     </tr>
+                </thead>
+                <tbody>
                     <tr ng-repeat="bill in bills">
                         <td>{{$index + 1}}</td>
                         <td>{{billidCheck(bill.billno)}}</td>
@@ -67,7 +69,6 @@
                         <td>{{bill.profit}} บาท</td>
                         <td>{{bill.branchname}}</td>
                     </tr>
-
                 </tbody>
             </table>
 

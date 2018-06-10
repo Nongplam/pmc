@@ -3,23 +3,20 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 $masterbranchid=$_SESSION["masterbranchid"];
-$output="";
+
 
 $query="select * from subbranch where subbranch.mid = '$masterbranchid'";
-$result=mysqli_query($con, $query);
-if(mysqli_num_rows($result)>0) {
-    while ($rs = $result->fetch_array(MYSQLI_ASSOC)) {
-        if($output !="") {
-            $output .=",";
-        }
-        $output .='{"id":"' . $rs["id"] . '",';
-        $output .='"mid":"' . $rs["mid"] . '",';        
-        $output .='"name":"' . $rs["name"] . '",'; 
-        $output .='"info":"' . $rs["info"] . '",';
-        $output .='"tel":"' . $rs["tel"] . '"}';
+if($result = mysqli_query($con,$query)){
+
+    while ($row = $result -> fetch_array(1)){
+
+        $res[] =  $row ;
+
     }
-    $output = '{"records":['.$output.']}';
-    echo($output);
+    $PO['records']= $res;
+    echo   json_encode($PO);
+}else{
+    echo mysqli_error($con);
 }
 
 ?>

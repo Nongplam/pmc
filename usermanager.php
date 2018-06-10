@@ -82,7 +82,7 @@
                                         <td>{{x.roledesc}}</td>
                                         <td>{{x.subbranchid}}</td>
                                         <td>{{x.name}}</td>
-                                        <td><button class="edituserbtn btn btn-info" id="edituserbtn" ng-click="setedituservalue(x.id,x.fname,x.lname,x.role,x.roledesc,x.subbranchid,x.username,x.password,x.userinfo)" data-toggle="modal" data-target="#editusermodal">Edit</button></td>
+                                        <td><button class="edituserbtn btn btn-info" id="edituserbtn" ng-click="setedituservalue(x.id,x.fname,x.lname,x.role,x.roledesc,x.subbranchid,x.username,x.userinfo)" data-toggle="modal" data-target="#editusermodal">Edit</button></td>
                                         <td><button class="btn btn-danger" ng-click="deleteUser(x.id)" type="button">ลบผู้ใช้</button></td>
                                     </tr>
                                 </tbody>
@@ -268,6 +268,7 @@
                         $scope.newinfo = null;
                         $scope.getallUser();
                         //location.reload();
+                        swal("เพิ่มข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกเพิ่ม", "success");
                     });
                 }
                 $scope.setnewroleDesc = function() {
@@ -310,7 +311,7 @@
                     }
                     //console.log($scope.newroledesc);
                 }
-                $scope.setedituservalue = function(id, fname, lname, role, roledesc, subbranch, username, password, userinfo) {
+                $scope.setedituservalue = function(id, fname, lname, role, roledesc, subbranch, username, userinfo) {
                     $scope.editid = id;
                     $scope.editfname = fname;
                     $scope.editlname = lname;
@@ -318,7 +319,6 @@
                     $scope.editroledesc = roledesc;
                     $scope.editusersubbranch = subbranch;
                     $scope.editusername = username;
-                    $scope.editpassword = password;
                     $scope.editinfo = userinfo;
                     if (role == 'admin' || role == 'mainstoragemanager') {
                         $scope.issubemploy = true;
@@ -348,7 +348,7 @@
                         $scope.editpassword = null;
                         $scope.editinfo = null;
                         $scope.getallUser();
-                        //location.reload();
+                        swal("แก้ไขข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกแก้ไข", "success");
                     });
                 }
                 $scope.deleteUser = function(userid) {

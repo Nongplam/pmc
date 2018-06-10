@@ -67,7 +67,7 @@
                         <th>กำไรต่อหน่วย</th>-->
                         <th>วันที่รับเข้า</th>
                         <th>เวลาที่บันทึก</th>
-                        <th>ติดตามสิ้นค้า</th>
+                        <!--<th>ติดตามสิ้นค้า</th>-->
                     </tr>
                 </thead>
                 <tbody>
@@ -85,7 +85,7 @@
                         <td>{{item.retailprice-item.costprice}}</td>-->
                         <td>{{item.receiveday}}</td>
                         <td>{{item.logdatetime}}</td>
-                        <td><button class="btn btn-info" ng-click="getstockTrail(item.sid,item.pname)">✓</button></td>
+                        <!--<td><button class="btn btn-info" ng-click="getstockTrail(item.sid,item.pname)">✓</button></td>-->
                     </tr>
                 </tbody>
             </table>
@@ -190,6 +190,7 @@
             $scope.selectBranch = function() {
                 $http.get('php/subbranchSelect.php').then(function(response) {
                     $scope.branchs = response.data.records;
+                    $scope.branch = $scope.branchs[0]['id'];
                 });
             };
 
