@@ -153,7 +153,7 @@ function thai_date($time){
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" ng-click="resetmodal()" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" ng-click="resetmodal()" data-dismiss="modal">ตกลง</button>
+                            <button type="button" class="btn btn-success" ng-click="sendtouser();resetmodal()" data-dismiss="modal">ตกลง</button>
                         </div>
                     </div>
                 </div>
@@ -236,12 +236,23 @@ function thai_date($time){
 
                 $scope.resetmodal = function() {
                     $scope.textonsendmodal = null;
-                    $scope.reciveuserid = $scope.users[0]['id'];
+                    //$scope.reciveuserid = $scope.users[0]['id'];
                 }
 
                 $scope.sendtouser = function() {
+                    $http.post("php/insertsendtobranchTodo.php", {
+                        'message': $scope.textonsendmodal,
+                        'userrecive': $scope.reciveuserid
+                    }).then(function(data) {
+                        //console.log(data.data);
+                        if (data.data == "Data Inserted") {
+                            swal("เสร็จสิ้น", "ข้อความของคุณถูกส่งให้ผู้รับแล้ว", "success");
+                            $scope.reciveuserid = $scope.users[0]['id'];
+                        } else {
+                            swal("บันทึกข้อมูลไม่สำเร็จ", "ข้อความของคุณยังไม่ถูกส่ง", "warning");
+                        }
 
-
+                    });
                 }
 
             });
