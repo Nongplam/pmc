@@ -90,7 +90,7 @@ function thai_date($time){
                     </div>
                     <br>
                     <table class="table table table-bordered">
-                        <thead class="bg-info">
+                        <thead class="table-info">
                             <tr>
                                 <th>สาขา</th>
                                 <th>รหัสสินค้า</th>
@@ -247,11 +247,10 @@ function thai_date($time){
                         //console.log(data.data);
                         if (data.data == "Data Inserted") {
                             swal("เสร็จสิ้น", "ข้อความของคุณถูกส่งให้ผู้รับแล้ว", "success");
-                            $scope.reciveuserid = $scope.users[0]['id'];
+                            //$scope.reciveuserid = $scope.users[0]['id'];
                         } else {
                             swal("บันทึกข้อมูลไม่สำเร็จ", "ข้อความของคุณยังไม่ถูกส่ง", "warning");
                         }
-
                     });
                 }
 
