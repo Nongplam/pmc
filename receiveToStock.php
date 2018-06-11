@@ -30,14 +30,14 @@ if (isset($_GET["no"])){
     <body>
         <?php 
     include 'mainbartest.php';
-    $role=$_SESSION["role"];
+    /*$role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
     $allowrule = explode(",",$allowruleraw["rule"]);
         if (!in_array("24", $allowrule)){
             header("Location: auth.php");
-        }
+        }*/
      ?>
         <div ng-app="reciveStockApp" ng-controller="reciveStockcontroller" class="ng-scope">
             <div class=" container">
@@ -254,7 +254,7 @@ if (isset($_GET["no"])){
                     if(key.keyCode == 13){
                         $scope.openprintpage();
                     }                    
-                }
+                };
                 
                 $scope.openprintpage = function(){
                     var urlstr = 'printBarcode.php?codenumber=';
@@ -361,7 +361,7 @@ if (isset($_GET["no"])){
         });
         </script>
 
-        <script src="dist/sweetalert.min.js"></script>
+        <script src="dist/sweetalert2.all.js"></script>
     </body>
 
     </html>

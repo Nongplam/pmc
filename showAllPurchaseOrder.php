@@ -62,13 +62,13 @@
                 <td>{{PO.rpt_PO_status_desc}}</td>
                 <td><a href="reportPurchaseOrder.php?NO={{PO.rptPO_no}}" target="_blank"><button class="btn btn-info" ><span class="icon ion-android-document font-weight-bold"></span>&#160;PDF </button></a> </td>
                 <td ng-show="checkStatusAccept(PO.rptPO_status)"><a href="editPurchaseOrder.php?no={{PO.rptPO_no}}"><button class="btn btn-primary" ><span class="icon ion-android-create font-weight-bold"></span>&#160;แก้ไข </button></a> </td>
-                <td ng-show="checkStatusAccept(PO.rptPO_status)"><button class="btn btn-success" ng-click="setData(PO.rptPO_no,PO.rptPO_status)" data-toggle="modal" data-target="#uploade"><span class="icon ion-android-checkbox-outline font-weight-bold"></span>&#160;อนุมัติ </button></td>
-                <td ng-show="checkStatusReject(PO.rptPO_status)"><button class="btn btn-danger"  ng-click="setData(PO.rptPO_no,PO.rptPO_status)" data-toggle="modal" data-target="#uploade"><span class="icon ion-android-cancel font-weight-bold"></span>&#160;ยกเลิก </button></td>
+                <td ng-show="checkStatusAccept(PO.rptPO_status)"><button class="btn btn-success" ng-click="setData(PO.rptPO_no,2)" data-toggle="modal" data-target="#upload"><span class="icon ion-android-checkbox-outline font-weight-bold"></span>&#160;อนุมัติ </button></td>
+                <td ng-show="checkStatusReject(PO.rptPO_status)"><button class="btn btn-danger"  ng-click="setData(PO.rptPO_no,3)" data-toggle="modal" data-target="#upload"><span class="icon ion-android-cancel font-weight-bold"></span>&#160;ยกเลิก </button></td>
             </tr>
             </tbody>
         </table>
-        <!--modal upload file for accept purchase order-->
-        <div class="modal fade" id="uploade" tabindex="1" role="dialog">
+        <!--modal upload file for accept and receive purchase order-->
+        <div class="modal fade" id="upload" tabindex="1" role="dialog">
             <div class="modal-dialog  modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -104,7 +104,7 @@
             </div>
 
         </div>
-        <!--end modal upload file for accept purchase order-->
+        <!--end modal upload file for accept nd receive purchase order-->
     </div>
 </div>
 
@@ -152,8 +152,8 @@
         $scope.setData  = function(no,flag){
             $scope.Po_no = no;
             $scope.Flag = flag;
-            if(parseInt(flag) == 2) {
-            $scope.showNote = true;
+            if(parseInt(flag) == 3  ) {
+                $scope.showNote = true;
             }else{
                 $scope.showNote = false;
             }
@@ -169,7 +169,7 @@
             });
             fd.append('no',$scope.Po_no);
             fd.append('flag', $scope.Flag);
-            if($scope.Flag == 2){
+            if($scope.Flag == 3 ){
                 fd.append('note', $scope.po_note);
             }
 
@@ -218,7 +218,7 @@
 
 
         $scope.checkStatusReject = function(status){
-            if(parseInt(status) == 2) {
+            if(parseInt(status) == 2 || parseInt(status) == 4 ) {
 
                 return true;
             }else{

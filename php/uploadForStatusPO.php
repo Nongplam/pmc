@@ -15,7 +15,7 @@ $subid = $_SESSION['subbranchid'];
 $no = $_POST['no'] ;
 $flag = $_POST['flag'] ;
 
-if($flag == 2){
+if($flag == 3){
     $note =  $_POST['note'] ;
   //  $note  = "<br>หมายเหตุยกเลิกใบสั่งสินค้า<br>$note<br>";
 
@@ -30,7 +30,7 @@ if($flag == 2){
 //echo  $no;
 
 
-$status  = $flag+1;
+$status  = $flag;
 $order = "PO";
 $location = "../upload/$subid/$order/$no/$status"; //
 
