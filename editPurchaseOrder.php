@@ -155,8 +155,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
             <div class="btn-group float-right" role="group">
