@@ -105,22 +105,13 @@ function thai_date($time){
     $allowrule = explode(",",$allowruleraw["rule"]);
         if (!in_array("4", $allowrule)){
             header("Location: auth.php");
-        }else{
-            $subbid = $_SESSION["subbranchid"];
-            $branchtypequery="SELECT subbranch.branchtype FROM subbranch WHERE subbranch.id = '$subbid';";
-            $branchtyperesult = mysqli_query($con, $branchtypequery);
-            $branchtyperows = mysqli_fetch_assoc($branchtyperesult);
-            $branchtype = $branchtyperows['branchtype'];
-            if($branchtype == '2'){
-                header("Location: posforwholesalebranch.php");
-            }
         }
      ?>
         <div id="productsCtrl" ng-app="posApp" ng-controller="productsCtrl">
             <div class="container-fluid border border-dark rounded">
                 <br>
                 <nav class="navbar navbar-dark bg-primary rounded">
-                    <span class="navbar-brand mb-0 h1"><?php echo $_SESSION["subbranchname"]; ?> <span><?php echo thai_date($eng_date); ?></span></span>
+                    <span class="navbar-brand mb-0 h1"><?php echo $_SESSION["subbranchname"]; ?> (ร้านค้าส่ง) <span><?php echo thai_date($eng_date); ?></span></span>
                     <span class="ml-auto navbar-text" style="color:rgb(248,249,250);">ยินดีต้อนรับ <?php echo " "; echo $_SESSION["fname"]; echo " "; echo $_SESSION["lname"];?></span>
                     <a href="logout.php"><button class="btn bg-light" type="button" id="logoutbtn">logout</button></a>
                 </nav>
@@ -133,7 +124,7 @@ function thai_date($time){
                                 <ul class="dropdown-menu w-100" id="searchitemdropdown">
                                     <input class="form-control" id="myInput" ng-model="myInput" type="text" placeholder="Search.." ng-keyup="enterItembybarcode($event)" autofocus>
                                     <div ng-repeat="x in stocks | filter: myInput">
-                                        <li class="dropdown-item" ng-click="setitemModal(x.lotno,x.pname,x.bname,x.stocktype,x.retailprice,x.sid,x.remain)"><button type="button" class="btn btn-light" data-toggle="modal" data-target="#additemModal" data-stockid="{{x.sid}}" data-lotnumber="{{x.lotno}}" data-productname="{{x.pname}}" data-productbrand="{{x.bname}}" data-retailprice="{{x.retailprice}}" data-unit="{{x.stocktype}}" data-remain="{{x.remain}}" data-baseprice="{{x.baseprice}}">{{x.pname}} {{x.bname}} หน่วย: {{x.stocktype}} หมดอายุวันที่: {{datethaiformat(x.expireday)}}</button>
+                                        <li class="dropdown-item" ng-click="setitemModal(x.lotno,x.pname,x.bname,x.stocktype,x.wholesaleprice,x.sid,x.remain)"><button type="button" class="btn btn-light" data-toggle="modal" data-target="#additemModal" data-stockid="{{x.sid}}" data-lotnumber="{{x.lotno}}" data-productname="{{x.pname}}" data-productbrand="{{x.bname}}" data-wholesaleprice="{{x.wholesaleprice}}" data-unit="{{x.stocktype}}" data-remain="{{x.remain}}" data-baseprice="{{x.baseprice}}">{{x.pname}} {{x.bname}} หน่วย: {{x.stocktype}} หมดอายุวันที่: {{datethaiformat(x.expireday)}}</button>
                                         </li>
                                     </div>
                                 </ul>
@@ -707,7 +698,7 @@ function thai_date($time){
                             for (i = 0; i < $scope.stocks.length; i++) {
                                 if ($scope.stocks[i].barcode == barcode) {
                                     isfound = true;
-                                    $scope.setitemModal($scope.stocks[i].lotno, $scope.stocks[i].pname, $scope.stocks[i].bname, $scope.stocks[i].stocktype, $scope.stocks[i].retailprice, $scope.stocks[i].sid, $scope.stocks[i].remain);
+                                    $scope.setitemModal($scope.stocks[i].lotno, $scope.stocks[i].pname, $scope.stocks[i].bname, $scope.stocks[i].stocktype, $scope.stocks[i].wholesaleprice, $scope.stocks[i].sid, $scope.stocks[i].remain);
                                 }
                             }
                             if (!isfound) {
