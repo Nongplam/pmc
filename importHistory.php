@@ -240,8 +240,8 @@
 
             $scope.checkPO = function(po) {
                 if (po == null) {
-                    return 'ไม่มีใบสั่งสินค้า'
-                    ว
+                    return 'ไม่มีใบสั่งสินค้า';
+
                 } else {
                     return po;
                 }

@@ -18,17 +18,17 @@ if($result = mysqli_query($con,$allsubbranch)){
     while ($row = $result ->fetch_array(1) ){
         $res[]  = $row['id'];
     }
-    $reportused =   $res;
+    $branchidres =   $res;
 }else{
     echo mysqli_error($con);
 }
 
 $res = array();
 $res2 = array();
-for($i = 0;$i<count($reportused);$i++){
+for($i = 0;$i<count($branchidres);$i++){
     //echo $i;
     
-    $branchid = $reportused[$i];
+    $branchid = $branchidres[$i];
  $reportdrugused="SELECT T.*,T2.* FROM (SELECT stock.subbranchid,subbranch.name,stock.productid AS mainpid,product.pname AS pname ,stock.stocktype AS mainstocktype,(SELECT SUM(stock.remain) FROM stock WHERE stock.subbranchid = '$mainbranchid' AND stock.productid = mainpid AND stock.stocktype = mainstocktype) AS mainbranchremain,SUM(stock.remain) AS branchremain FROM stock,product,subbranch WHERE product.regno = stock.productid AND subbranch.id = stock.subbranchid AND stock.subbranchid = '$branchid' GROUP BY product.pname,stock.stocktype) T, (SELECT product.pname AS branchpname,IF(SUM(dailysaledetail.qty)/(SELECT DATEDIFF(NOW(),MIN(dailysaledetail.date)) FROM dailysaledetail,stock,product WHERE dailysaledetail.subbranchid = '$branchid' AND product.regno = stock.productid AND stock.sid = dailysaledetail.stockid AND product.pname = branchpname)>0,SUM(dailysaledetail.qty)/(SELECT DATEDIFF(NOW(),MIN(dailysaledetail.date)) FROM dailysaledetail,stock,product WHERE dailysaledetail.subbranchid = '$branchid' AND product.regno = stock.productid AND stock.sid = dailysaledetail.stockid AND product.pname = branchpname),SUM(dailysaledetail.qty)/1) AS aveusedperday,stock.stocktype AS stocktype FROM dailysaledetail,stock,product WHERE dailysaledetail.subbranchid = '$branchid' AND product.regno = stock.productid AND stock.sid = dailysaledetail.stockid GROUP BY product.pname,stock.stocktype) T2 WHERE T.pname = T2.branchpname AND T.mainstocktype = T2.stocktype";
 
 

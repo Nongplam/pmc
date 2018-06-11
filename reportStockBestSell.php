@@ -32,8 +32,8 @@
 </select>
                 <input type="submit" name="" ng-click="getAllStock()" class="btn btn-success" value="ตกลง" style="width: 117px;">
             </form>
-            <table class="table table-info table-bordered">
-                <tbody>
+            <table class="table table-bordered">
+                <tbody class="table-info">
                     <tr>
                         <th>เลขสต็อค</th>
                         <th>ผลิตภัณฑ์</th>
