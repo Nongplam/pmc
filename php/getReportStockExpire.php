@@ -11,18 +11,18 @@ if($type == 1){
     $query = "SELECT  stock.sid,product.pname ,stock.productid,company.cname,stock.remain,stock.stocktype,stock.costprice,stock.lotno,stock.receiveday,stock.expireday 
     FROM stock,product,company 
     WHERE (stock.productid = product.regno AND stock.cid = company.cid) 
-    AND (DATE(stock.expireday) <= DATE_ADD( NOW() , INTERVAL 60 DAY)) AND stock.subbranchid = ".$id." ORDER BY stock.expireday DESC";
+    AND (DATE(stock.expireday) <= DATE_ADD( NOW() , INTERVAL 60 DAY)) AND stock.subbranchid = ".$id." AND stock.remain > 0 ORDER BY stock.expireday DESC";
 
 }elseif($type == 2){
     $query = "SELECT  stock.sid,product.pname ,stock.productid,company.cname,stock.remain,stock.stocktype,stock.costprice,stock.lotno,stock.receiveday,stock.expireday 
     FROM stock,product,company 
     WHERE (stock.productid = product.regno AND stock.cid = company.cid) 
-    AND (DATE(stock.expireday) >= NOW() AND  DATE(stock.expireday) <= DATE_ADD( NOW() , INTERVAL 60 DAY)) AND stock.subbranchid = ".$id." ORDER BY stock.expireday ASC";
+    AND (DATE(stock.expireday) >= NOW() AND  DATE(stock.expireday) <= DATE_ADD( NOW() , INTERVAL 60 DAY)) AND stock.subbranchid = ".$id." AND stock.remain > 0 ORDER BY stock.expireday ASC";
 }elseif($type == 3){
     $query = "SELECT  stock.sid,product.pname ,stock.productid,company.cname,stock.remain,stock.stocktype,stock.costprice,stock.lotno,stock.receiveday,stock.expireday 
     FROM stock,product,company 
     WHERE (stock.productid = product.regno AND stock.cid = company.cid) 
-    AND DATE(stock.expireday) <= NOW()  AND stock.subbranchid = ".$id." ORDER BY stock.expireday DESC";
+    AND DATE(stock.expireday) <= NOW()  AND stock.subbranchid = ".$id." AND stock.remain > 0 ORDER BY stock.expireday DESC";
 
 }
 
