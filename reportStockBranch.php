@@ -5,19 +5,6 @@
  * Date: 6/3/2018
  * Time: 6:35 PM
  */
-session_start();
-
-$subid= $_SESSION['subbranchid'];
-include "php/connectDB.php";
-$sql = "SELECT subbranch.name FROM subbranch WHERE subbranch.id = $subid";
-
-
-$result = mysqli_query($con,$sql);
-
-$row = $result ->fetch_array(1);
-
-
-
 ?>
 
 
@@ -36,15 +23,24 @@ $row = $result ->fetch_array(1);
 
 <body>
 <?php
-    /*include 'mainbartest.php';
-    $role=$_SESSION["role"];
-    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
-    $allowqueryresult=mysqli_query($con,$allowquery);
-    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);
-    $allowrule = explode(",",$allowruleraw["rule"]);
-    if (!in_array("26", $allowrule)){
-        header("Location: auth.php");
-    }*/
+    include 'mainbartest.php';
+$subid= $_SESSION['subbranchid'];
+include "php/connectDB.php";
+$sql = "SELECT subbranch.name FROM subbranch WHERE subbranch.id = $subid";
+
+
+$result = mysqli_query($con,$sql);
+
+$row = $result ->fetch_array(1);
+
+/*$role=$_SESSION["role"];
+$allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+$allowqueryresult=mysqli_query($con,$allowquery);
+$allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);
+$allowrule = explode(",",$allowruleraw["rule"]);
+if (!in_array("26", $allowrule)){
+    header("Location: auth.php");
+}*/
 ?>
 
 

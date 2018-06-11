@@ -1,3 +1,13 @@
+
+<?php
+
+
+     $no = $_GET["no"];
+
+
+?>
+
+
 <!DOCTYPE html>
 <html ng-app="purchaseOrderApp" ng-app>
 
@@ -39,7 +49,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">เลขที่ใบสั่งซื้อ</span>
                     </div>
-                    <input type="text" name="po_no" ng-model="po_no" class="form-control" ng-init="genPO_NO()" aria-label="Small" aria-describedby="inputGroup-sizing-sm" disabled>
+                    <input type="text" name="po_no" ng-model="po_no" class="form-control" ng-init="getHeadPurchaseOrder()" aria-label="Small" aria-describedby="inputGroup-sizing-sm" disabled>
                 </div>
                 <div class="input-group input-group-sm mb-3  col-sm-5 ">
                     <div class="input-group-prepend">
@@ -145,19 +155,17 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
-            <div class="btn-group offset-sm-9" role="group">
+            <div class="btn-group float-right" role="group">
 
-                <button class="btn btn-success mr-2" ng-click="addToRptPO()" >สร้างใบสั่งสินค้า&#160;<span class="icon ion-compose font-weight-bold"></span></button>
+                <button class="btn btn-success mr-2" ng-click="addToRptPO()" >บันทึก&#160;<span class="icon ion-compose font-weight-bold"></span></button>
 
 
                 <button class="btn btn-primary " data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
 
             </div>
-            <table class="table table-striped" ng-init="selectPrePO()">
+            <table class="table table-striped" ng-init="getDetailPoProduct()">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -178,7 +186,7 @@
                         <td>{{producrPO.pricePerType}}</td>
                         <td ng-init="sumallprice(producrPO.priceall)"> {{producrPO.priceall}}</td>
                         <td>{{producrPO.note}}</td>
-                        <td><button class="btn btn-danger" ng-click="delProPrePO(producrPO.prePo_id)">ลบ&#160;<span class="icon ion-android-remove-circle font-weight-bold"></span> </button> </td>
+                        <td><button class="btn btn-danger" ng-click="delPoDetail(producrPO.rpt_POD_id)">ลบ&#160;<span class="icon ion-android-remove-circle font-weight-bold"></span> </button> </td>
                     </tr>
                 </tbody>
             </table>
@@ -205,7 +213,6 @@
                     <span class="input-group-text  font-weight-bold" id="inputGroup-sizing">หมายเหตุ</span>
                 </div>
                 <textarea name="po_note" rows="5" id="po_note" ng-model="po_note" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing"></textarea>
-
             </div>
 
             <!--..................................modal add detail product start........................................-->
@@ -265,13 +272,13 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
-                            <button type="button" class="btn btn-success" ng-click="addToPrePO()" data-dismiss="modal">เพิ่ม</button>
+                            <button type="button" class="btn btn-success" ng-click="addToPoDetail()" data-dismiss="modal">เพิ่ม</button>
                         </div>
 
                     </div>
                 </div>
             </div>
-
+            <!--..................................end modal add detail product start........................................-->
             <!--..................................modal selectProกduct start........................................-->
             <div class="modal fade" id="selectProductModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -340,7 +347,7 @@
                     </div>
                 </div>
             </div>
-            <!--......................................endmodal...................................-->
+            <!--..................................end modal selectProกduct start........................................-->
 
 
             <!--modal add company-->
@@ -398,7 +405,7 @@
                 </div>
 
             </div>
-
+            <!--end modal add company-->
 
 
 
@@ -425,8 +432,7 @@
 
                     $scope.po_discount = 0;
                     $scope.countPro = 0;
-                    $scope.po_date = new Date();
-                    $scope.po_datesend = new Date();
+
                     $scope.po_vat = 0;
                     $scope.po_disc = 0;
                     $scope.discofprice = 0.00;
@@ -462,7 +468,7 @@
                         po_productid = id;
 
                     };
-                    $scope.addToPrePO = function() {
+                    $scope.addToPoDetail = function() {
 
 
                         if($scope.po_remain == null){
@@ -485,33 +491,55 @@
 
 
 
-                        $http.post('php/addToPrePO.php', {
+                        $http.post('php/addToPoDetail.php', {
+                            'no': <?= sprintf("%'.010d",$no )?>,
                             'po_productid': po_productid,
                             'po_remain': $scope.po_remain,
                             'po_type': $scope.po_type,
                             'po_pricePerType': $scope.po_pricePerType,
                             'po_notePro': $scope.po_notePro
                         }).then(function(res) {
+                            if (res.data.add == true) {
+                                const toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
 
-                            const toast = swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 1000
-                            });
+                                toast({
+                                    type: 'success',
+                                    title: 'เพิ่มสินค้าสำเร็จ'
+                                });
+                                po_productid = null;
+                                $scope.po_remain = null;
+                                $scope.po_type = null;
+                                $scope.po_pricePerType = null;
+                                $scope.po_notePro = null;
+                                $scope.totalprice = 0.00;
 
-                            toast({
-                                type: 'success',
-                                title: 'add successfully'
-                            });
-                            po_productid = null;
-                            $scope.po_remain = null;
-                            $scope.po_type = null;
-                            $scope.po_pricePerType = null;
-                            $scope.po_notePro = null;
-                            $scope.totalprice = 0.00;
-                            $scope.selectPrePO();
+                                $scope.getDetailPoProduct();
+                            }else{
+                                const toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
 
+                                toast({
+                                    type: 'error',
+                                    title: 'เพิ่มสินค้าไม่สำเร็จ'
+                                });
+                                po_productid = null;
+                                $scope.po_remain = null;
+                                $scope.po_type = null;
+                                $scope.po_pricePerType = null;
+                                $scope.po_notePro = null;
+                                $scope.totalprice = 0.00;
+
+                                $scope.getDetailPoProduct();
+                            }
                         });
                     };
                     $scope.selectPrePO = function() {
@@ -521,7 +549,7 @@
 
                         })
                     };
-                    $scope.delProPrePO = function(id) {
+                    $scope.delPoDetail = function(id) {
 
                         swal({
 
@@ -537,13 +565,40 @@
                             .then((data) => {
                                 if (data.value) {
 
-                                    $http.post('php/delProPrePO.php', {
+                                    $http.post('php/delPoDetail.php', {
                                         'id': id
-                                    }).then(function() {
-                                        swal("ลบข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกลบ", "success");
-                                        $scope.totalprice = 0.00;
-                                        $scope.discOfPrice();
-                                        $scope.selectPrePO();
+                                    }).then(function(res) {
+                                        var temp =res.data;
+                                        if(temp.del == true) {
+                                            const toast = swal.mixin({
+                                                toast: true,
+                                                position: 'top-end',
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            });
+
+                                            toast({
+                                                type: 'success',
+                                                title: 'ลบสินค้าสำเร็จ'
+                                            });
+                                            $scope.totalprice = 0.00;
+
+                                            $scope.getDetailPoProduct();
+                                        }else{
+                                            const toast = swal.mixin({
+                                                toast: true,
+                                                position: 'top-end',
+                                                showConfirmButton: false,
+                                                timer: 2000
+                                            });
+
+                                            toast({
+                                                type: 'error',
+                                                title: 'ลบสินค้าไม่สำเร็จ'
+                                            });
+                                            $scope.totalprice = 0.00;
+                                            $scope.getDetailPoProduct();
+                                        }
                                     });
 
                                 }
@@ -556,6 +611,55 @@
                             $scope.no = res.data.records[0].rptPO_no;
                         });
                     };
+
+                    $scope.getHeadPurchaseOrder = function(){
+
+                        $http.post("php/getHeadEditPurchaseOrder.php",{
+                            'no': <?= sprintf("%'.010d",$no )?>
+                        }).then(function(res){
+
+                            var temp = angular.fromJson(res.data);
+
+                            $scope.po_no = temp.rptPO_no;
+
+                            $scope.cid =  temp.cid;
+                            $scope.cname =  temp.cname;
+                            $scope.po_agent =  temp.rptPO_agent;
+                            $scope.po_lo =  temp.rptPO_lo;
+                            $scope.po_tel =   temp.rptPO_tel;
+                            $scope.po_mail =    temp.rptPO_mail ;
+
+
+
+
+                            $scope.po_sendlo = temp.rptPO_losend;
+                            $scope.po_note = temp.note;
+
+                            $scope.countPro = 0;
+                            $scope.po_date =  new Date(temp.rptPO_date);
+                            $scope.po_datesend =  new Date(temp.rptPO_datesend);
+                            $scope.po_vat = temp.vat;
+                            $scope.po_disc = temp.discount;
+                           // $scope.discofprice = temp.pricediscount;
+                           // $scope.totalprice = temp.pricesum;
+                          //  $scope.vatofprice = temp.pricevat;
+                           // $scope.priceallMidisc = temp.priceMIdicount;
+                            //$scope.totalPAll = temp.totalprice;
+
+                        })
+
+                    };
+                    $scope.getDetailPoProduct = function(){
+                        $http.post("php/getDetailPoProduct.php",{
+                            'no': <?= sprintf("%'.010d",$no )?>
+                        }).then(function(res){
+                            $scope.producrPOs = res.data.records
+                            $scope.discOfPrice();
+                        })
+                    };
+
+
+
                     $scope.selectCompany = function() {
                         $http.get("php/companySelect.php").then(function(response) {
                             $scope.companys = response.data.records;
@@ -568,8 +672,6 @@
                         $scope.po_lo = null;
                         $scope.po_tel =  null;
                         $scope.po_mail =   null ;
-
-
                         $scope.cid = id;
                         $scope.cname = name;
                         $scope.po_agent = agent;
@@ -579,29 +681,29 @@
 
                     };
                     $scope.discOfPrice = function() {
-                        if ($scope.po_disc > 100) {
+                        if (($scope.po_disc > 100 && $scope.po_disc < 0) || $scope.po_disc == null ) {
                             $scope.po_disc = 0;
                         }
 
-                        if ($scope.vatOp > 100) {
+                        if (($scope.vatOp > 100    && $scope.vatOp < 0) || $scope.vatOp  == null) {
                             $scope.vatOp = 0;
                         }
-                        if ($scope.disc) {
+                       // if ($scope.disc) {
                             $scope.discofprice = parseFloat($scope.totalprice * $scope.po_disc / 100).toFixed(2);
                             $scope.priceallMidisc = parseFloat($scope.totalprice - $scope.discofprice).toFixed(2);
 
-                        } else {
+                        /*} else {
                             $scope.discofprice = 0.00;
                             $scope.priceallMidisc = parseFloat($scope.totalprice - $scope.discofprice).toFixed(2);
 
-                        }
+                        }*/
 
-                        if ($scope.vatOp) {
+                        //if ($scope.vatOp) {
 
                             $scope.vatofprice = parseFloat($scope.priceallMidisc * $scope.po_vat / 100).toFixed(2);
-                        } else {
+                        /*} else {
                             $scope.vatofprice = 0.00;
-                        }
+                        }*/
 
                         $scope.totalPAll = parseFloat(parseFloat($scope.priceallMidisc) + parseFloat($scope.vatofprice)).toFixed(2);
 
@@ -671,7 +773,7 @@
                         }
 
 
-                        $http.post('php/addToRptPO.php', {
+                        $http.post('php/editRptPO.php', {
                             'po_no': $scope.po_no,
                             'po_date': $scope.formatDate(date1),
                             'cid': $scope.cid,
@@ -692,8 +794,7 @@
                         }).then(function(res) {
                             var temp = angular.fromJson(res.data);
                             //console.log(temp.addrpt_PO ,temp.addrpt_POD,temp.DelPrePO);
-                            if(temp.records["0"].DelPrePO == true && temp.records["0"].addrpt_PO== true && temp.records["0"].addrpt_POD== true){
-                                $scope.genPO_NO();
+                            if( temp.records["0"].Uprpt_PO== true){
                                 $scope.selectPrePO();
                                 $scope.cname = null;
                                 $scope.cid = null;
@@ -703,7 +804,7 @@
                                 $scope.po_mail = null;
 
                                 $scope.po_sendlo = null;
-                                $scope.note = null;
+                                $scope.po_note = null;
                                 $scope.po_discount = 0;
                                 $scope.countPro = 0;
                                 $scope.po_date = new Date();

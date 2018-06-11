@@ -10,7 +10,8 @@ include 'connectDB.php';
 
 $subid= $_SESSION['subbranchid'];
 
-  $sql = "SELECT rpt_PO.*,company.cname FROM rpt_PO,company WHERE company.cid = rpt_PO.cid  AND subbranchid = $subid ORDER BY rptPO_date DESC";
+  $sql = "SELECT rpt_PO.*,company.cname,rpt_PO_status.rpt_PO_status_desc,rpt_recivePO.rptRecivePO_No,rpt_recivePO.rptRecivePO_Date,rpt_recivePO.rptRecivePO_Status FROM company,rpt_PO_status,rpt_PO LEFT JOIN rpt_recivePO ON rpt_PO.rptPO_no  = rpt_recivePO.rptPO_no   AND rpt_PO.subbranchid = rpt_recivePO.subbranchid 
+WHERE rpt_PO.rptPO_status = rpt_PO_status.rpt_PO_status_s AND company.cid = rpt_PO.cid  AND rpt_PO.subbranchid = $subid ORDER BY rptPO_date DESC";
 $res = array();
 //echo  $sql;
 if($result = mysqli_query($con,$sql)){
