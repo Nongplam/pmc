@@ -7,7 +7,7 @@ $subid= $_SESSION['subbranchid'];
 
 if($data) {
     $branchid= mysqli_real_escape_string($con, $data->branch);    
-    $sql="SELECT stock.sid,product.pname,stock.remainfull,stock.remain,stock.costprice,stock.retailprice,stock.expireday,subbranch.name FROM stock,product,subbranch WHERE product.regno=stock.productid AND stock.remain > 0 AND stock.subbranchid = $branchid AND stock.ispromotion = 0 AND subbranch.id = '$branchid'";
+    $sql="SELECT stock.sid,product.pname,stock.remainfull,stock.remain,stock.stocktype,stock.costprice,stock.retailprice,stock.expireday,subbranch.name FROM stock,product,subbranch WHERE product.regno=stock.productid AND stock.remain > 0 AND stock.subbranchid = $branchid AND stock.ispromotion = 0 AND subbranch.id = '$branchid'";
     $res = array();
     
     if($result = mysqli_query($con,$sql)){

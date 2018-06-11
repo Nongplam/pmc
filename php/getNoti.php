@@ -30,7 +30,7 @@ if($result=  mysqli_query($con,$stocknotinshelfquery)){
         echo "<tbody>";
 for($i = 0;$i < count($noti['records']);$i++){
         echo "<tr class='notirow'>";
-            echo "<td>"; echo $noti['records'][$i]['pname']; echo "</td>";
+            echo "<td><a href='/pmc/stocktoshelf.php'>"; echo $noti['records'][$i]['pname']; echo "</a></td>";
         echo "</tr>";
 }
         echo "</tbody>";

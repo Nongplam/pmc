@@ -49,6 +49,7 @@
                                     <tr>
                                         <th>เลขสต๊อก</th>
                                         <th>ชื่อสินค้า</th>
+                                        <th>หน่วย</th>
                                         <th>คงเหลือ</th>
                                         <th>ต้นทุน</th>
                                         <th>ราคาปลีก</th>
@@ -59,10 +60,11 @@
                                     <tr ng-repeat="stock in stocks | filter:stockfiller">
                                         <td>{{stock.sid}}</td>
                                         <td>{{stock.pname}}</td>
+                                        <td>{{stock.stocktype}}</td>
                                         <td>{{stock.remain}}</td>
                                         <td>{{stock.costprice}}</td>
                                         <td>{{stock.retailprice}}</td>
-                                        <td>{{stock.expireday}}</td>
+                                        <td style="width:15%;">{{stock.expireday}}</td>
                                         <td> <button class="btn btn-primary" ng-click="sendtoprePromotion(stock.sid)"> -> </button> </td>
                                     </tr>
                                 </tbody>
@@ -125,18 +127,38 @@
                             <table class="table table-bordered">
                                 <thead class="table-info">
                                     <tr>
-                                        <th>Column 1</th>
-                                        <th>Column 2</th>
+                                        <th>รหัสส่วนลด</th>
+                                        <th>ชื่อส่วนลด</th>
+                                        <th>ราคาต่อชุด</th>
+                                        <th>มูลค่าส่วนลด</th>
+                                        <th>ราคาเต็ม</th>
+                                        <th>รายละเอียด</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Cell 1</td>
-                                        <td>Cell 2</td>
+                                        <td>Cell1</td>
+                                        <td>Cell2</td>
+                                        <td>Cell3</td>
+                                        <td>Cell4</td>
+                                        <td>Cell4</td>
+                                        <td>Cell4</td>
                                     </tr>
                                     <tr>
-                                        <td>Cell 3</td>
-                                        <td>Cell 4</td>
+                                        <td>Cell1</td>
+                                        <td>Cell2</td>
+                                        <td>Cell3</td>
+                                        <td>Cell4</td>
+                                        <td>Cell4</td>
+                                        <td>Cell4</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cell1</td>
+                                        <td>Cell2</td>
+                                        <td>Cell3</td>
+                                        <td>Cell4</td>
+                                        <td>Cell4</td>
+                                        <td>Cell4</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -158,6 +180,7 @@
             $http.get('php/subbranchSelect.php').then(function(response) {
                 $scope.branchs = response.data.records;
                 $scope.branch = $scope.branchs[0]['id'];
+                $scope.getstockinbranch();
             });
         };
 
