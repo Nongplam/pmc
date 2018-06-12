@@ -7,7 +7,10 @@ $userid = $_SESSION["id"];
 if($data){
     $detail=mysqli_real_escape_string($con, $data->message);
     $userrecive=mysqli_real_escape_string($con, $data->userrecive);
-    $sql = "INSERT INTO Todolist(todotype, title, detail, url, usergen, userrecive) VALUES ('1','ส่งสินค้าไปสาขาย่อย','$detail','/pmc/stockToStockBranchPre.php','$userid','$userrecive')";
+    $todotype=mysqli_real_escape_string($con, $data->todotype);
+    $title=mysqli_real_escape_string($con, $data->title);
+    $url=mysqli_real_escape_string($con, $data->url);
+    $sql = "INSERT INTO Todolist(todotype, title, detail, url, usergen, userrecive) VALUES ('$todotype','$title','$detail','$url','$userid','$userrecive')";
     if(mysqli_query($con, $sql)) {
         echo "Data Inserted";
         
