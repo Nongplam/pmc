@@ -26,12 +26,19 @@ include "upload.php";
 
 if (!empty($filename_arr)) {
     $sql = "UPDATE rpt_PO SET rpt_PO.rptPO_status = 5 WHERE rpt_PO.rptPO_no = '$no' AND rpt_PO.subbranchid = $subid";
+    
+    
 
 //    echo $sql;
 
     $result = array();
     if (mysqli_query($con, $sql)) {
         $result[0]['UpStsrpt_PO'] = true;
+        
+        $sql2 = "INSERT INTO Todolist(todotype, title, detail, url, usergen, userrecive) VALUES ('2','ตรวจรับสินค้า','ตรวจรับสินค้าเรียบร้อย $no','/pmc/showAllPurchaseOrder.php','$userid','46')";
+        mysqli_query($con, $sql2)
+        
+        
     } else {
         $result[0]['UpStsrpt_PO'] = 'Failed = '.mysqli_error($con)."------".$sql;
     }
