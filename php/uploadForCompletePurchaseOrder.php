@@ -36,7 +36,7 @@ if (!empty($filename_arr)) {
         $result[0]['UpStsrpt_PO'] = true;
         
         $sql2 = "INSERT INTO Todolist(todotype, title, detail, url, usergen, userrecive) VALUES ('2','ตรวจรับสินค้า','ตรวจรับสินค้าเรียบร้อย $no','/pmc/showAllPurchaseOrder.php','$userid','46')";
-        mysqli_query($con, $sql2)
+        mysqli_query($con, $sql2);
         
         
     } else {
