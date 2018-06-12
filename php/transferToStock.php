@@ -22,7 +22,7 @@ $subid = $_SESSION['subbranchid'];
 
 
 $sql = "INSERT INTO stock(barcode, PO_No, productid, cid, remainfull, remain, lotno, stocktype, costprice, baseprice, boxprice, retailprice, wholesaleprice, receiveday, expireday, subbranchid, userid, logdatetime ) 
-                  SELECT  barcode, PO_No, productid, cid, remainfull,remainfull, lotno, stocktype, costprice, baseprice, boxprice, retailprice, wholesaleprice, receiveday, expireday ,subbranchid,$userid,NOW()  FROM preToStock WHERE PO_No = '$po_no' AND subbranchid = $subid";
+                  SELECT  barcode, PO_No, productid, cid, remainfull,remainfull, lotno, stocktype, costprice, baseprice, boxprice, retailprice, wholesaleprice, receiveday, expireday ,subbranchid,$userid,NOW()  FROM preToStock WHERE remainfull <> 0 AND PO_No = '$po_no' AND subbranchid = $subid";
 
 
 
