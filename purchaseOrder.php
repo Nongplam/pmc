@@ -20,14 +20,14 @@
 <body>
     <?php 
     include 'mainbartest.php';
-    /*$role=$_SESSION["role"];
+    $role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
     $allowrule = explode(",",$allowruleraw["rule"]);
         if (!in_array("21", $allowrule)){
             header("Location: auth.php");
-        }*/
+        }
      ?>
     <div ng-controller="purchaseOrdercontroller" class="ng-scope">
         <div class="container">
@@ -151,7 +151,7 @@
             </div>
             <div class="btn-group offset-sm-9" role="group">
 
-                <button class="btn btn-success mr-2" ng-click="addToRptPO()" >สร้างใบสั่งสินค้า&#160;<span class="icon ion-compose font-weight-bold"></span></button>
+                <button class="btn btn-success mr-2" ng-click="addToRptPO()">สร้างใบสั่งสินค้า&#160;<span class="icon ion-compose font-weight-bold"></span></button>
 
 
                 <button class="btn btn-primary " data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
@@ -405,407 +405,403 @@
 
 
 
-                </div>
-            </div>
+        </div>
+    </div>
 
-            <script>
-                var app = angular.module("purchaseOrderApp", []);
+    <script>
+        var app = angular.module("purchaseOrderApp", []);
 
-                app.filter('startFrom', function() {
-                    return function(input, start) {
-                        if (input) {
-                            start = +start; //parse to int
-                            return input.slice(start);
-                        }
-                        return [];
-                    }
-                });
+        app.filter('startFrom', function() {
+            return function(input, start) {
+                if (input) {
+                    start = +start; //parse to int
+                    return input.slice(start);
+                }
+                return [];
+            }
+        });
 
-                app.controller('purchaseOrdercontroller', function($scope, $http, $timeout) {
+        app.controller('purchaseOrdercontroller', function($scope, $http, $timeout) {
 
-                    $scope.po_discount = 0;
-                    $scope.countPro = 0;
-                    $scope.po_date = new Date();
-                    $scope.po_datesend = new Date();
-                    $scope.po_vat = 0;
-                    $scope.po_disc = 0;
-                    $scope.discofprice = 0.00;
+            $scope.po_discount = 0;
+            $scope.countPro = 0;
+            $scope.po_date = new Date();
+            $scope.po_datesend = new Date();
+            $scope.po_vat = 0;
+            $scope.po_disc = 0;
+            $scope.discofprice = 0.00;
+            $scope.totalprice = 0.00;
+            $scope.vatofprice = 0.00;
+            $scope.priceallMidisc = 0.00;
+            $scope.totalPAll = 0.00;
+
+            var ttprice = 0.00;
+            var po_productid = null;
+            $scope.sumallprice = function(allprice) {
+
+
+                $scope.totalprice = parseFloat(parseFloat($scope.totalprice) + parseFloat(allprice)).toFixed(2);
+
+                $scope.discOfPrice();
+            };
+            $scope.setPage = function(pageNo) {
+                $scope.currentPage = pageNo;
+            };
+            $scope.filter = function() {
+                $timeout(function() {
+                    $scope.filteredItems = $scope.filtered.length;
+                }, 10);
+            };
+            $scope.sort_by = function(predicate) {
+                $scope.predicate = predicate;
+                $scope.reverse = !$scope.reverse;
+            };
+            $scope.selectProduct = function(id, name) {
+
+                $scope.po_pname = name;
+                po_productid = id;
+
+            };
+            $scope.addToPrePO = function() {
+
+
+                if ($scope.po_remain == null) {
+                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกจำนวนสินค้า", "warning");
+                    return;
+                }
+                if ($scope.po_type == null) {
+                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกหน่วยสินค้า", "warning");
+                    return;
+                }
+                if ($scope.po_pricePerType == null) {
+                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกราคาต่อหน่วย", "warning");
+                    return;
+                }
+
+                if ($scope.po_notePro == null) {
+                    $scope.po_notePro = "-";
+                }
+
+
+
+
+                $http.post('php/addToPrePO.php', {
+                    'po_productid': po_productid,
+                    'po_remain': $scope.po_remain,
+                    'po_type': $scope.po_type,
+                    'po_pricePerType': $scope.po_pricePerType,
+                    'po_notePro': $scope.po_notePro
+                }).then(function(res) {
+
+                    const toast = swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+
+                    toast({
+                        type: 'success',
+                        title: 'add successfully'
+                    });
+                    po_productid = null;
+                    $scope.po_remain = null;
+                    $scope.po_type = null;
+                    $scope.po_pricePerType = null;
+                    $scope.po_notePro = null;
                     $scope.totalprice = 0.00;
+                    $scope.selectPrePO();
+
+                });
+            };
+            $scope.selectPrePO = function() {
+                $http.get('php/selelctPrePO.php').then(function(res) {
+
+                    $scope.producrPOs = res.data.records
+
+                })
+            };
+            $scope.delProPrePO = function(id) {
+
+                swal({
+
+
+                        type: 'warning',
+                        title: 'ลบข้อมูล',
+                        text: 'ต้องการลบข้อมูลหรือไม่',
+                        allowOutsideClick: false,
+                        allowEnterKey: true,
+                        showConfirmButton: true,
+                        showCancelButton: true
+                    })
+                    .then((data) => {
+                        if (data.value) {
+
+                            $http.post('php/delProPrePO.php', {
+                                'id': id
+                            }).then(function() {
+                                swal("ลบข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกลบ", "success");
+                                $scope.totalprice = 0.00;
+                                $scope.discOfPrice();
+                                $scope.selectPrePO();
+                            });
+
+                        }
+                    });
+
+            };
+            $scope.genPO_NO = function() {
+                $http.get('php/genPO_NO.php').then(function(res) {
+                    $scope.po_no = res.data.records[0].rptPO_no;
+                    $scope.no = res.data.records[0].rptPO_no;
+                });
+            };
+            $scope.selectCompany = function() {
+                $http.get("php/companySelect.php").then(function(response) {
+                    $scope.companys = response.data.records;
+                });
+            };
+            $scope.setCompany = function(id, name, agent, conn, tel, mail) {
+                $scope.cid = null;
+                $scope.cname = null;
+                $scope.po_agent = null;
+                $scope.po_lo = null;
+                $scope.po_tel = null;
+                $scope.po_mail = null;
+
+
+                $scope.cid = id;
+                $scope.cname = name;
+                $scope.po_agent = agent;
+                $scope.po_lo = conn;
+                $scope.po_tel = tel;
+                $scope.po_mail = mail;
+
+            };
+            $scope.discOfPrice = function() {
+                if ($scope.po_disc > 100) {
+                    $scope.po_disc = 0;
+                }
+
+                if ($scope.vatOp > 100) {
+                    $scope.vatOp = 0;
+                }
+                if ($scope.disc) {
+                    $scope.discofprice = parseFloat($scope.totalprice * $scope.po_disc / 100).toFixed(2);
+                    $scope.priceallMidisc = parseFloat($scope.totalprice - $scope.discofprice).toFixed(2);
+
+                } else {
+                    $scope.discofprice = 0.00;
+                    $scope.priceallMidisc = parseFloat($scope.totalprice - $scope.discofprice).toFixed(2);
+
+                }
+
+                if ($scope.vatOp) {
+
+                    $scope.vatofprice = parseFloat($scope.priceallMidisc * $scope.po_vat / 100).toFixed(2);
+                } else {
                     $scope.vatofprice = 0.00;
-                    $scope.priceallMidisc = 0.00;
-                    $scope.totalPAll = 0.00;
+                }
 
-                    var ttprice = 0.00;
-                    var po_productid = null;
-                    $scope.sumallprice = function(allprice) {
+                $scope.totalPAll = parseFloat(parseFloat($scope.priceallMidisc) + parseFloat($scope.vatofprice)).toFixed(2);
 
+            };
+            $scope.formatDate = function(date) {
+                var d = new Date(date),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
 
-                        $scope.totalprice = parseFloat(parseFloat($scope.totalprice) + parseFloat(allprice)).toFixed(2);
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
 
-                        $scope.discOfPrice();
-                    };
-                    $scope.setPage = function(pageNo) {
-                        $scope.currentPage = pageNo;
-                    };
-                    $scope.filter = function() {
-                        $timeout(function() {
-                            $scope.filteredItems = $scope.filtered.length;
-                        }, 10);
-                    };
-                    $scope.sort_by = function(predicate) {
-                        $scope.predicate = predicate;
-                        $scope.reverse = !$scope.reverse;
-                    };
-                    $scope.selectProduct = function(id, name) {
-
-                        $scope.po_pname = name;
-                        po_productid = id;
-
-                    };
-                    $scope.addToPrePO = function() {
+                return [year, month, day].join('-');
+            };
+            $scope.addToRptPO = function() {
 
 
-                        if($scope.po_remain == null){
-                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกจำนวนสินค้า", "warning");
-                            return;
-                        }
-                        if($scope.po_type == null ){
-                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกหน่วยสินค้า", "warning");
-                            return;
-                        }
-                        if( $scope.po_pricePerType == null){
-                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกราคาต่อหน่วย", "warning");
-                            return;
-                        }
-
-                        if ($scope.po_notePro == null){
-                            $scope.po_notePro = "-";
-                        }
+                var date1 = new Date($scope.po_date);
+                var date2 = new Date($scope.po_datesend);
 
 
 
 
-                        $http.post('php/addToPrePO.php', {
-                            'po_productid': po_productid,
-                            'po_remain': $scope.po_remain,
-                            'po_type': $scope.po_type,
-                            'po_pricePerType': $scope.po_pricePerType,
-                            'po_notePro': $scope.po_notePro
-                        }).then(function(res) {
+                if ($scope.cid == null) {
+                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกบริษัทคู่ค้า", "warning");
 
-                            const toast = swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 1000
-                            });
+                    return;
+                }
 
-                            toast({
-                                type: 'success',
-                                title: 'add successfully'
-                            });
-                            po_productid = null;
-                            $scope.po_remain = null;
-                            $scope.po_type = null;
-                            $scope.po_pricePerType = null;
-                            $scope.po_notePro = null;
-                            $scope.totalprice = 0.00;
-                            $scope.selectPrePO();
+                if ($scope.po_agent == null) {
+                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตัวแทน", "warning");
 
-                        });
-                    };
-                    $scope.selectPrePO = function() {
-                        $http.get('php/selelctPrePO.php').then(function(res) {
+                    return;
+                }
+                if ($scope.po_lo == null) {
+                    $scope.po_lo = "-";
+                }
+                if ($scope.po_tel == null) {
+                    $scope.po_tel = "-";
+                }
+                if ($scope.po_mail == null) {
+                    $scope.po_mail = "-";
+                }
 
-                            $scope.producrPOs = res.data.records
+                if ($scope.po_sendlo == null) {
+                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตที่อยู่จัดส่ง", "warning");
 
-                        })
-                    };
-                    $scope.delProPrePO = function(id) {
-
-                        swal({
+                    return;
+                }
+                if ($scope.po_datesend == null) {
+                    date2 = "0000/00/00"
+                }
+                if ($scope.po_note == null) {
+                    $scope.po_note = "-";
+                }
 
 
-                            type: 'warning',
-                            title: 'ลบข้อมูล',
-                            text: 'ต้องการลบข้อมูลหรือไม่',
-                            allowOutsideClick :false,
-                            allowEnterKey : true,
-                            showConfirmButton: true,
-                            showCancelButton: true
-                            })
-                            .then((data) => {
-                                if (data.value) {
+                if ($scope.po_vat != 0 && $scope.vatOp == false) {
+                    $scope.vatOp = true;
+                    $scope.discOfPrice();
+                }
 
-                                    $http.post('php/delProPrePO.php', {
-                                        'id': id
-                                    }).then(function() {
-                                        swal("ลบข้อมูลเสร็จสิ้น", "ข้อมูลของคุณถูกลบ", "success");
-                                        $scope.totalprice = 0.00;
-                                        $scope.discOfPrice();
-                                        $scope.selectPrePO();
-                                    });
+                if ($scope.po_disc != 0 && $scope.disc == false) {
+                    $scope.disc = true;
+                    $scope.discOfPrice();
+                }
 
-                                }
-                            });
 
-                    };
-                    $scope.genPO_NO = function() {
-                        $http.get('php/genPO_NO.php').then(function(res) {
-                            $scope.po_no = res.data.records[0].rptPO_no;
-                            $scope.no = res.data.records[0].rptPO_no;
-                        });
-                    };
-                    $scope.selectCompany = function() {
-                        $http.get("php/companySelect.php").then(function(response) {
-                            $scope.companys = response.data.records;
-                        });
-                    };
-                    $scope.setCompany = function(id, name,agent,conn,tel,mail) {
-                        $scope.cid = null;
+                $http.post('php/addToRptPO.php', {
+                    'po_no': $scope.po_no,
+                    'po_date': $scope.formatDate(date1),
+                    'cid': $scope.cid,
+                    'po_agent': $scope.po_agent,
+                    'po_lo': $scope.po_lo,
+                    'po_tel': $scope.po_tel,
+                    'po_mail': $scope.po_mail,
+                    'discount': $scope.po_disc,
+                    'po_sendlo': $scope.po_sendlo,
+                    'po_datesend': $scope.formatDate(date2),
+                    'pricesum': $scope.totalprice,
+                    'pricediscount': $scope.discofprice,
+                    'priceMIdicount': $scope.priceallMidisc,
+                    'vat': $scope.po_vat,
+                    'pricevat': $scope.vatofprice,
+                    'totalprice': $scope.totalPAll,
+                    'note': $scope.po_note
+                }).then(function(res) {
+                    var temp = angular.fromJson(res.data);
+                    //console.log(temp.addrpt_PO ,temp.addrpt_POD,temp.DelPrePO);
+                    if (temp.records["0"].DelPrePO == true && temp.records["0"].addrpt_PO == true && temp.records["0"].addrpt_POD == true) {
+                        $scope.genPO_NO();
+                        $scope.selectPrePO();
                         $scope.cname = null;
+                        $scope.cid = null;
                         $scope.po_agent = null;
                         $scope.po_lo = null;
-                        $scope.po_tel =  null;
-                        $scope.po_mail =   null ;
+                        $scope.po_tel = null;
+                        $scope.po_mail = null;
 
-
-                        $scope.cid = id;
-                        $scope.cname = name;
-                        $scope.po_agent = agent;
-                        $scope.po_lo = conn;
-                        $scope.po_tel =  tel;
-                        $scope.po_mail =   mail ;
-
-                    };
-                    $scope.discOfPrice = function() {
-                        if ($scope.po_disc > 100) {
-                            $scope.po_disc = 0;
-                        }
-
-                        if ($scope.vatOp > 100) {
-                            $scope.vatOp = 0;
-                        }
-                        if ($scope.disc) {
-                            $scope.discofprice = parseFloat($scope.totalprice * $scope.po_disc / 100).toFixed(2);
-                            $scope.priceallMidisc = parseFloat($scope.totalprice - $scope.discofprice).toFixed(2);
-
-                        } else {
-                            $scope.discofprice = 0.00;
-                            $scope.priceallMidisc = parseFloat($scope.totalprice - $scope.discofprice).toFixed(2);
-
-                        }
-
-                        if ($scope.vatOp) {
-
-                            $scope.vatofprice = parseFloat($scope.priceallMidisc * $scope.po_vat / 100).toFixed(2);
-                        } else {
-                            $scope.vatofprice = 0.00;
-                        }
-
-                        $scope.totalPAll = parseFloat(parseFloat($scope.priceallMidisc) + parseFloat($scope.vatofprice)).toFixed(2);
-
-                    };
-                    $scope.formatDate = function(date) {
-                        var d = new Date(date),
-                            month = '' + (d.getMonth() + 1),
-                            day = '' + d.getDate(),
-                            year = d.getFullYear();
-
-                        if (month.length < 2) month = '0' + month;
-                        if (day.length < 2) day = '0' + day;
-
-                        return [year, month, day].join('-');
-                    };
-                    $scope.addToRptPO = function() {
-
-
-                        var date1 = new Date($scope.po_date);
-                        var date2 = new Date($scope.po_datesend);
-
-
-
-
-                        if ($scope.cid == null) {
-                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกบริษัทคู่ค้า", "warning");
-
-                            return;
-                        }
-
-                        if ($scope.po_agent == null) {
-                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตัวแทน", "warning");
-
-                            return;
-                        }
-                        if ($scope.po_lo == null) {
-                            $scope.po_lo = "-";
-                        }
-                        if ($scope.po_tel == null) {
-                            $scope.po_tel = "-";
-                        }
-                        if ($scope.po_mail == null) {
-                            $scope.po_mail = "-";
-                        }
-
-                        if ($scope.po_sendlo == null) {
-                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตที่อยู่จัดส่ง", "warning");
-
-                            return;
-                        }
-                        if ($scope.po_datesend == null) {
-                            date2 = "0000/00/00"
-                        }
-                        if($scope.po_note == null){
-                            $scope.po_note = "-";
-                        }
-
-
-                        if($scope.po_vat != 0 && $scope.vatOp == false ){
-                            $scope.vatOp = true;
-                            $scope.discOfPrice();
-                        }
-
-                        if($scope.po_disc != 0 && $scope.disc == false){
-                            $scope.disc = true;
-                            $scope.discOfPrice();
-                        }
-
-
-                        $http.post('php/addToRptPO.php', {
-                            'po_no': $scope.po_no,
-                            'po_date': $scope.formatDate(date1),
-                            'cid': $scope.cid,
-                            'po_agent': $scope.po_agent,
-                            'po_lo': $scope.po_lo,
-                            'po_tel': $scope.po_tel,
-                            'po_mail': $scope.po_mail,
-                             'discount' :  $scope.po_disc,
-                            'po_sendlo': $scope.po_sendlo,
-                            'po_datesend': $scope.formatDate(date2),
-                            'pricesum': $scope.totalprice,
-                            'pricediscount': $scope.discofprice,
-                            'priceMIdicount': $scope.priceallMidisc,
-                            'vat': $scope.po_vat,
-                            'pricevat': $scope.vatofprice,
-                            'totalprice': $scope.totalPAll,
-                            'note' : $scope.po_note
-                        }).then(function(res) {
-                            var temp = angular.fromJson(res.data);
-                            //console.log(temp.addrpt_PO ,temp.addrpt_POD,temp.DelPrePO);
-                            if(temp.records["0"].DelPrePO == true && temp.records["0"].addrpt_PO== true && temp.records["0"].addrpt_POD== true){
-                                $scope.genPO_NO();
-                                $scope.selectPrePO();
-                                $scope.cname = null;
-                                $scope.cid = null;
-                                $scope.po_agent = null;
-                                $scope.po_lo = null;
-                                $scope.po_tel = null;
-                                $scope.po_mail = null;
-
-                                $scope.po_sendlo = null;
-                                $scope.note = null;
-                                $scope.po_discount = 0;
-                                $scope.countPro = 0;
-                                $scope.po_date = new Date();
-                                $scope.po_datesend = new Date();
-                                $scope.po_vat = 7;
-                                $scope.po_disc = 0;
-                                $scope.discofprice = 0.00;
-                                $scope.totalprice = 0.00;
-                                $scope.vatofprice = 0.00;
-                                $scope.priceallMidisc = 0.00;
-                                $scope.totalPAll = 0.00;
-                                swal({
-                                    type: 'success',
-                                    title: 'บันทึกข้อมูลเสร็จสิ้น',
-                                    text: 'บันทึกข้อมูลแล้ว',
-                                    allowOutsideClick :false,
-                                    allowEnterKey : true,
-                                    showConfirmButton: true
-                                }).then((resolve) => {
-                                        window.location.assign("showAllPurchaseOrder.php");
-                                        if(resolve.value){
-                                            window.location.assign("showAllPurchaseOrder.php");
-                                        }
-                                    }
-                                )
+                        $scope.po_sendlo = null;
+                        $scope.note = null;
+                        $scope.po_discount = 0;
+                        $scope.countPro = 0;
+                        $scope.po_date = new Date();
+                        $scope.po_datesend = new Date();
+                        $scope.po_vat = 7;
+                        $scope.po_disc = 0;
+                        $scope.discofprice = 0.00;
+                        $scope.totalprice = 0.00;
+                        $scope.vatofprice = 0.00;
+                        $scope.priceallMidisc = 0.00;
+                        $scope.totalPAll = 0.00;
+                        swal({
+                            type: 'success',
+                            title: 'บันทึกข้อมูลเสร็จสิ้น',
+                            text: 'บันทึกข้อมูลแล้ว',
+                            allowOutsideClick: false,
+                            allowEnterKey: true,
+                            showConfirmButton: true
+                        }).then((resolve) => {
+                            window.location.assign("showAllPurchaseOrder.php");
+                            if (resolve.value) {
+                                window.location.assign("showAllPurchaseOrder.php");
                             }
+                        })
+                    }
 
 
-                        });
-
-
-                    };
-                    $scope.getProduct = function() {
-                        $http.get('php/pselect.php').then(function(res) {
-                            $scope.list = res.data.records;
-                            $scope.currentPage = 1; //current page
-                            $scope.entryLimit = 5; //max no of items to display in a page
-                            $scope.filteredItems = $scope.list.length; //Initially for no filter
-                            $scope.totalItems = $scope.list.length;
-                        });
-                    };
-
-                    $scope.addCompany = function(){
-
-                        if($scope.acname == null){
-                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกชื่อบริษัท", "warning");
-                            return;
-                        }
-                        if($scope.agent == null){
-                            swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตัวแทน", "warning");
-                            return;
-                        }
-                        if($scope.contact == null){
-                            $scope.contact = "-";
-                        }
-                        if( $scope.tel == null){
-                            $scope.tel = "-";
-                        }
-                        if(  $scope.mail == null){
-                            $scope.mail = "-";
-                        }
-
-
-
-
-                        $http.post('php/addCompany.php',{
-                            'cname':$scope.acname,
-                            'agent':$scope.agent,
-                            'contact':$scope.contact,
-                            'tel':$scope.tel,
-                            'mail':$scope.mail
-                        }).then(function(res){
-                            var temp = angular.fromJson(res.data);
-                            if(temp.Insert == true ){
-                                swal("บันทึกข้อมูลเสร็จสิ้น", "บันทึกข้อมูลแล้ว", "success");
-                                $scope.cid = temp.cid;
-                                $scope.cname = $scope.acname;
-                                $scope.po_agent =  $scope.agent;
-                                $scope.po_lo = $scope.contact;
-                                $scope.po_tel =  $scope.tel;
-                                $scope.po_mail =   $scope.mail ;
-                                $scope.acname = null;
-                                $scope.agent = null;
-                                $scope.contact = null;
-                                $scope.tel = null;
-                                $scope.mail = null;
-                            }
-                        });
-                    };
-
-                    $scope.test = function(){
-                    };
                 });
 
 
+            };
+            $scope.getProduct = function() {
+                $http.get('php/pselect.php').then(function(res) {
+                    $scope.list = res.data.records;
+                    $scope.currentPage = 1; //current page
+                    $scope.entryLimit = 5; //max no of items to display in a page
+                    $scope.filteredItems = $scope.list.length; //Initially for no filter
+                    $scope.totalItems = $scope.list.length;
+                });
+            };
 
-            </script>
-            <script src="dist/sweetalert2.all.js"></script>
-            <script type="application/javascript">
+            $scope.addCompany = function() {
+
+                if ($scope.acname == null) {
+                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกชื่อบริษัท", "warning");
+                    return;
+                }
+                if ($scope.agent == null) {
+                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตัวแทน", "warning");
+                    return;
+                }
+                if ($scope.contact == null) {
+                    $scope.contact = "-";
+                }
+                if ($scope.tel == null) {
+                    $scope.tel = "-";
+                }
+                if ($scope.mail == null) {
+                    $scope.mail = "-";
+                }
 
 
-            </script>
+
+
+                $http.post('php/addCompany.php', {
+                    'cname': $scope.acname,
+                    'agent': $scope.agent,
+                    'contact': $scope.contact,
+                    'tel': $scope.tel,
+                    'mail': $scope.mail
+                }).then(function(res) {
+                    var temp = angular.fromJson(res.data);
+                    if (temp.Insert == true) {
+                        swal("บันทึกข้อมูลเสร็จสิ้น", "บันทึกข้อมูลแล้ว", "success");
+                        $scope.cid = temp.cid;
+                        $scope.cname = $scope.acname;
+                        $scope.po_agent = $scope.agent;
+                        $scope.po_lo = $scope.contact;
+                        $scope.po_tel = $scope.tel;
+                        $scope.po_mail = $scope.mail;
+                        $scope.acname = null;
+                        $scope.agent = null;
+                        $scope.contact = null;
+                        $scope.tel = null;
+                        $scope.mail = null;
+                    }
+                });
+            };
+
+            $scope.test = function() {};
+        });
+
+    </script>
+    <script src="dist/sweetalert2.all.js"></script>
+    <script type="application/javascript">
+
+
+    </script>
 </body>
 
 </html>
