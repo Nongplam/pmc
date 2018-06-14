@@ -25,8 +25,8 @@
         }
 
      ?>
-        <div class="container" style="width:70%">
-            <h3 align="center">รายงานสินค้าใกล้หมดในสต๊อค แต่ละสาขา</h3>
+        <div class="container" style="width:80%">
+            <h3 align="center">รายงานสินค้าในสต๊อค แต่ละสาขา</h3>
             <div ng-app="reportStockRemainApp" ng-controller="reportStockRemaincontroller" class="ng-scope">
                 <form>
 
@@ -40,9 +40,9 @@
                 <div class="d-flex justify-content-start">
                     <h4>*เรียงจากจำนวนที่เหลืออยู่จากน้อยไปมาก</h4>
                 </div>
-                <table class="table table-info table-bordered">
+                <table class="table table-bordered">
                     <tbody>
-                        <tr>
+                        <tr class="table-info">
                             <th>เลขสต็อค</th>
                             <th>ผลิตภัณฑ์</th>
                             <th>เลขทะเบียนตํารับยา</th>

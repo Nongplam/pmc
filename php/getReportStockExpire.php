@@ -5,26 +5,8 @@ include 'connectDB.php';
 $id=$_GET['branch'];
 $type = $_GET['type'];
 
-$query = "";
-if($type == 1){
+$query = "SELECT * FROM (SELECT stock.sid AS sid,product.pname,stock.stocktype,stock.lotno,(stock.remain+IF((SELECT SUM(shelf.shelfremain) FROM shelf WHERE shelf.stockid = sid GROUP BY shelf.stockid) IS NULL, 0, (SELECT SUM(shelf.shelfremain) FROM shelf WHERE shelf.stockid = sid GROUP BY shelf.stockid))) AS sumremain,stock.costprice,stock.expireday,DATEDIFF(stock.expireday, NOW()) AS DateDiff FROM stock,product,shelf WHERE product.regno = stock.productid AND stock.subbranchid ='$id' GROUP BY stock.sid)AS stockexp WHERE stockexp.sumremain > 0";
 
-    $query = "SELECT  stock.sid,product.pname ,stock.productid,company.cname,stock.remain,stock.stocktype,stock.costprice,stock.lotno,stock.receiveday,stock.expireday 
-    FROM stock,product,company 
-    WHERE (stock.productid = product.regno AND stock.cid = company.cid) 
-    AND (DATE(stock.expireday) <= DATE_ADD( NOW() , INTERVAL 60 DAY)) AND stock.subbranchid = ".$id." AND stock.remain > 0 ORDER BY stock.expireday DESC";
-
-}elseif($type == 2){
-    $query = "SELECT  stock.sid,product.pname ,stock.productid,company.cname,stock.remain,stock.stocktype,stock.costprice,stock.lotno,stock.receiveday,stock.expireday 
-    FROM stock,product,company 
-    WHERE (stock.productid = product.regno AND stock.cid = company.cid) 
-    AND (DATE(stock.expireday) >= NOW() AND  DATE(stock.expireday) <= DATE_ADD( NOW() , INTERVAL 60 DAY)) AND stock.subbranchid = ".$id." AND stock.remain > 0 ORDER BY stock.expireday ASC";
-}elseif($type == 3){
-    $query = "SELECT  stock.sid,product.pname ,stock.productid,company.cname,stock.remain,stock.stocktype,stock.costprice,stock.lotno,stock.receiveday,stock.expireday 
-    FROM stock,product,company 
-    WHERE (stock.productid = product.regno AND stock.cid = company.cid) 
-    AND DATE(stock.expireday) <= NOW()  AND stock.subbranchid = ".$id." AND stock.remain > 0 ORDER BY stock.expireday DESC";
-
-}
 
 
     $result = mysqli_query($con,$query);    
@@ -33,8 +15,7 @@ if($type == 1){
     $res = array();
 while ($rows = $result->fetch_array(MYSQLI_ASSOC)){
     
-    $res[] = array('sid' =>$rows['sid'],'pname' =>$rows['pname'],'productid' =>$rows['productid'],'cname' =>$rows['cname'],'remain' =>$rows['remain']
-    ,'stocktype' =>$rows['stocktype'],'costprice' =>$rows['costprice'],'lotno' =>$rows['lotno'],'receiveday' =>$rows['receiveday'],'expireday' =>$rows['expireday'] );
+    $res[] = $rows;
 }
 $stocks['records'] = $res;
 echo json_encode($stocks);

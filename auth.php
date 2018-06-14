@@ -45,7 +45,14 @@ if(isset($_POST['username'])){
     $subbranchmidquery = "SELECT mid FROM `subbranch` WHERE `id` LIKE '{$_SESSION["subbranchid"]}'";
     $resultsubbranchmid = mysqli_query($con,$subbranchmidquery);     
     $rows = $resultsubbranchmid->fetch_array(MYSQLI_ASSOC);    
-    $_SESSION["masterbranchid"] = $rows['mid'];   
+    $_SESSION["masterbranchid"] = $rows['mid']; 
+    $masterbranchtemp = $_SESSION["masterbranchid"];
+    
+    $logopathquery = "SELECT masterbranch.logopath FROM masterbranch WHERE masterbranch.id = '$masterbranchtemp'";
+    $resultlogopath = mysqli_query($con,$logopathquery);     
+    $rows = $resultlogopath->fetch_array(MYSQLI_ASSOC);
+    $_SESSION["logourl"] = $rows['logopath']; 
+    
     
         
 }
