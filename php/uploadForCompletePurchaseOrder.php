@@ -29,7 +29,6 @@ if (!empty($filename_arr)) {
     
     
 
-//    echo $sql;
 
     $result = array();
     if (mysqli_query($con, $sql)) {
