@@ -39,155 +39,190 @@ if($result = mysqli_query($con,$sql)){
 ob_start();
 ?>
 
-<div  lang="th">
+    <div lang="th">
 
-        <h4  lang="th" align="center"> ใบตรวจรับสินค้า </h4>
-       <h4 lang="th"> บริษัท สุมิตรเภสัช 21 หมู่ 6 ถ.ศรีจันทร์ ต.ในเมือง อ.เมือง  ขอนแก่น 40000</h4>
-        <table  style="width: 100%;">
+        <h4 lang="th" align="center"> ใบตรวจรับสินค้า </h4>
+        <h4 lang="th"> บริษัท สุมิตรเภสัช 21 หมู่ 6 ถ.ศรีจันทร์ ต.ในเมือง อ.เมือง ขอนแก่น 40000</h4>
+        <table style="width: 100%;">
             <tbody>
                 <tr>
                     <td style="width: 50%;">
-                        <table  border="1" lang="th" >
+                        <table border="1" lang="th">
                             <tbody>
-                            <tr>
-                                <th>เลขที่ใบสั่งซื้อ</th>
-                                <td><?=$rptPO_no?></td>
-                            </tr>
-                            <tr>
-                                <th>วันที่ออกใบสั่ง</th>
-                                <td><?=$rptPO_date?></td>
-                            </tr>
+                                <tr>
+                                    <th>เลขที่ใบสั่งซื้อ</th>
+                                    <td>
+                                        <?=$rptPO_no?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>วันที่ออกใบสั่ง</th>
+                                    <td>
+                                        <?=$rptPO_date?>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </td>
 
                     <td style=" width: 50%;">
-                        <table  border="1" lang="th" align="right">
+                        <table border="1" lang="th" align="right">
                             <tbody>
-                            <tr>
-                                <th>เลขที่ใบตรวจรับ</th>
-                                <td><?=$rptRecivePO_No?></td>
-                            </tr>
-                            <tr>
-                                <th>วันที่ออกใบตรวจรับ</th>
-                                <td><?=$rptRecivePO_Date?></td>
-                            </tr>
+                                <tr>
+                                    <th>เลขที่ใบตรวจรับ</th>
+                                    <td>
+                                        <?=$rptRecivePO_No?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>วันที่ออกใบตรวจรับ</th>
+                                    <td>
+                                        <?=$rptRecivePO_Date?>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <table  border="1" lang="th" style="width: 100%;">
+        <table border="1" lang="th" style="width: 100%;">
             <tbody>
                 <tr>
                     <td style="width: 50%;">
-                        <p>บริษัทผู้ขาย : <?=$cname?></p>
+                        <p>บริษัทผู้ขาย :
+                            <?=$cname?>
+                        </p>
                         <br>
-                        <p>ตัวแทน : <?=$rptPO_agent?></p>
+                        <p>ตัวแทน :
+                            <?=$rptPO_agent?>
+                        </p>
                         <br>
-                        <p>ที่อยู่  : <?=$rptPO_lo?></p>
+                        <p>ที่อยู่ :
+                            <?=$rptPO_lo?>
+                        </p>
                         <br>
-                        <p>โทร  : <?=$rptPO_tel?></p>
+                        <p>โทร :
+                            <?=$rptPO_tel?>
+                        </p>
                         <br>
-                        <p>mail  : <?=$rptPO_mail?></p>
+                        <p>mail :
+                            <?=$rptPO_mail?>
+                        </p>
                     </td>
                     <td style="width: 50%;">
-                        <p>ส่วนลด  : <?=$discount?> %</p>
+                        <p>ส่วนลด :
+                            <?=$discount?> %</p>
                         <br>
-                        <p>ภาษี  : <?=$vat?> %</p>
+                        <p>ภาษี :
+                            <?=$vat?> %</p>
                         <br>
-                        <p>ที่อยู่จัดส่ง  : <?=$rptPO_losend?></p>
+                        <p>ที่อยู่จัดส่ง :
+                            <?=$rptPO_losend?>
+                        </p>
                         <br>
-                        <p>กำหนดส่ง : <?=$rptPO_datesend?></p>
+                        <p>กำหนดส่ง :
+                            <?=$rptPO_datesend?>
+                        </p>
 
 
                     </td>
                 </tr>
-             </tbody>
+            </tbody>
         </table>
 
-    <table border="1" lang="th" style="width: 100%;">
-        <thead>
-        <tr class="headerrow">
-            <th>#</th>
-            <th>ชื่อ</th>
-            <th>จำนวนที่สั่ง</th>
-            <th>จำนวนที่รับ</th>
-            <th>หน่วย</th>
-            <th>หมายเหตุ</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
+        <table border="1" lang="th" style="width: 100%;">
+            <thead>
+                <tr class="headerrow">
+                    <th>#</th>
+                    <th>ชื่อ</th>
+                    <th>จำนวนที่สั่ง</th>
+                    <th>จำนวนที่รับ</th>
+                    <th>หน่วย</th>
+                    <th>หมายเหตุ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
 
         $sqlDe = "SELECT rpt_POdetail.*,product.pname,rpt_recivePOdetail.* FROM rpt_POdetail,product,rpt_recivePOdetail WHERE rpt_POdetail.rpt_POD_id = rpt_recivePOdetail.rpt_POD_id AND  rpt_POdetail.productid = product.regno AND rpt_POdetail.rptPO_no = '$poNO'  AND rpt_POdetail.subbranchid = $subid ORDER BY product.pname ASC";
             $c =0 ;
         if($result2 = mysqli_query($con,$sqlDe)){
             while ($rowD = $result2->fetch_array(1)) {
                 ?>
-                <tr>
-                    <td><?=$c=$c+1?></td>
-                    <td><?=$rowD["pname"]?></td>
-                    <td align="center"><?=$rowD["remain"]?></td>
-                    <td align="center"><?php if($rowD["rptRecivePOdetailI_Qty"] != null){
+                    <tr>
+                        <td>
+                            <?=$c=$c+1?>
+                        </td>
+                        <td>
+                            <?=$rowD["pname"]?>
+                        </td>
+                        <td align="center">
+                            <?=$rowD["remain"]?>
+                        </td>
+                        <td align="center">
+                            <?php if($rowD["rptRecivePOdetailI_Qty"] != null){
                            echo  $rowD["rptRecivePOdetailI_Qty"] ;
                         }else{
                                 echo "....................";
-                        }   ?>  </td>
-                    <td align="center"><?=$rowD["type"]?></td>
-                    <td align="center"><?=$rowD["note"]?></td>
-                </tr>
-                <?php
+                        }   ?> </td>
+                        <td align="center">
+                            <?=$rowD["type"]?>
+                        </td>
+                        <td align="center">
+                            <?=$rowD["note"]?>
+                        </td>
+                    </tr>
+                    <?php
             }
         }
             ?>
-             </tbody>
+            </tbody>
         </table>
 
 
 
 
-    <table lang="th">
-        <tr>
-            <td width="69%">
+        <table lang="th">
+            <tr>
+                <td width="69%">
 
-                <span style="color: red">หมายเหตุ*</span>
-                <span style="color: red"><?=$note?></span>
-            </td>
-            <td width="31%">
+                    <span style="color: red">หมายเหตุ*</span>
+                    <span style="color: red"><?=$note?></span>
+                </td>
+                <!--<td width="31%">
                 <table align="right " lang="th">
                     <tbody>
                     <tr>
                         <th align="right">รวมเงิน : </th>
-                        <td><?=$pricesum?></td>
+                        <td><?//=$pricesum?></td>
                     </tr>
                     <tr>
                         <th align="right">ส่วนลด : </th>
-                        <td><?=$pricediscount?></td>
+                        <td><?//=$pricediscount?></td>
                     </tr>
                     <tr>
                         <th align="right">หลังหักส่วนลด : </th>
-                        <td><?=$priceMIdicount?></td>
+                        <td><?//=$priceMIdicount?></td>
                     </tr>
                     <tr>
                         <th align="right">ภาษีมูลค่าเพิม : </th>
-                        <td><?=$pricevat?></td>
+                        <td><?//=$pricevat?></td>
                     </tr>
                     <tr>
                         <th align="right">จำนวนเงินทั้งสิ้น : </th>
-                        <td><?=$totalprice?></td>
+                        <td><?//=$totalprice?></td>
                     </tr>
                     </tbody>
                 </table>
-            </td>
-        </tr>
-    </table>
+            </td>-->
+            </tr>
+        </table>
 
 
-</div>
+    </div>
 
-<?php
+    <?php
 
 $html = ob_get_contents();
 

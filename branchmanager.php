@@ -113,6 +113,17 @@
                                 <div class="col"><label class="col-form-label">ข้อมูลสาขา :</label></div>
                                 <div class="col"><textarea type="text" class="form-control" ng-model="newsubbranchinfo" style="width:345px;" id="newsubbranchinfo">ข้อมูลสาขา</textarea></div>
                             </div>
+                            <div class="form-row newsubbranchrowbuffer">
+                                <div class="col">
+                                    <label class="col-form-label">ประเภทสาขา :</label>
+                                </div>
+                                <div class="col">
+                                    <select ng-model="branchtype" class="custom-select">
+                                    <option value="1">ขายปลีก</option>
+                                    <option value="2">ขายส่ง</option>
+                                </select>
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -149,6 +160,17 @@
                                 <div class="col"><label class="col-form-label">ข้อมูลสาขา :</label></div>
                                 <div class="col"><textarea type="text" class="form-control" ng-model="editsubbranchinfo" style="width:345px;" id="editsubbranchinfo">ข้อมูลสาขา</textarea></div>
                             </div>
+                            <div class="form-row newsubbranchrowbuffer">
+                                <div class="col">
+                                    <label class="col-form-label">ประเภทสาขา :</label>
+                                </div>
+                                <div class="col">
+                                    <select ng-model="branchtype" class="custom-select">
+                                    <option value="1">ขายปลีก</option>
+                                    <option value="2">ขายส่ง</option>
+                                </select>
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -163,6 +185,7 @@
     <script>
         var app = angular.module('subbranchmanagerApp', []);
         app.controller('subbranchsCtrl', function($scope, $http) {
+            $scope.branchtype = '1';
 
             $scope.subbranchsearchInput = '';
 
@@ -176,13 +199,16 @@
                     'name': $scope.newsubbranchname,
                     'tel': $scope.newsubbranchtel,
                     'info': $scope.newsubbranchinfo,
+                    'branchtype': $scope.branchtype,
                     'taxid': $scope.newsubbranchtaxid
                 }).then(function(data) {
                     $scope.newsubbranchname = null;
                     $scope.newsubbranchtel = null;
                     $scope.newsubbranchinfo = null;
                     $scope.newsubbranchtaxid = null;
+                    $scope.branchtype = '1';
                     $scope.getallSubbranch();
+                    swal("เพิ่มสาขาสำเร็จ", "ข้อมูลถูกบันทึก", "success");
                     //location.reload();
                 });
             }
@@ -199,6 +225,7 @@
                     'name': $scope.editsubbranchname,
                     'tel': $scope.editsubbranchtel,
                     'info': $scope.editsubbranchinfo,
+                    'branchtype': $scope.branchtype,
                     'taxid': $scope.editsubbranchtaxid
 
                 }).then(function(data) {
@@ -207,7 +234,9 @@
                     $scope.editsubbranchtel = null;
                     $scope.editsubbranchinfo = null;
                     $scope.editsubbranchtaxid = null;
+                    $scope.branchtype = '1';
                     $scope.getallSubbranch();
+                    swal("แก้ไขสาขาสำเร็จ", "ข้อมูลถูกบันทึก", "success");
                     //location.reload();
                 });
             }

@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 session_start();
 header('Content-Type: text/html; charset=utf-8');
 include 'php/connectDB.php';
@@ -16,7 +17,7 @@ include 'php/connectDB.php';
     <nav class="navbar navbar-dark navbar-expand-md bg-primary rounded-bottom">
         <div class="container-fluid">
             <a href="auth.php" class="navbar-brand"><!--
-                <?php echo strtoupper( $_SESSION["role"]); ?> Menu--><img src="img/icon/druglogo.png" height="35" width="84"/></a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                <?php echo strtoupper( $_SESSION["role"]); ?> Menu--><img src="img/icon/druglogo.png" height="35" /></a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav">
                     <?php 

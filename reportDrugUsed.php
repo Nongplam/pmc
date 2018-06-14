@@ -242,6 +242,9 @@ function thai_date($time){
                 $scope.sendtouser = function() {
                     $http.post("php/insertsendtobranchTodo.php", {
                         'message': $scope.textonsendmodal,
+                        'todotype': '1',
+                        'title': 'ส่งสินค้าไปสาขาย่อย',
+                        'url': '/pmc/stockToStockBranchPre.php',
                         'userrecive': $scope.reciveuserid
                     }).then(function(data) {
                         //console.log(data.data);
