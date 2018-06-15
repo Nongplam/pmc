@@ -30,7 +30,7 @@ $res = array();
 $res2 = array();
 for($i = 0;$i<count($branchidres);$i++){ 
     $branchid = $branchidres[$i];
-    $stm="SELECT rpt_endday.subbranchid,subbranch.name,SUM(rpt_endday.totalbill) as totalbill,SUM(rpt_endday.totalcost) AS totalcost,SUM(rpt_endday.totalprofit) AS totalprofit,SUM(rpt_endday.totalsale) AS totalsale FROM rpt_endday,subbranch WHERE rpt_endday.subbranchid = '$branchid' AND subbranch.id = rpt_endday.subbranchid AND rpt_endday.date >= '$datestart 00:00:00' AND rpt_endday.date <= '$dateend 23:59:59'";
+    $stm="SELECT name,subbranchid,COUNT(name) AS totalbill,SUM(sumprice) AS totalsale,SUM(costprice) AS totalcost,SUM(profit) AS totalprofit FROM (SELECT *,(sumprice-costprice) AS profit FROM (SELECT subbranch.name,dailysalemaster.subbranchid,dailysalemaster.dmid,dailysalemaster.sumprice,SUM(stock.costprice*dailysaledetail.qty) AS costprice FROM subbranch,stock,dailysaledetail,dailysalemaster WHERE stock.sid = dailysaledetail.stockid AND dailysaledetail.masterid = dailysalemaster.dmid AND subbranch.id = dailysalemaster.subbranchid AND dailysalemaster.subbranchid = $branchid AND dailysalemaster.masterdate >= '$datestart 00:00:00' AND dailysalemaster.masterdate <= '$dateend 23:59:59' AND dailysalemaster.status = 1 GROUP BY dailysalemaster.dmid) AS T1) AS T2 GROUP BY name";
     if($result=  mysqli_query($con,$stm)){
                 
                 while ($row = $result->fetch_array(1)){

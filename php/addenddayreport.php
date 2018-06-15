@@ -3,7 +3,7 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 include 'connectDB.php';
 
-$subbranchid= $_SESSION['subbranchid'];
+$subbranchid=74; //$_SESSION['subbranchid'];
 $mydate=getdate(date("U"));
 //echo "$mydate[year]-$mydate[mon]-$mydate[mday]";
 $currentdate = "$mydate[year]-$mydate[mon]-$mydate[mday]";
@@ -16,13 +16,13 @@ $maxlistquery="SELECT rpt_endday.totalbill FROM rpt_endday WHERE rpt_endday.subb
 if($totalbill > 0){
     echo "Dup";
 }else{
-    $stm="INSERT INTO rpt_endday(subbranchid, totalbill, totalcost, totalprofit, totalsale, date) SELECT dailysalemaster.subbranchid,(SELECT COUNT(dailysalemaster.dmid) FROM dailysalemaster WHERE dailysalemaster.subbranchid = '$subbranchid' AND dailysalemaster.masterdate >= '$currentdate 00:00:00' AND dailysalemaster.masterdate <= '$currentdate 23:59:59') AS totalbill,SUM(stock.costprice*dailysaledetail.qty) AS totalcost,(SUM(dailysalemaster.sumprice)-SUM(stock.costprice*dailysaledetail.qty)) AS totalprofit,SUM(dailysalemaster.sumprice) AS totalsale,('$currentdate 23:59:59') AS date FROM dailysalemaster,dailysaledetail,stock WHERE stock.sid = dailysaledetail.stockid AND dailysaledetail.masterid = dailysalemaster.dmid AND dailysalemaster.subbranchid = '$subbranchid' AND dailysalemaster.masterdate >= '$currentdate 00:00:00' AND dailysalemaster.masterdate <= '$currentdate 23:59:59'";
+    $stm="INSERT INTO rpt_endday(subbranchid, totalbill, totalcost, totalprofit, totalsale) SELECT subbranchid,COUNT(name) AS totalbill,SUM(costprice) AS totalcost,SUM(profit) AS totalprofit,SUM(sumprice) AS totalsale FROM (SELECT *,(sumprice-costprice) AS profit FROM (SELECT subbranch.name,dailysalemaster.subbranchid,dailysalemaster.dmid,dailysalemaster.sumprice,SUM(stock.costprice*dailysaledetail.qty) AS costprice FROM subbranch,stock,dailysaledetail,dailysalemaster WHERE stock.sid = dailysaledetail.stockid AND dailysaledetail.masterid = dailysalemaster.dmid AND subbranch.id = dailysalemaster.subbranchid AND dailysalemaster.subbranchid = '$subbranchid' AND dailysalemaster.masterdate >= '$currentdate 00:00:00' AND dailysalemaster.masterdate <= '$currentdate 23:59:59' AND dailysalemaster.status = 1 GROUP BY dailysalemaster.dmid) AS T1) AS T2 GROUP BY name";
     if(mysqli_query($con, $stm)) {
         echo "Data Inserted";
         
         }
         else {
-            echo "Error";
+            echo $con;
         }
 }
 
