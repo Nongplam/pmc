@@ -35,6 +35,7 @@ function thai_date($time){
         <script src="js/lib/angular.min.js"></script>
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <script src="js/lib/jquery-3.3.1.min.js"></script>
+        <script src="js/lib/popper.min.js"></script>
         <script src="js/lib/bootstrap.min.js" type="text/javascript"></script>
         <!--<style>
         .modal-lg {
@@ -84,6 +85,26 @@ function thai_date($time){
                 <div class="container col-12" ng-init="getusedperday()">
                     <div class="d-flex justify-content-end">
                         <!--<h3>Print</h3>-->
+                        <!--<h5 class="align-self-center mr-2">รายการสินค้าที่จะหมดใน</h5>-->
+                        <!--<button type="button" class="btn btn-success mr-2" ng-click="numdayfilter = 9999">
+                            แสดงทั้งหมด
+                        </button>
+                        <button type="button" class="btn btn-warning mr-2" ng-click="numdayfilter = 14">
+                            สินค้าที่จะหมดใน 14 วัน
+                        </button>
+                        <button type="button" class="btn btn-danger mr-2" ng-click="numdayfilter = 7">
+                            สินค้าที่จะหมดใน 7 วัน
+                        </button>-->
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle mr-2" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                                    {{filtermode}}
+                            </button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item" ng-click="numdayfilter = 9999; filtermode = 'แสดงทั้งหมด'">แสดงทั้งหมด</button>
+                                <button class="dropdown-item" ng-click="numdayfilter = 14; filtermode = 'สิ้นค้าที่จะหมดภายใน 14 วัน'">สิ้นค้าที่จะหมดภายใน 14 วัน</button>
+                                <button class="dropdown-item" ng-click="numdayfilter = 7; filtermode = 'สิ้นค้าที่จะหมดภายใน 7 วัน'">สิ้นค้าที่จะหมดภายใน 7 วัน</button>
+                            </div>
+                        </div>
                         <button type="button" class="btn btn-default">
           <span><img src="svg/si-glyph-print.svg" height="15" width="15"/></span> Print
                         </button>
@@ -93,7 +114,7 @@ function thai_date($time){
                         <thead class="table-info">
                             <tr>
                                 <th>สาขา</th>
-                                <th>รหัสสินค้า</th>
+                                <!--<th>รหัสสินค้า</th>-->
                                 <th>ชื่อสินค้า</th>
                                 <th>หน่วย</th>
                                 <th>คลังใหญ่ (ชิ้น)</th>
@@ -101,13 +122,13 @@ function thai_date($time){
                                 <th>เฉลี่ยขายต่อวัน</th>
                                 <th ng-click="orderbyemptyindayToggle()">สินค้าจะหมดใน (วัน)<span><img src="svg/si-glyph-disc-play-2.svg" height="15" width="15"/></span>
                                 </th>
-                                <th style="width:15%;">Action</th>
+                                <th style="width:15%;">ประมาณการใช้ 14 วัน</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="item in usedperdays | orderBy:['name',orderbyemptyinday]">
+                            <tr ng-repeat="item in usedperdays | filter : filerbyremainday | orderBy:['name',orderbyemptyinday]">
                                 <td>{{item.name}}</td>
-                                <td>{{item.mainpid}}</td>
+                                <!--<td>{{item.mainpid}}</td>-->
                                 <td>{{item.pname}}</td>
                                 <td>{{item.mainstocktype}}</td>
                                 <td>{{item.mainbranchremain}}</td>
@@ -116,9 +137,9 @@ function thai_date($time){
                                 <td>{{checkbranchEmpty(item.emptyinday)}}</td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" ng-model="sendqtyintable[$index]" ng-keyup="setmodalbyEnter($event,item.pname,sendqtyintable[$index],item.name,item.mainstocktype,item.mainbranchremain)" class="form-control" placeholder="จำนวน">
+                                        <input type="text" ng-model="sendqtyintable[$index]" ng-keyup="setmodalbyEnter($event,item.pname,sendqtyintable[$index],item.name,item.mainstocktype,item.mainbranchremain)" class="form-control" placeholder="{{adjust(item.branchremain,item.aveusedperday)}}">
                                         <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button" ng-click="setsenditemmodal(item.pname,sendqtyintable[$index],item.name,item.mainstocktype,item.mainbranchremain)">จัดส่ง</button>
+                                            <button class="btn btn-primary" type="button" ng-click="setsenditemmodal(item.pname,sendqtyintable[$index],item.name,item.mainstocktype,item.mainbranchremain,item.branchremain,item.aveusedperday)">จัดส่ง</button>
                                         </div>
                                     </div>
                                 </td>
@@ -153,7 +174,7 @@ function thai_date($time){
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" ng-click="resetmodal()" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" ng-click="sendtouser();resetmodal()" data-dismiss="modal">ตกลง</button>
+                            <button type="button" class="btn btn-success" ng-click="sendtouser();resetmodal()" data-dismiss="modal">ส่ง</button>
                         </div>
                     </div>
                 </div>
@@ -166,6 +187,8 @@ function thai_date($time){
 
                 $scope.orderbyemptyinday = 'emptyinday';
                 $scope.sendqtyintable = [];
+                $scope.numdayfilter = 9999;
+                $scope.filtermode = 'แสดงทั้งหมด';
 
                 $scope.getusedperday = function() {
                     $http.get('php/getReportDrugUsed.php').then(function(response) {
@@ -177,7 +200,11 @@ function thai_date($time){
                     });
                 }
 
-                $scope.setsenditemmodal = function(pname, qty, branchname, stocktype, mainbranchremain) {
+                $scope.setsenditemmodal = function(pname, qty, branchname, stocktype, mainbranchremain, branchremain, avgusedperday) {
+                    if (qty == undefined) {
+                        qty = $scope.adjust(branchremain, avgusedperday);
+                    }
+
                     if (qty == undefined) {
                         swal("กรุณาใส่จำนวนสินค้าที่ต้องการส่ง!", "", "warning");
                     } else {
@@ -202,7 +229,24 @@ function thai_date($time){
                 }
 
                 $scope.logtest = function() {
-                    console.log($scope.reciveuserid);
+                    console.log("Worked");
+
+                }
+
+                $scope.adjust = function(stockremain, avgperday) {
+                    var value = avgperday * 14;
+                    var remain = stockremain;
+                    value = Math.ceil(value);
+                    if (stockremain < 1) {
+                        remain = 0;
+                    }
+                    value = value - remain;
+                    if (value < 0) {
+                        return 0;
+                    } else {
+                        return value;
+                    }
+                    //console.log(value);
                 }
 
                 $scope.orderbyemptyindayToggle = function() {
@@ -237,6 +281,17 @@ function thai_date($time){
                 $scope.resetmodal = function() {
                     $scope.textonsendmodal = null;
                     //$scope.reciveuserid = $scope.users[0]['id'];
+                }
+
+                $scope.filerbyremainday = function(day) {
+                    //console.log(day);
+                    if (day.emptyinday < $scope.numdayfilter) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                    //return true;
+
                 }
 
                 $scope.sendtouser = function() {
