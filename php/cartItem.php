@@ -5,10 +5,10 @@ session_start();
 
 $userid = $_SESSION["id"];
 $subbranchid = $_SESSION["subbranchid"];
-
 $output="";
+$sess = $_GET['sess'];
 
-$query="SELECT pos.*,product.pname,product.pcore,stock.stocktype FROM pos,stock,product WHERE pos.stockid = stock.sid AND stock.productid=product.regno AND pos.userid = '$userid'";
+$query="SELECT pos.*,product.pname,product.pcore,stock.stocktype FROM pos,stock,product WHERE pos.stockid = stock.sid AND stock.productid=product.regno AND pos.userid = '$userid' AND pos.session = '$sess'";
 $result=mysqli_query($con, $query);
 if(mysqli_num_rows($result)>0) {
     while ($rs = $result->fetch_array(MYSQLI_ASSOC)) {
