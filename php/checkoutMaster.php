@@ -13,6 +13,7 @@ if($data){
     $changemoney=mysqli_real_escape_string($con, $data->changemoney);
     $recivemoney=mysqli_real_escape_string($con, $data->recivemoney);
     $paymethod=mysqli_real_escape_string($con, $data->paymethod);
+    $sess=mysqli_real_escape_string($con, $data->sess);
     $billkey = uniqid();
     
     $maxbillnoquery="SELECT MAX(billno) as billno FROM dailysalemaster WHERE dailysalemaster.subbranchid = '$subbranchid';";
@@ -42,7 +43,7 @@ $salemasteridresult = mysqli_query($con,$salemasteridStm);
     }
 $maxmasterid = max($salemasterid);
 
-$stm2="select * from pos where pos.userid = '$userid'";
+$stm2="select * from pos where pos.userid = '$userid' and pos.session = '$sess'";
 
 $resultstm2 = mysqli_query($con,$stm2);
 $stockid = array();
@@ -120,7 +121,7 @@ for($i = 0;$i < $poslist ;$i++){
     
     
 }
-$deleteposstm="DELETE FROM `pos` WHERE `pos`.`subbranchid` = '$subbranchid' AND `pos`.`userid` = '$userid'";
+$deleteposstm="DELETE FROM `pos` WHERE `pos`.`subbranchid` = '$subbranchid' AND `pos`.`userid` = '$userid' AND `pos`.`session` = '$sess'";
 $deleteposexec= mysqli_query($con,$deleteposstm);
 }
 

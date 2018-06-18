@@ -139,8 +139,10 @@ function thai_date($time){
                                 </ul>
                             </div>
                             <br>
-                            <h1>รายการ : {{newbill}}
-                            </h1>
+                            <div class="container">
+                                <h1>รายการ : {{newbill}} </h1>
+
+                            </div>
 
                             <table class="table col">
                                 <thead class="thead-light">
@@ -164,7 +166,7 @@ function thai_date($time){
                                         <td>{{y.qty}}</td>
                                         <td>{{y.stocktype}}</td>
                                         <td class="totalonlist">{{y.price*y.qty}}</td>
-                                        <td ng-init="calculateallPrice()"><button class="btn btn-danger" ng-click="deleteItem(y.id)">x</button></td>
+                                        <td><button class="btn btn-danger" ng-click="deleteItem(y.id)">x</button></td>
                                     </tr>
                                     <!--<tr class="table-info">
                                     <td>P1</td>
@@ -190,7 +192,9 @@ function thai_date($time){
                                 </tr>-->
                                 </tbody>
                             </table>
-
+                            <div class="row container">
+                                <button class="btn btn-sm btn-warning" ng-click="switchsession()">{{sessbtnmode}}</button>
+                            </div>
                         </div>
                     </div>
 
@@ -589,6 +593,20 @@ function thai_date($time){
                     $scope.showreturnrefkey = false;
                     $scope.showreturnitem = false;
                     $scope.mgrpass = '';
+                    $scope.sessbtnmode = 'พักรายการ';
+                    $scope.session = 1;
+
+                    $scope.switchsession = function() {
+                        if ($scope.session == 1) {
+                            $scope.session = 2;
+                            $scope.sessbtnmode = 'กลับคืนรายการก่อนหน้า';
+                            $scope.posItem();
+                        } else {
+                            $scope.session = 1;
+                            $scope.sessbtnmode = 'พักรายการ';
+                            $scope.posItem();
+                        }
+                    }
 
                     $scope.returnsCheckout = function(checkboxName) {
                         var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'),
@@ -641,9 +659,11 @@ function thai_date($time){
 
                     $scope.submititemtoCart = function() {
                         $scope.myInput = "";
+
                         $http.post("php/addtoCart.php", {
                             'stockid': $scope.siditemModal,
                             'price': $scope.priceitemModal,
+                            'sess': $scope.session,
                             'qty': $scope.qtyitemModal
                         }).then(function(data) {
                             $scope.posItem();
@@ -652,13 +672,22 @@ function thai_date($time){
 
                     $scope.calculateallPrice = function() {
                         $scope.firsttotalPrice = 0;
-                        for (var i = 0; i < $scope.positems.length; i++) {
-                            $scope.firsttotalPrice = $scope.firsttotalPrice + ($scope.positems[i].price * $scope.positems[i].qty);
-                        }
                         $scope.totalDiscount = 0;
-                        $scope.totalpriceafterDiscount = $scope.firsttotalPrice - $scope.totalDiscount;
-                        $scope.totalpriceafterttax = $scope.totalpriceafterDiscount * 0.07;
-                        $scope.moneyReceived = $scope.totalpriceafterDiscount;
+                        //console.log($scope.positems);
+                        if ($scope.positems != undefined) {
+                            for (var i = 0; i < $scope.positems.length; i++) {
+                                $scope.firsttotalPrice = $scope.firsttotalPrice + ($scope.positems[i].price * $scope.positems[i].qty);
+                            }
+
+                            $scope.totalpriceafterDiscount = $scope.firsttotalPrice - $scope.totalDiscount;
+                            $scope.totalpriceafterttax = $scope.totalpriceafterDiscount * 0.07;
+                            $scope.moneyReceived = $scope.totalpriceafterDiscount;
+                        } else {
+                            $scope.totalpriceafterDiscount = 0;
+                            $scope.totalpriceafterttax = 0;
+                            $scope.moneyReceived = 0;
+                        }
+
                     }
 
                     $scope.regisnewMember = function() {
@@ -740,6 +769,7 @@ function thai_date($time){
                                 'memberid': $scope.currentmemberid,
                                 'changemoney': $scope.moneyChange,
                                 'recivemoney': $scope.moneyReceived,
+                                'sess': $scope.session,
                                 'paymethod': $scope.paymethod
                             }).then(function(data) {
                                 $scope.moneyChange = 0;
@@ -813,8 +843,9 @@ function thai_date($time){
                     }
                     $scope.posItem = function() {
                         $scope.getnewbill();
-                        $http.get("php/cartItem.php").then(function(response) {
+                        $http.get("php/cartItem.php?sess=" + $scope.session).then(function(response) {
                             $scope.positems = response.data.records;
+                            $scope.calculateallPrice();
                         });
                     }
                     $scope.getPnames = function(sid) {
