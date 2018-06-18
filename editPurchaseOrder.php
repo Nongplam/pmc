@@ -180,10 +180,10 @@
                         <tr ng-repeat="producrPO in producrPOs">
                             <td>{{$index + 1}}</td>
                             <td>{{producrPO.pname}}</td>
-                            <td>{{producrPO.remain}}</td>
+                            <td>{{numberWithCommas(producrPO.remain)}}</td>
                             <td>{{producrPO.type}}</td>
-                            <td>{{producrPO.pricePerType}}</td>
-                            <td ng-init="sumallprice(producrPO.priceall)"> {{producrPO.priceall}}</td>
+                            <td>{{numberWithCommas(producrPO.pricePerType)}}</td>
+                            <td ng-init="sumallprice(producrPO.priceall)"> {{numberWithCommas(producrPO.priceall)}}</td>
                             <td>{{producrPO.note}}</td>
                             <td><button class="btn btn-danger" ng-click="delPoDetail(producrPO.rpt_POD_id)">ลบ&#160;<span class="icon ion-android-remove-circle font-weight-bold"></span> </button> </td>
                         </tr>
@@ -198,11 +198,11 @@
                         <p class="font-weight-bold text-right mb-0">จำนวนเงินทั้งสิ้น : </p>
                     </div>
                     <div class="col-5">
-                        <p class="mb-0">{{totalprice}}</p>
-                        <p class="mb-0">{{discofprice}}</p>
-                        <p class="mb-0">{{priceallMidisc}}</p>
-                        <p class="mb-0">{{vatofprice}}</p>
-                        <p class="mb-0">{{totalPAll}}</p>
+                        <p class="mb-0">{{numberWithCommas(totalprice)}}</p>
+                        <p class="mb-0">{{numberWithCommas(discofprice)}}</p>
+                        <p class="mb-0">{{numberWithCommas(priceallMidisc)}}</p>
+                        <p class="mb-0">{{numberWithCommas(vatofprice)}}</p>
+                        <p class="mb-0">{{numberWithCommas(totalPAll)}}</p>
 
                     </div>
                 </div>
@@ -442,6 +442,12 @@
 
                 var ttprice = 0.00;
                 var po_productid = null;
+               
+                $scope.numberWithCommas =function(x) {
+                    var parts = x.toString().split(".");
+                    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    return parts.join(".");
+                };
                 $scope.sumallprice = function(allprice) {
 
 

@@ -8,7 +8,7 @@ $userid = $_SESSION['id'];
 $subid = $_SESSION['subbranchid'];
 $poNO = $_GET["NO"];
 
-$sql = "SELECT rpt_PO.*,company.cname,rpt_PO_status.rpt_PO_status_desc,rpt_recivePO.rptRecivePO_No,rpt_recivePO.rptRecivePO_Date,rpt_recivePO.rptRecivePO_Status FROM company,rpt_PO_status,rpt_PO LEFT JOIN rpt_recivePO ON rpt_PO.rptPO_no  = rpt_recivePO.rptPO_no   AND rpt_PO.subbranchid = rpt_recivePO.subbranchid 
+$sql = "SELECT rpt_PO.*,company.cname,rpt_PO_status.rpt_PO_status_desc,rpt_recivePO.rptRecivePO_No,rpt_recivePO.rptRecivePO_Date,rpt_recivePO.recieive_Date,rpt_recivePO.rptRecivePO_Status FROM company,rpt_PO_status,rpt_PO LEFT JOIN rpt_recivePO ON rpt_PO.rptPO_no  = rpt_recivePO.rptPO_no   AND rpt_PO.subbranchid = rpt_recivePO.subbranchid 
 WHERE rpt_PO.rptPO_status = rpt_PO_status.rpt_PO_status_s AND company.cid = rpt_PO.cid AND rpt_PO.rptPO_no = $poNO AND rpt_PO.subbranchid = $subid ORDER BY rptPO_date DESC  ";
 if($result = mysqli_query($con,$sql)){
     $row = $result->fetch_array(1);
@@ -31,7 +31,7 @@ if($result = mysqli_query($con,$sql)){
     $totalprice = $row["totalprice"];
     $note = $row["note"];
     $rptPO_status = $row["rptPO_status"];
-
+    $recieive_Date = $row["recieive_Date"];
     $rptRecivePO_No = $row["rptRecivePO_No"];
     $rptRecivePO_Date = $row["rptRecivePO_Date"];
 }
@@ -75,10 +75,22 @@ ob_start();
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>วันที่ออกใบตรวจรับ</th>
+                                    <?php
+                                        if($recieive_Date == null){
+                                            echo "<th>วันที่ออกใบตรวจรับ</th>
                                     <td>
-                                        <?=$rptRecivePO_Date?>
-                                    </td>
+                                        $rptRecivePO_Date
+                                    </td>";
+                                        }else{
+                                            echo "<th>วันที่ตรวจรับ</th>
+                                    <td>
+                                        $recieive_Date
+                                    </td>";
+                                        }
+
+                                    ?>
+
+
                                 </tr>
                             </tbody>
                         </table>
@@ -284,5 +296,5 @@ $mpdf->WriteHTML($html,2);
 
 
 // Output a PDF file directly to the browser
-$mpdf->Output();
+$mpdf->Output("RPO_".$rptRecivePO_No."_".$rptPO_no.".pdf", 'I');
 ?>

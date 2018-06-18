@@ -60,19 +60,6 @@ $mbranchid = $_SESSION["masterbranchid"] ;
      echo json_encode($pre);
 
 
-   /*
-
-     $lenrptNo = 10-strlen($rptNoUp);
-     $rptNo = "";
-
-     for ($i = 1; $i <= $lenrptNo; $i++) {
-         $rptNo = $rptNo.'0';
-     }
-
-     $rptNo = $rptNo.$rptNoUp;
- */
-
-
 
 
  }
