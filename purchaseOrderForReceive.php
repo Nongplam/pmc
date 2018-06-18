@@ -104,7 +104,7 @@
                                             <span class="input-group-text font-weight-bold">เลือกสถานะการรับ</span>
                                         </div>
                                         <div class="form-check form-check-inline mb-2  ml-2">
-                                            <input class="form-check-input" type="radio" name="statusReceiveItem" id="statusReceiveItem"  ng-model="statusReceiveItem" value="5" ng-value="true">
+                                            <input class="form-check-input" type="radio" name="statusReceiveItem" id="statusReceiveItem"  ng-model="statusReceiveItem" value="5" >
                                             <label class="form-check-label" for="inlineRadio1">รับสินค้าครบ</label>
                                         </div>
                                         <div class="form-check form-check-inline mb-2 ">
@@ -183,7 +183,7 @@
 
 
 
-
+                            
                         $http({
                             method: 'post',
                             url: 'php/uploadForCompletePurchaseOrder.php',
