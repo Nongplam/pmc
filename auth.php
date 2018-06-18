@@ -36,7 +36,7 @@ if(isset($_POST['username'])){
     $resultsubbranchid = mysqli_query($con,$subbranchidquery);     
     $rows = $resultsubbranchid->fetch_array(MYSQLI_ASSOC);    
     $_SESSION["subbranchid"] = $rows['subbranchid']; 
-    
+    $subbid = $_SESSION["subbranchid"];
     $subbranchnamequery = "SELECT name FROM `subbranch` WHERE `id` LIKE '{$_SESSION["subbranchid"]}'";
     $resultsubbranchname = mysqli_query($con,$subbranchnamequery);     
     $rows = $resultsubbranchname->fetch_array(MYSQLI_ASSOC);    
@@ -52,6 +52,11 @@ if(isset($_POST['username'])){
     $resultlogopath = mysqli_query($con,$logopathquery);     
     $rows = $resultlogopath->fetch_array(MYSQLI_ASSOC);
     $_SESSION["logourl"] = $rows['logopath']; 
+    
+    $branchtypequery="SELECT subbranch.branchtype FROM subbranch WHERE subbranch.id = '$subbid';";
+    $branchtyperesult = mysqli_query($con, $branchtypequery);
+    $branchtyperows = mysqli_fetch_assoc($branchtyperesult);
+    $_SESSION["branchtype"] = $branchtyperows['branchtype'];
     
     
         

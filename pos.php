@@ -111,9 +111,9 @@ function thai_date($time){
             $branchtyperesult = mysqli_query($con, $branchtypequery);
             $branchtyperows = mysqli_fetch_assoc($branchtyperesult);
             $branchtype = $branchtyperows['branchtype'];
-            if($branchtype == '2'){
+            /*if($branchtype == '2'){
                 header("Location: posforwholesalebranch.php");
-            }
+            }*/           
         }
      ?>
         <div id="productsCtrl" ng-app="posApp" ng-controller="productsCtrl">
@@ -121,7 +121,7 @@ function thai_date($time){
                 <br>
                 <nav class="navbar navbar-dark bg-primary rounded">
                     <span class="navbar-brand mb-0 h1"><?php echo $_SESSION["subbranchname"]; ?> <span><?php echo thai_date($eng_date); ?></span></span>
-                    <span class="ml-auto navbar-text" style="color:rgb(248,249,250);">ยินดีต้อนรับ <?php echo " "; echo $_SESSION["fname"]; echo " "; echo $_SESSION["lname"];?></span>
+                    <span class="ml-auto navbar-text mr-2" style="color:rgb(248,249,250);">ยินดีต้อนรับ <?php echo " "; echo $_SESSION["fname"]; echo " "; echo $_SESSION["lname"];?></span>
                     <a href="logout.php"><button class="btn bg-light" type="button" id="logoutbtn">logout</button></a>
                 </nav>
                 <br>
@@ -613,10 +613,8 @@ function thai_date($time){
                             values = [];
                         var str = '';
                         Array.prototype.forEach.call(checkboxes, function(el) {
-                            //values.push(el.value);
                             str = str + el.value + ",";
                         });
-                        //console.log(values)
                         if (str == '') {
                             swal("รายการคืนสินค้าว่างเปล่า!", "กรุณาเลือกสินค้าที่ต้องการคืน", "warning");
                         } else {
@@ -628,20 +626,6 @@ function thai_date($time){
                             });
                         }
 
-                    }
-
-
-
-
-                    $scope.setitemModal = function(lotno, pname, bname, type, price, sid, remain) {
-                        $scope.lotnoitemModal = lotno;
-                        $scope.pnameitemModal = pname;
-                        $scope.bnameitemModal = bname;
-                        $scope.typeitemModal = type;
-                        $scope.qtyitemModal = 1;
-                        $scope.priceitemModal = parseFloat(price);
-                        $scope.siditemModal = sid;
-                        $scope.remainitemModal = remain;
                     }
 
                     $scope.getreturnsItem = function() {
@@ -659,7 +643,6 @@ function thai_date($time){
 
                     $scope.submititemtoCart = function() {
                         $scope.myInput = "";
-
                         $http.post("php/addtoCart.php", {
                             'stockid': $scope.siditemModal,
                             'price': $scope.priceitemModal,
@@ -673,12 +656,10 @@ function thai_date($time){
                     $scope.calculateallPrice = function() {
                         $scope.firsttotalPrice = 0;
                         $scope.totalDiscount = 0;
-                        //console.log($scope.positems);
                         if ($scope.positems != undefined) {
                             for (var i = 0; i < $scope.positems.length; i++) {
                                 $scope.firsttotalPrice = $scope.firsttotalPrice + ($scope.positems[i].price * $scope.positems[i].qty);
                             }
-
                             $scope.totalpriceafterDiscount = $scope.firsttotalPrice - $scope.totalDiscount;
                             $scope.totalpriceafterttax = $scope.totalpriceafterDiscount * 0.07;
                             $scope.moneyReceived = $scope.totalpriceafterDiscount;
@@ -727,13 +708,21 @@ function thai_date($time){
 
                     $scope.enterItembybarcode = function(e) {
                         if (e.keyCode == "13") {
-                            ///1111111111123
-                            //$scope.stocks["0"].barcode
-                            //$scope.stocks["0"].barcode
                             var i = 0;
                             var barcode = $scope.myInput;
-                            var isfound = false;
-                            for (i = 0; i < $scope.stocks.length; i++) {
+                            //var isfound = false;
+                            $http.post("php/findstockbyBarcode.php", {
+                                'barcode': barcode
+                            }).then(function(response) {
+                                $scope.stockitems = response.data;
+                                console.log($scope.stockitems['sid']);
+                                if ($scope.stockitems == null) {
+                                    swal("รหัสสินค้าผิดพลาด!", "กรุณาสแกนบาร์โคดใหม่", "warning");
+                                } else {
+                                    $scope.setitemModal($scope.stockitems['lotno'], $scope.stockitems['pname'], $scope.stockitems['bname'], $scope.stockitems['stocktype'], $scope.stockitems['retailprice'], $scope.stockitems['sid'], $scope.stockitems['remain']);
+                                }
+                            });
+                            /*for (i = 0; i < $scope.stocks.length; i++) {
                                 if ($scope.stocks[i].barcode == barcode) {
                                     isfound = true;
                                     $scope.setitemModal($scope.stocks[i].lotno, $scope.stocks[i].pname, $scope.stocks[i].bname, $scope.stocks[i].stocktype, $scope.stocks[i].retailprice, $scope.stocks[i].sid, $scope.stocks[i].remain);
@@ -741,14 +730,23 @@ function thai_date($time){
                             }
                             if (!isfound) {
                                 swal("รหัสสินค้าผิดพลาด!", "กรุณาสแกนบาร์โคดใหม่", "warning");
-                            }
+                            }*/
                         }
                     }
 
+                    $scope.setitemModal = function(lotno, pname, bname, type, price, sid, remain) {
+                        $scope.lotnoitemModal = lotno;
+                        $scope.pnameitemModal = pname;
+                        $scope.bnameitemModal = bname;
+                        $scope.typeitemModal = type;
+                        $scope.qtyitemModal = 1;
+                        $scope.priceitemModal = parseFloat(price);
+                        $scope.siditemModal = sid;
+                        $scope.remainitemModal = remain;
+                    }
+
                     $scope.calculateChange = function(e) {
-                        //console.log("keywork");
                         if ($scope.moneyReceived != undefined) {
-                            //console.log($scope.moneyReceived);
                             $scope.moneyChange = $scope.moneyReceived - $scope.totalpriceafterDiscount;
                         } else {
                             $scope.moneyChange = 'จำนวนเงินไม่ถูกต้อง';
@@ -782,8 +780,6 @@ function thai_date($time){
                             });
                         }
                     }
-
-
 
                     $scope.setcurrentMember = function(fname, lname, point, level, status, memberid) {
                         $scope.currentfname = fname;
