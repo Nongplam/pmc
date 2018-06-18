@@ -21,9 +21,11 @@ $location = "../upload/$subid/$order/$no/$status";
 include "upload.php";
 
 if (!empty($filename_arr)) {
+
     // update status purchaseOrder 
     $sql = "UPDATE rpt_PO SET rpt_PO.rptPO_status = $status WHERE rpt_PO.rptPO_no = '$no' AND rpt_PO.subbranchid = $subid";
 //    echo $sql;
+
     $result = array();
     if (mysqli_query($con, $sql)) {
         $result[0]['UpStsrpt_PO'] = true;

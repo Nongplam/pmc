@@ -18,10 +18,10 @@
 
     </style>
 </head>
-<?php error_reporting(0); ?>
 
 <body>
     <?php 
+    ob_start();
     include 'mainbartest.php';    
     $role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
@@ -69,7 +69,7 @@
                                     <th>โทรศัพท์</th>
                                     <th>เลขประจำตัวผู้เสียภาษี</th>
                                     <th style="width:66px;">แก้ไข</th>
-                                    <th style="width:66px;">ลบ</th>
+                                    <!--<th style="width:66px;">ลบ</th>-->
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,7 +80,7 @@
                                     <td>{{x.tel}}</td>
                                     <td>{{x.taxid}}</td>
                                     <td><button class="editsubbranchbtn btn btn-info" id="editsubbranchbtn" ng-click="seteditsubbranchvalue(x.id,x.name,x.tel,x.info,x.taxid)" data-target="#editsubbranchmodal" data-toggle="modal">Edit</button></td>
-                                    <td><button class="btn btn-danger" ng-click="deleteSubbranch(x.id)" type="button">ลบสาขา</button></td>
+                                    <!--<td><button class="btn btn-danger" ng-click="deleteSubbranch(x.id)" type="button">ลบสาขา</button></td>-->
                                 </tr>
                             </tbody>
                         </table>

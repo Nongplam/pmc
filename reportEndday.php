@@ -35,11 +35,11 @@
             <!--<div class="d-flex justify-content-center">
                 <h3>ประจำสาขา ห้วยผึ้ง</h3>
             </div>-->
-            <div class="row mb-3">
+            <div class="row mb-3 d-flex justify-content-center">
                 <label class="col-2 col-form-label font-weight-bold text-right " for="date1"> ข้อมูล ณ วันที่ :</label>
-                <input type="date" name="date1" id="date1" ng-model="date1" class="form-control col-3 mr-2">
+                <input type="date" name="date1" id="date1" ng-model="date1" ng-change="getreport()" class="form-control col-2 mr-2">
                 <label class="col-1 col-form-label font-weight-bold text-right" for="date2">ถึง</label>
-                <input type="date" name="date2" id="date2" ng-model="date2" class="form-control col-3 mr-2">
+                <input type="date" name="date2" id="date2" ng-model="date2" ng-change="getreport()" class="form-control col-2 mr-2">
                 <input type="submit" name="" ng-click="getreport()" class="btn btn-success col-sm-1" value="ตกลง" style="width: 117px;">
             </div>
             <table class="table table-bordered">
@@ -92,6 +92,7 @@
         $scope.date2.setDate(lastDay.getDate());
         $scope.isgetreport = false;
 
+
         $scope.getreport = function() {
             var d1month = parseInt($scope.date1.getMonth());
             d1month++;
@@ -131,6 +132,7 @@
                 //console.log(res.data);
             });
         }
+        $scope.getreport();
 
 
 

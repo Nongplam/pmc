@@ -37,14 +37,14 @@
             </div>-->
             <div class="row mb-3">
                 <label class="col-2 col-form-label font-weight-bold text-right " for="date1"> ข้อมูลระหว่างวันที่ :</label>
-                <input type="date" name="date1" id="date1" ng-model="date1" class="form-control col-3 mr-2">
+                <input type="date" name="date1" id="date1" ng-model="date1" ng-change="getreport()" class="form-control col-3 mr-2">
                 <label class="col-1 col-form-label font-weight-bold text-right" for="date2">ถึง</label>
-                <input type="date" name="date2" id="date2" ng-model="date2" class="form-control col-3 mr-2">
+                <input type="date" name="date2" id="date2" ng-model="date2" ng-change="getreport()" class="form-control col-3 mr-2">
                 <input type="submit" name="" ng-click="getreport()" class="btn btn-success col-sm-1" value="ตกลง" style="width: 117px;">
             </div>
             <div class="row mb-3 ml-0">
                 <label class="col-sm-1 col-form-label font-weight-bold text-right " for="branch"> สาขา :</label>
-                <select id="branch" name="branch" ng-model="branch" class="form-control col-sm-3 mr-2" ng-init="selectBranch()">
+                <select id="branch" name="branch" ng-model="branch" ng-change="getreport()" class="form-control col-sm-3 mr-2" ng-init="selectBranch()">
                 <option ng-repeat="branch in branchs" value="{{branch.id}}" selected>{{branch.name}}</option>
                 </select>
             </div>
@@ -108,6 +108,7 @@
             $http.get('php/subbranchSelect.php').then(function(response) {
                 $scope.branchs = response.data.records;
                 $scope.branch = $scope.branchs[0]['id'];
+                $scope.getreport();
             });
         };
 

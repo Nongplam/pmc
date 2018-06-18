@@ -12,8 +12,9 @@ if($data){
     $stockid=mysqli_real_escape_string($con, $data->stockid);
     $price=mysqli_real_escape_string($con, $data->price);
     $qty=mysqli_real_escape_string($con, $data->qty);
+    $sess=mysqli_real_escape_string($con, $data->sess);
     
-    $searchdupQuery="SELECT * FROM `pos` WHERE `stockid` = '$stockid' AND `subbranchid` = '$subbranchid'";
+    $searchdupQuery="SELECT * FROM `pos` WHERE `stockid` = '$stockid' AND `subbranchid` = '$subbranchid' AND `session` = '$sess'";
     $dupresult = mysqli_query($con,$searchdupQuery);
     
     $dup=array();
@@ -35,7 +36,7 @@ if($data){
             echo "Error";
         }
     }else{
-        $query="insert into pos(stockid,price,qty,userid,subbranchid) values('$stockid','$price','$qty','$userid','$subbranchid')";
+        $query="insert into pos(stockid,price,qty,userid,subbranchid,session) values('$stockid','$price','$qty','$userid','$subbranchid','$sess')";
         if(mysqli_query($con, $query)) {
             echo "Data Inserted";
         }

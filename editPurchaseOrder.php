@@ -28,6 +28,7 @@
 
     <body>
         <?php 
+        ob_start();
     include 'mainbartest.php';
     /*$role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
