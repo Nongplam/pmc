@@ -1,4 +1,5 @@
 <?php
+ob_start();
 //error_reporting(0);
 session_start();
 header('Content-Type: text/html; charset=utf-8');
