@@ -11,11 +11,13 @@
         .modal-lg {
             max-width: 70%;
         }
+
     </style>
 </head>
 
 <body>
     <?php 
+    ob_start();
     include 'mainbartest.php';
     $role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
@@ -266,6 +268,7 @@
                 return newdate;
             }
         });
+
     </script>
 </body>
 <script src="dist/sweetalert.min.js"></script>

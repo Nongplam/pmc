@@ -10,6 +10,7 @@
 
 <body>
     <?php 
+    ob_start();
     include 'mainbartest.php';
     $role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
@@ -22,7 +23,7 @@
      ?>
 
     <div class="container" style="width:70%">
-       <br>
+        <br>
         <h3 align="center">เพิ่มข้อมูลแบรนด์</h3>
         <div ng-app="brandApp" ng-controller="brandcontroller" class="ng-scope">
 

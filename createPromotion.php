@@ -16,6 +16,18 @@
 </head>
 
 <body>
+    <?php 
+    ob_start();
+    include 'mainbartest.php';    
+    $role=$_SESSION["role"];
+    $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
+    $allowqueryresult=mysqli_query($con,$allowquery);
+    $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
+    $allowrule = explode(",",$allowruleraw["rule"]);    
+        if (!in_array("38", $allowrule)){
+            header("Location: auth.php");
+        }
+     ?>
     <div ng-app="createpromotionApp" ng-controller="createpromotionmainController" class="ng-scope">
         <div>
             <div class="d-flex justify-content-center mb-2">
@@ -24,7 +36,7 @@
             <div class="container" style="width:110%;">
                 <div class="row mb-2">
                     <div class="col" ng-init="selectBranch()"><label>เลือกสาขา</label>
-                        <select class="custom-select mb-1" ng-model="branch" ng-click="getstockinbranch()">
+                        <select class="custom-select mb-1" ng-model="branch" ng-change="getstockinbranch()">
                         <option ng-repeat="branch in branchs" value="{{branch.id}}">{{branch.name}}</option>
                        
                        </select>
@@ -43,7 +55,7 @@
 
                         </div>
 
-                        <div style="height:232px; overflow-y: scroll;">
+                        <div style="height:400px; overflow-y: scroll;">
                             <table class="table table-bordered">
                                 <thead class="table-info">
                                     <tr>
@@ -107,13 +119,45 @@
 
                             </table>
                         </div>
-                        <div class="row">
-                            <div class="col"><small class="form-text text-muted">Help text for a form field.</small></div>
-                            <div class="col col-4">
-                                <label>ราคาต่อชุด</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" />
-                                    <div class="input-group-append"><button class="btn btn-success" ng-click="logtest()" type="button">✓<br /></button></div>
+                        <div ng-show="isadd">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <label>ชื่อโปรโมชัน</label>
+                                    <div class="input-group">
+                                        <input type="text" ng-model="promoname" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col col-4 ">
+                                    <label>รหัสส่วนลด</label>
+                                    <div class="input-group">
+                                        <input type="text" ng-model="promocode" class="form-control" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <label>วันเริ่มโปรโมชัน</label>
+                                    <div class="input-group">
+                                        <input type="date" ng-model="date1" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label>วันหมดโปรโมชัน</label>
+                                    <div class="input-group">
+                                        <input type="date" ng-model="date2" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-4">
+                                    <label>ราคาต่อชุด</label>
+                                    <div class="input-group">
+                                        <input type="text" ng-model="promoprice" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col align-self-end d-flex justify-content-end">
+                                    <button class="btn btn-success" ng-click="checkoutPromotion()">ตกลง</button>
                                 </div>
                             </div>
                         </div>
@@ -122,43 +166,41 @@
                 <div class="row">
 
                     <div class="col">
-                        <hr><label>รายการโปรโมชันของสาขา {{bottomsubbranch}}</label>
+                        <hr>
+                        <div class="row">
+                            <div class="col-3 align-self-center">
+                                <label>รายการโปรโมชันของสาขา {{bottomsubbranch}}</label>
+                            </div>
+                            <div class="col-4 mb-2">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text">ค้นหา</span></div><input class="form-control" type="text" ng-model="promotionfiller" />
+
+                                </div>
+                            </div>
+                        </div>
                         <div class="">
                             <table class="table table-bordered">
                                 <thead class="table-info">
                                     <tr>
                                         <th>รหัสส่วนลด</th>
-                                        <th>ชื่อส่วนลด</th>
+                                        <th>ชื่อโปรโมชัน</th>
                                         <th>ราคาต่อชุด</th>
                                         <th>มูลค่าส่วนลด</th>
                                         <th>ราคาเต็ม</th>
-                                        <th>รายละเอียด</th>
+                                        <th>วันเริ่มโปรโมชัน</th>
+                                        <th>วันหมดโปรโมชัน</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Cell1</td>
-                                        <td>Cell2</td>
-                                        <td>Cell3</td>
-                                        <td>Cell4</td>
-                                        <td>Cell4</td>
-                                        <td>Cell4</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cell1</td>
-                                        <td>Cell2</td>
-                                        <td>Cell3</td>
-                                        <td>Cell4</td>
-                                        <td>Cell4</td>
-                                        <td>Cell4</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cell1</td>
-                                        <td>Cell2</td>
-                                        <td>Cell3</td>
-                                        <td>Cell4</td>
-                                        <td>Cell4</td>
-                                        <td>Cell4</td>
+                                    <tr ng-repeat="pro in promotions | filter: promotionfiller">
+                                        <td>{{pro.promotioncode}}</td>
+                                        <td>{{pro.promotionname}}</td>
+                                        <td>{{pro.priceperpack}}</td>
+                                        <td>{{pro.discount}}</td>
+                                        <td>{{pro.fullprice}}</td>
+                                        <td>{{pro.startdate}}</td>
+                                        <td>{{pro.expiredate}}</td>
+                                        <td><button class="btn btn-info" ng-click="getpromotiondetail(pro.stockidwithqty)">เพิ่มเติม</button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -169,6 +211,43 @@
 
 
         </div>
+        <!-------------------------------Modal detail start--------------------------->
+        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailModalLabel">รายละเอียดโปรโมชัน</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <table class="table">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>จำนวน</th>
+                                        <th>หน่วย</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in details">
+                                        <td>{{item.pname}}</td>
+                                        <td class="text-right">{{item.qty}}</td>
+                                        <td>{{item.type}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>
@@ -176,6 +255,9 @@
     var app = angular.module("createpromotionApp", []);
     app.controller("createpromotionmainController", function($scope, $http, $window) {
 
+        $scope.date1 = new Date();
+        $scope.date2 = new Date();
+        $scope.isadd = true;
         $scope.selectBranch = function() {
             $http.get('php/subbranchSelect.php').then(function(response) {
                 $scope.branchs = response.data.records;
@@ -192,6 +274,8 @@
                 $scope.branchname = null;
                 $scope.getprePromotion();
                 $scope.bottomsubbranch = $scope.stocks[0]['name'];
+                $scope.getpromotion();
+                $scope.resetnewpromo();
 
             });
         }
@@ -225,8 +309,52 @@
                 $scope.getstockinbranch();
                 $scope.getprePromotion();
             });
+        }
+
+        $scope.getpromotion = function() {
+            $http.post("php/getpromotionbyBranch.php", {
+                'branch': $scope.branch
+            }).then(function(response) {
+                $scope.promotions = response.data.records;
+            });
+        }
 
 
+        $scope.getpromotiondetail = function(detail) {
+            $("#detailModal").modal('toggle');
+            $http.post("php/getpromotiondetail.php", {
+                'detail': detail
+            }).then(function(response) {
+                //console.log(response.data);
+                $scope.details = response.data.records;
+            });
+
+        }
+
+        $scope.checkoutPromotion = function() {
+            if ($scope.promoname == null || $scope.promoprice == null || $scope.promocode == null) {
+                alert("กรุณาใส่ข้อมูลให้ครบ");
+            } else if (isNaN($scope.promoprice)) {
+                alert("กรุณาใส่จำนวนให้ถูกต้อง");
+            } else {
+                console.log($scope.promoname);
+                console.log($scope.promoprice);
+                console.log($scope.date1);
+                console.log($scope.date2);
+                console.log($scope.promocode);
+                $scope.resetnewpromo();
+
+
+            }
+
+        }
+
+        $scope.resetnewpromo = function() {
+            $scope.promoname = null;
+            $scope.promoprice = null;
+            $scope.date1 = new Date();
+            $scope.date2 = new Date();
+            $scope.promocode = null;
         }
 
         $scope.logtest = function() {
