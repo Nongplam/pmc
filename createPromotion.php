@@ -41,7 +41,7 @@
                        
                        </select>
                         <hr class="mb-1 mt-1">
-                        <div class="row ">
+                        <div class="row mb-1">
                             <div class="col d-flex justify-content-center">
                                 <span class="mr-sm-1 align-self-center">เลือกสินค้าที่ต้องการจัดโปรโมชัน</span>
                                 <!--<input type="text" class="input-group-text" />-->
