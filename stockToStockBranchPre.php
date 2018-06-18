@@ -26,7 +26,7 @@
 
     <div ng-app="stockApp" ng-controller="stockcontroller" class="ng-scope">
         <br>
-        <h3 align="center">จัดสินค้าเข้าสต๊อคสาขา</h3>
+        <h3 align="center">จัดสินค้าเข้าคลังสาขา</h3>
         <hr>
 
 
@@ -80,7 +80,7 @@
 
 
         <hr>
-        <h3 align="right"><button class="btn btn-lg btn-success" ng-click="addTorptBranchStock()">ยืนยันสินค้า</button></h3>
+        <h3 align="right"><button class="btn btn-lg btn-success" ng-click="addTorptBranchStock()">สร้างใบนำส่งสินค้า</button></h3>
         <hr>
 
         <h3 align="center">สินค้าที่จะนำเข้าสต๊อกสาขา</h3>
@@ -112,7 +112,7 @@
                 <td>{{stock.receiveday | date:'dd/MM/yyyy'}}</td>
                 <td>{{stock.expireday | date:'dd/MM/yyyy'}}</td>
 
-                <td><button class="btn btn-info btn-xs" type="button" ng-click="setpreshelfModal(stock.sid,stock.lotno,stock.pname,stock.stocktype)" data-toggle="modal" data-target="#prestockModal">เตรียม</button></td>
+                <td><button class="btn btn-info btn-xs" type="button" ng-click="setpreModal(stock.sid,stock.lotno,stock.pname,stock.stocktype,stock.remain)" data-toggle="modal" data-target="#prestockModal">เตรียม</button></td>
             </tr>
             </tbody>
         </table>
@@ -206,20 +206,26 @@
 
 
 
-        $scope.setpreshelfModal = function(sid, lotno, pname, type) {
+        $scope.setpreModal = function(sid, lotno, pname, type,remain) {
             $scope.sidonmodal = sid;
             $scope.lotonmodal = lotno;
             $scope.pnameonmodal = pname;
             $scope.typeonmodal = type;
+            $scope.remain = remain;
         }
 
         $scope.addtoprepare = function() {
             var stockid = $scope.sidonmodal;
             var qty = $scope.prestockqtyonmodal;
             var subid = $scope.branch;
+            
+            if(qty > $scope.remain ){
+                sweetAlert("คำเตือน", "ห้ามใส่เกินจำนวนที่มี", "warning");
+                return;
+            }
 
             if ($scope.branch == null){
-                sweetAlert("บันทึกข้อมูลผิดพลาด", "กรุณาเลือกสาขา", "warning");
+                sweetAlert("คำเตือน", "กรุณาเลือกสาขา", "warning");
                 return false;
             }
             $http.post("php/addToBranchStockPrepare.php", {

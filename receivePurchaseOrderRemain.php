@@ -157,13 +157,13 @@ if(!isset($_GET["po_no"]) && !isset($_GET["rpo_no"]) ){
             <tr ng-repeat="producrPO in producrPOs">
                 <td>{{$index + 1}}</td>
                 <td >{{producrPO.pname}}</td>
-                <td class="text-center">{{producrPO.remain}}</td>
+                <td class="text-center">{{numberWithCommas(producrPO.remain)}}</td>
                 <td class="text-center">{{producrPO.type}}</td>
                 <td class="text-left">{{producrPO.note}}</td>
-                <td ng-show="checkRemain(producrPO.status_remain)" class="text-center" >{{producrPO.rptRecivePOdetailI_Qty}} <input  type="number" min="0" class="form-control" name="qty" ng-model="qty[$index]"></td>
+                <td ng-show="checkRemain(producrPO.status_remain)" class="text-center" >{{numberWithCommas(producrPO.rptRecivePOdetailI_Qty)}} <input  type="number" min="0" class="form-control" name="qty" ng-model="qty[$index]"></td>
                 <td ng-show="checkKeyRemain(producrPO.status_remain)"><input type="number" min="0" class="form-control" name="qty" ng-model="qty[$index]"></td>
-                <td class="text-center" ng-show="checkKeyRemain(producrPO.status_remain)"><button class="btn btn-success" ng-click="addRemain(producrPO.rptRecivePOdetailI_Id,producrPO.preToStock_id,$index)">บันทึก&#160;<span class="icon ion-android-add-circle font-weight-bold"></span> </button> </td>
-                <td class="text-center" ng-show="checkRemain(producrPO.status_remain)"><button class="btn btn-success" ng-click="addRemain(producrPO.rptRecivePOdetailI_Id,producrPO.preToStock_id,$index)" >แก้ไข&#160;<span class="icon ion-edit font-weight-bold"></span> </button> </td>
+                <td class="text-center" ng-show="checkKeyRemain(producrPO.status_remain)"><button class="btn btn-success" ng-click="addRemain(producrPO.rptRecivePOdetailI_Id,producrPO.preToStock_id,$index,producrPO.remain)">บันทึก&#160;<span class="icon ion-android-add-circle font-weight-bold"></span> </button> </td>
+                <td class="text-center" ng-show="checkRemain(producrPO.status_remain)"><button class="btn btn-success" ng-click="addRemain(producrPO.rptRecivePOdetailI_Id,producrPO.preToStock_id,$index,producrPO.remain)" >แก้ไข&#160;<span class="icon ion-edit font-weight-bold"></span> </button> </td>
             </tr>
             </tbody>
         </table>
@@ -181,7 +181,8 @@ if(!isset($_GET["po_no"]) && !isset($_GET["rpo_no"]) ){
 
     app.controller("receivePurchaseOrdercontroller", function($scope, $http) {
         $scope.qty = [];
-        $scope.rpo_date1 = new Date();
+        $scope.currentDate= new Date();
+        var rpo_date1;
         $scope.getDetailPoProduct = function(){
             $http.post("php/getDetailReceivePoProduct.php",{
                 'po_no':<?=$po_no?>
@@ -211,14 +212,50 @@ if(!isset($_GET["po_no"]) && !isset($_GET["rpo_no"]) ){
                 if(  temp.recieive_Date == null){
                     swal({
                         title: 'กรอกวันที่ตรวจรับสินค้า',
-                        html: '<input type="date" name="rpo_date1" ng-model="rpo_date1" class="form-control" >',
+                        html: "<input type='date' name='rpo_date1' id='rpo_date1' ng-model='rpo_date1' class='form-control' >",
                         confirmButtonText: 'ตกลง',
-                        allowOutsideClick : false
+                        allowOutsideClick : false,
+                        preConfirm: function() {
+
+                        }
                     }).then((result) => {
 
+                        var rpo_date1 = $('#rpo_date1').val();
+                        //console.log($scope.formatDate(rpo_date1));
+                        if( new Date(rpo_date1 )> $scope.currentDate){
+                            swal({
+                                type: 'warning',
+                                title: 'แจ้งเตือน',
+                                text: 'ไม่สามารถใส่วันตรวจรับล่วงหน้าได้',
+                                allowOutsideClick :false
+                            }).then(function(result){
+                                if(result.value){
+                                $scope.getHeadReceivePO();
+                                }
+                            });
+
+                            return;
+                        }
+                        if(!isNaN(rpo_date1)){
+                            swal({
+                                type: 'warning',
+                                title: 'แจ้งเตือน',
+                                text: 'กรุณาใส่วันตรวจรับ',
+                                allowOutsideClick :false
+                            }).then(function(){
+                                if(result.value){
+                                    $scope.getHeadReceivePO();
+                                }
+                            });
+
+                            return;
+                        }
+
                         if (result.value) {
+
+
                             $http.post('php/addDateReceivePO.php',{
-                                'date': $scope.formatDate($scope.rpo_date1),
+                                'date': $scope.formatDate(rpo_date1),
                                 'po_no': <?=$po_no?>
                             }).then(function(response){
                                 if(response.data.Insert == true){
@@ -233,7 +270,7 @@ if(!isset($_GET["po_no"]) && !isset($_GET["rpo_no"]) ){
                                         type: 'success',
                                         title: 'บันทึกสำเร็จ'
                                     });
-                                    $scope.rpo_date = new Date($scope.rpo_date1);
+                                    $scope.rpo_date = new Date(rpo_date1);
                                 }else{
                                     const toast = swal.mixin({
                                         toast: true,
@@ -280,7 +317,11 @@ if(!isset($_GET["po_no"]) && !isset($_GET["rpo_no"]) ){
 
         };
 
-
+        $scope.numberWithCommas =function(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        };
 
         $scope.checkKeyRemain = function(status){
 
@@ -293,8 +334,19 @@ if(!isset($_GET["po_no"]) && !isset($_GET["rpo_no"]) ){
         };
 
 
-        $scope.addRemain = function(rpo_id,preStock_id,index){
+        $scope.addRemain = function(rpo_id,preStock_id,index,qty){
 
+
+            if($scope.qty[index] > qty){
+
+                swal({
+                    type: 'warning',
+                    title: 'แจ้งเตือน',
+                    text: 'ไม่สามารถใส่มากกว่าจำนวนที่สั่งซื้อได้',
+                    allowOutsideClick :false
+                });
+                return;
+            }
 
 
 

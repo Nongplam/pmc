@@ -48,7 +48,7 @@ ob_start();
                     </tr>
                     <tr>
                         <th>วันที่</th>
-                        <td><?=$rptPO_date?></td>
+                        <td><?= $rptPO_date?></td>
                     </tr>
                      </tbody>
                 </table>
@@ -96,7 +96,7 @@ ob_start();
         <tbody>
         <?php
 
-        $sqlDe = "SELECT rpt_POdetail.*,product.pname FROM rpt_POdetail,product WHERE rpt_POdetail.productid = product.regno AND rpt_POdetail.rptPO_no = $poNO ORDER BY product.pname ASC";
+        $sqlDe = "SELECT rpt_POdetail.*,product.pname FROM rpt_POdetail,product WHERE rpt_POdetail.productid = product.regno AND rpt_POdetail.rptPO_no = $poNO AND rpt_POdetail.subbranchid = $subid ORDER BY product.pname ASC";
             $c =0 ;
         if($result2 = mysqli_query($con,$sqlDe)){
             while ($rowD = $result2->fetch_array(1)) {
@@ -104,10 +104,10 @@ ob_start();
                 <tr>
                     <td><?=$c=$c+1?></td>
                     <td><?=$rowD["pname"]?></td>
-                    <td align="center"><?=$rowD["remain"]?></td>
+                    <td align="center"><?=number_format($rowD["remain"])?></td>
                     <td align="center"><?=$rowD["type"]?></td>
-                    <td align="center"><?=$rowD["pricePerType"]?></td>
-                    <td align="center"><?=$rowD["priceall"]?></td>
+                    <td align="center"><?=number_format($rowD["pricePerType"],2)?></td>
+                    <td align="center"><?=number_format($rowD["priceall"],2)?></td>
                     <td align="center"><?=$rowD["note"]?></td>
                 </tr>
                 <?php
@@ -122,33 +122,38 @@ ob_start();
 
     <table lang="th">
         <tr>
-            <td width="70%">
+            <td width="60%">
 
                 <span style="color: red">หมายเหตุ*</span>
                 <span style="color: red"><?=$note?></span>
             </td>
-            <td width="30%">
+            <td width="40%">
                 <table align="right " lang="th">
                     <tbody>
                     <tr>
                         <th align="right">รวมเงิน : </th>
-                        <td><?=$pricesum?></td>
+                        <td><?=number_format($pricesum,2)?></td>
+                        <th align="left">บาท</th>
                     </tr>
                     <tr>
                         <th align="right">ส่วนลด : </th>
-                        <td><?=$pricediscount?></td>
+                        <td><?=number_format($pricediscount,2)?></td>
+                        <th align="left">บาท</th>
                     </tr>
                     <tr>
                         <th align="right">หลังหักส่วนลด : </th>
-                        <td><?=$priceMIdicount?></td>
+                        <td><?=number_format($priceMIdicount,2)?></td>
+                        <th align="left">บาท</th>
                     </tr>
                     <tr>
                         <th align="right">ภาษีมูลค่าเพิม : </th>
-                        <td><?=$pricevat?></td>
+                        <td><?=number_format($pricevat,2)?></td>
+                        <th align="left">บาท</th>
                     </tr>
                     <tr>
                         <th align="right">จำนวนเงินทั้งสิ้น : </th>
-                        <td><?=$totalprice?></td>
+                        <td><?= number_format($totalprice,2)?></td>
+                        <th align="left">บาท</th>
                     </tr>
                     </tbody>
                 </table>
@@ -159,6 +164,14 @@ ob_start();
 
 </div>
 
+
+<script>
+    const numberWithCommas = (x) => {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+</script>
 <?php
 
 $html = ob_get_contents();
@@ -212,5 +225,5 @@ $mpdf->WriteHTML($html,2);
 
 
 // Output a PDF file directly to the browser
-$mpdf->Output();
+$mpdf->Output("PO_".$rptPO_no.".pdf", 'I');
 ?>
