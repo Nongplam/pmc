@@ -16,6 +16,8 @@ $subid = $_SESSION['subbranchid'];
 $no = $_POST['no'] ;
 $status = $_POST["status"];
 
+
+
 $order = "PO";
 $location = "../upload/$subid/$order/$no/$status";
 include "upload.php";
@@ -157,6 +159,19 @@ if (!empty($filename_arr)) {
                }else{
                 $result[0]['InsertFinceIncomplete'] = 'Failed = '.mysqli_error($con);
                }
+        }else{
+            $sqlSelectRef = "SELECT rpt_PO_fine_Incomplete.* FROM rpt_PO_fine_Incomplete WHERE rpt_PO_fine_Incomplete.rptPO_no = '$no' AND rpt_PO_fine_Incomplete.subbranchid = $subid";
+            $resultRef = mysqli_query($con,$sqlSelectRef);
+            if( $resultRef ->num_rows >0){
+                $rowRef = $resultRef -> fetch_array(1);
+                $refPo_No = $rowRef["rptPO_no_ref"];
+                $sqlUpstsPoRef = "UPDATE rpt_PO SET rpt_PO.rptPO_status = $status WHERE rpt_PO.rptPO_no = '$refPo_No' AND rpt_PO.subbranchid = $subid";
+               if ( mysqli_query($con,$sqlUpstsPoRef)){
+                $result[0]['UpstsPoRef'] = true;
+               }else{
+                $result[0]['UpstsPoRef'] = 'Failed = '.mysqli_error($con);
+               }
+            }
         }
       
         
