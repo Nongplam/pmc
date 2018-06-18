@@ -12,7 +12,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>รายการใบสั่งซื้อ และ ตรวจรับสินค้า</title>
+        <title>รายการตรวจรับสินค้า</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/lib/angular.min.js"></script>
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -39,7 +39,7 @@
             <div ng-app="showAllPurchaseOrderApp" ng-controller="showAllPurchaseOrderController" class="ng-scope">
                 <div class=" container">
                     <br>
-                    <h3 align="center">รายการใบสั่งซื้อ และ ตรวจรับสินค้า</h3>
+                    <h3 align="center">รายการตรวจรับสินค้า</h3>
                     <hr>
                     <table class="table">
                         <thead>
@@ -70,7 +70,7 @@
                                 <td><button ng-show="checkStatusCreateReceivePurchaseOrder(PO.rptPO_status)" class="btn btn-primary mb-2 mr-2" ng-click="createReceivePurchaseOrder(PO.rptPO_no)"><span class="icon ion-compose font-weight-bold"></span>&#160;สร้างใบตรวจรับ</button>
                                     <a href="reportReceivePurchaseOrder.php?NO={{PO.rptPO_no}}" target="_blank"><button class="btn btn-info mb-2 mr-2"><span class="icon ion-document-text font-weight-bold"></span>&#160;PDF </button></a>
                                     <button ng-show="checkStatusCompleteReceivePurchaseOrder(PO.rptPO_status)" class="btn btn-success mb-2 mr-2" ng-click="setData(PO.rptPO_no)" data-toggle="modal" data-target="#uploads"><span class="icon ion-android-checkbox-outline font-weight-bold"></span>&#160;ยืนยันการตรวจรับสินค้า </button>
-                                    <a ng-show="checkStatusKeyRemain(PO.rptPO_status,PO.rptRecivePO_Status)" href="receivePurchaseOrderRemain.php?po_no={{PO.rptPO_no}}&&rpo_no={{PO.rptRecivePO_No}}" target="_blank"><button class="btn btn-info mb-2 mr-2"><span class="icon ion-clipboard font-weight-bold"></span>&#160;กรอกจำนวนสินค้า </button></a> </td>
+                                    <a ng-show="checkStatusCompleteReceivePurchaseOrder(PO.rptPO_status)" href="receivePurchaseOrderRemain.php?po_no={{PO.rptPO_no}}&&rpo_no={{PO.rptRecivePO_No}}" target="_blank"><button class="btn btn-info mb-2 mr-2"><span class="icon ion-clipboard font-weight-bold"></span>&#160;กรอกจำนวนสินค้า </button></a> </td>
                             </tr>
                         </tbody>
                     </table>
@@ -98,6 +98,23 @@
                                             <span class="input-group-text icon  ion-android-attach font-weight-bold">file</span>
                                         </div>
                                         <input type="file" multiple accept="image/*,.pdf,.PDF" name="file" id="file" ng-model="file" ng-file="uploadfiles" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-lg mb-2">
+                                        <div class="input-group-prepend mb-2">
+                                            <span class="input-group-text font-weight-bold">เลือกสถานะการรับ</span>
+                                        </div>
+                                        <div class="form-check form-check-inline mb-2  ml-2">
+                                            <input class="form-check-input" type="radio" name="statusReceiveItem" id="statusReceiveItem"  ng-model="statusReceiveItem" value="5" >
+                                            <label class="form-check-label" for="inlineRadio1">รับสินค้าครบ</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mb-2 ">
+                                            <input class="form-check-input" type="radio" name="statusReceiveItem" id="statusReceiveItem" ng-model="statusReceiveItem" value="6">
+                                            <label class="form-check-label" for="inlineRadio2">รับสินค้างบางส่วน</label>
+                                        </div>
+                                        <!--<div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
+                                            <label class="form-check-label" for="inlineRadio3">3 (disabled)</label>
+                                        </div>-->
                                     </div>
 
                                 </div>
@@ -134,6 +151,9 @@
                 }]);
 
                 app.controller("showAllPurchaseOrderController", function($scope, $http) {
+
+                  
+                    
                     $scope.getAllPurchaseOrder = function() {
 
                         $http.get('php/getAllPurchaseOrder.php').then(function(res) {
@@ -148,15 +168,22 @@
 
                     $scope.upload = function() {
                         //console.log("runqqqqqqq");
-                        //console.log($scope.Po_no);
+                        console.log($scope.statusReceiveItem);
+                        if($scope.statusReceiveItem == null){
+                            swal("คำเตือน", "โปรดเลือกสถานะการตรวจรับ", "warning");
+                            return;
+                        }
+
                         var fd = new FormData();
                         angular.forEach($scope.uploadfiles, function(file) {
                             fd.append('file[]', file);
                         });
                         fd.append('no', $scope.Po_no);
+                        fd.append('status',$scope.statusReceiveItem);
 
 
 
+                            
                         $http({
                             method: 'post',
                             url: 'php/uploadForCompletePurchaseOrder.php',
@@ -186,6 +213,7 @@
                             }
 
                         });
+
                     };
 
                     $scope.reciveProduct = function(po_no) {
@@ -282,7 +310,7 @@
                         } else {
                             return false;
                         }
-                    }
+                    };
 
 
 

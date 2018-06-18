@@ -53,12 +53,25 @@ if($data) {
     $note  = mysqli_real_escape_string($con,$data->note);
     $dicount = mysqli_real_escape_string($con,$data -> discount);
     $vat = mysqli_real_escape_string($con,$data -> vat );
+/*
+    if($dicount != 0 ){
+        $datePayMent = "'".mysqli_real_escape_string($con,$data -> po_datePayMent )."'";
+    }else{
+        $datePayMent = null;
+    }*/
+
+
+    $datePayMent = ($dicount != 0) ? mysqli_real_escape_string($con,$data -> po_datePayMent ) : null;
+    
+
+
+
     $enc = md5($po_no);
-    $sqlInPO = "INSERT INTO rpt_PO(rptPO_no,rptPO_noENC, rptPO_date, cid, rptPO_agent, rptPO_lo, rptPO_tel, rptPO_mail,  rptPO_losend, rptPO_datesend, pricesum,discount, pricediscount, priceMIdicount,vat, pricevat,totalprice,note, rptPO_status,subbranchid, userid) 
-   VALUES ('$po_no','$enc','$po_date',$cid,'$po_agent','$po_lo','$po_tel','$po_mail','$po_sendlo','$po_datesend',$pricesum,$dicount,$pricediscount,$priceMIdicount,$vat,$pricevat,$totalprice,'$note','1',$subid,$userid)";
+    $sqlInPO = "INSERT INTO rpt_PO(rptPO_no,rptPO_noENC, rptPO_date, cid, rptPO_agent, rptPO_lo, rptPO_tel, rptPO_mail,  rptPO_losend, rptPO_datesend,rptPO_datePayMent, pricesum,discount, pricediscount, priceMIdicount,vat, pricevat,totalprice,note, rptPO_status,subbranchid, userid) 
+   VALUES ('$po_no','$enc','$po_date',$cid,'$po_agent','$po_lo','$po_tel','$po_mail','$po_sendlo','$po_datesend',,$pricesum,$dicount,$pricediscount,$priceMIdicount,$vat,$pricevat,$totalprice,'$note','1',$subid,$userid)";
 
     $result = array();
-    if (mysqli_query($con, $sqlInPO)) {
+      if (mysqli_query($con, $sqlInPO)) {
         $result[0]['addrpt_PO'] = true;
 
         $sqlInPOD = "INSERT INTO rpt_POdetail( rptPO_no, productid, remain, type, pricePerType, note, priceall, sts,subbranchid, userid) SELECT '$po_no',productid, remain, type, pricePerType, note, priceall,'1',$subid,$userid FROM prePo WHERE prePo.subbranchid = $subid";

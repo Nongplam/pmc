@@ -45,7 +45,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">วันที่</span>
                     </div>
-                    <input type="date" name="po_date" ng-model="po_date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                    <input type="date" name="po_date" ng-model="po_date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" ng-change="changeDay()">
                 </div>
 
             </div>
@@ -97,7 +97,7 @@
                 </div>
                 <div class="col-sm-4">
 
-                    <div class="input-group input-group-sm mb-sm-2 ">
+                    <div class="input-group input-group-sm mb-sm-2 " ng-init="getDetailBranch()">
                         <div class="input-group-prepend ">
                             <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">ที่อยู่จัดส่ง</span>
                         </div>
@@ -146,17 +146,15 @@
                         </div>
                     </div>
 
-
+                    <div class="input-group input-group-sm" ng-show="showDatePayment">
+                        <div class="input-group-prepend ">
+                            <span class="input-group-text font-weight-bold" id="inputGroup-sizing-sm">วันชำระเงิน</span>
+                        </div>
+                        <input type="date" name="po_datePayMent" ng-model="po_datePayMent" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                    </div>
                 </div>
             </div>
-            <div class="btn-group offset-sm-9" role="group">
-
-                <button class="btn btn-success mr-2" ng-click="addToRptPO()">สร้างใบสั่งสินค้า&#160;<span class="icon ion-compose font-weight-bold"></span></button>
-
-
-                <button class="btn btn-primary " data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
-
-            </div>
+            <button class="btn btn-primary float-right" data-toggle="modal" data-target="#selectProductModal">เพิ่มสินค้า&#160;<span class="icon ion-android-add-circle font-weight-bold"></span></button>
             <table class="table table-striped" ng-init="selectPrePO()">
                 <thead>
                     <tr>
@@ -173,10 +171,10 @@
                     <tr ng-repeat="producrPO in producrPOs">
                         <td>{{$index + 1}}</td>
                         <td>{{producrPO.pname}}</td>
-                        <td>{{producrPO.remain}}</td>
+                        <td>{{numberWithCommas(producrPO.remain)}}</td>
                         <td>{{producrPO.type}}</td>
-                        <td>{{producrPO.pricePerType}}</td>
-                        <td ng-init="sumallprice(producrPO.priceall)"> {{producrPO.priceall}}</td>
+                        <td>{{numberWithCommas(producrPO.pricePerType)}}</td>
+                        <td ng-init="sumallprice(producrPO.priceall)"> {{numberWithCommas(producrPO.priceall)}}</td>
                         <td>{{producrPO.note}}</td>
                         <td><button class="btn btn-danger" ng-click="delProPrePO(producrPO.prePo_id)">ลบ&#160;<span class="icon ion-android-remove-circle font-weight-bold"></span> </button> </td>
                     </tr>
@@ -191,11 +189,11 @@
                     <p class="font-weight-bold text-right mb-0">จำนวนเงินทั้งสิ้น : </p>
                 </div>
                 <div class="col-5">
-                    <p class="mb-0">{{totalprice}}</p>
-                    <p class="mb-0">{{discofprice}}</p>
-                    <p class="mb-0">{{priceallMidisc}}</p>
-                    <p class="mb-0">{{vatofprice}}</p>
-                    <p class="mb-0">{{totalPAll}}</p>
+                    <p class="mb-0">{{numberWithCommas(totalprice)}}</p>
+                    <p class="mb-0">{{numberWithCommas(discofprice)}}</p>
+                    <p class="mb-0">{{numberWithCommas(priceallMidisc)}}</p>
+                    <p class="mb-0">{{numberWithCommas(vatofprice)}}</p>
+                    <p class="mb-0">{{numberWithCommas(totalPAll)}}</p>
 
                 </div>
             </div>
@@ -207,6 +205,14 @@
                 <textarea name="po_note" rows="5" id="po_note" ng-model="po_note" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing"></textarea>
 
             </div>
+
+
+                <button class="btn btn-success text-center" ng-click="addToRptPO()">สร้างใบสั่งสินค้า&#160;<span class="icon ion-compose font-weight-bold"></span></button>
+
+
+
+
+
 
             <!--..................................modal add detail product start........................................-->
             <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="prestockModalLabel" aria-hidden="true">
@@ -398,13 +404,6 @@
                 </div>
 
             </div>
-
-
-
-
-
-
-
         </div>
     </div>
 
@@ -422,11 +421,12 @@
         });
 
         app.controller('purchaseOrdercontroller', function($scope, $http, $timeout) {
-
+            $scope.showDatePayment = false;
             $scope.po_discount = 0;
             $scope.countPro = 0;
             $scope.po_date = new Date();
-            $scope.po_datesend = new Date();
+            $scope.po_datesend   = new Date($scope.po_date );
+            $scope.po_datesend.setDate($scope.po_datesend.getDate() +7);
             $scope.po_vat = 0;
             $scope.po_disc = 0;
             $scope.discofprice = 0.00;
@@ -434,7 +434,12 @@
             $scope.vatofprice = 0.00;
             $scope.priceallMidisc = 0.00;
             $scope.totalPAll = 0.00;
-
+           
+            $scope.numberWithCommas =function(x) {
+                var parts = x.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                return parts.join(".");
+            };
             var ttprice = 0.00;
             var po_productid = null;
             $scope.sumallprice = function(allprice) {
@@ -589,8 +594,9 @@
                 if ($scope.disc) {
                     $scope.discofprice = parseFloat($scope.totalprice * $scope.po_disc / 100).toFixed(2);
                     $scope.priceallMidisc = parseFloat($scope.totalprice - $scope.discofprice).toFixed(2);
-
+                    $scope.showDatePayment = true;
                 } else {
+                    $scope.showDatePayment = false;
                     $scope.discofprice = 0.00;
                     $scope.priceallMidisc = parseFloat($scope.totalprice - $scope.discofprice).toFixed(2);
 
@@ -627,13 +633,13 @@
 
 
                 if ($scope.cid == null) {
-                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกบริษัทคู่ค้า", "warning");
+                    swal("คำเตือน", "ไม่ได้กรอกบริษัทคู่ค้า", "warning");
 
                     return;
                 }
 
                 if ($scope.po_agent == null) {
-                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตัวแทน", "warning");
+                    swal("คำเตือน", "ไม่ได้กรอกตัวแทน", "warning");
 
                     return;
                 }
@@ -648,7 +654,7 @@
                 }
 
                 if ($scope.po_sendlo == null) {
-                    swal("เกิดข้อผิดพลาด", "ไม่ได้กรอกตที่อยู่จัดส่ง", "warning");
+                    swal("คำเตือน", "ไม่ได้กรอกที่อยู่จัดส่ง", "warning");
 
                     return;
                 }
@@ -669,6 +675,15 @@
                     $scope.disc = true;
                     $scope.discOfPrice();
                 }
+                if($scope.disc){
+                    if($scope.po_datePayMent == null ){
+
+                         swal("คำเตือน", "ไม่ได้ใส่วันที่ชำระเงิน", "warning");
+                        return;
+                    }
+                    
+
+                }
 
 
                 $http.post('php/addToRptPO.php', {
@@ -688,7 +703,8 @@
                     'vat': $scope.po_vat,
                     'pricevat': $scope.vatofprice,
                     'totalprice': $scope.totalPAll,
-                    'note': $scope.po_note
+                    'note': $scope.po_note,
+                    'po_datePayMent':$scope.formatDate($scope.po_datePayMent) 
                 }).then(function(res) {
                     var temp = angular.fromJson(res.data);
                     //console.log(temp.addrpt_PO ,temp.addrpt_POD,temp.DelPrePO);
@@ -789,11 +805,28 @@
                         $scope.contact = null;
                         $scope.tel = null;
                         $scope.mail = null;
+                        $scope.selectCompany();
                     }
                 });
             };
 
             $scope.test = function() {};
+
+            $scope.changeDay = function(){
+                $scope.po_datesend   = new Date($scope.po_date );
+                $scope.po_datesend.setDate($scope.po_datesend.getDate() +7);
+            };
+
+
+
+            $scope.getDetailBranch = function (){
+                $http.post("php/getDetailBranch.php").then(function(response){
+                
+                    $scope.po_sendlo =  response.data.records["0"].info;
+
+                });
+            };
+
         });
 
     </script>

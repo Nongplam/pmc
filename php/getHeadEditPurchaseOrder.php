@@ -19,9 +19,10 @@ $po_no =  sprintf("%'.010d", $no);
 
 
 
-$stmt = $con->prepare("SELECT rpt_PO.*,company.cname FROM rpt_PO,company WHERE rpt_PO.cid = company.cid AND rpt_PO.rptPO_no = ?");
+$stmt = $con->prepare("SELECT rpt_PO.*,company.cname FROM rpt_PO,company WHERE rpt_PO.cid = company.cid AND rpt_PO.rptPO_no = ? AND rpt_PO.subbranchid = ?");
 /* bind parameters for markers */
-$stmt->bind_param("s",$po_no);
+$stmt->bind_param("si",$po_no,$subid);
+
 /* execute query */
 $stmt->execute();
 $result = $stmt->get_result();
