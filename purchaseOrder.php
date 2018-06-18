@@ -241,7 +241,13 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm">หน่วย</span>
                                             </div>
-                                            <input type="text" name="po_type" id="po_type" ng-model="po_type" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                            <input type="text" name="po_type" id="po_type" ng-model="po_type" class="form-control dropdown-toggle" aria-label="Small" aria-describedby="inputGroup-sizing-sm" ng-init="selectStocktype()" data-toggle="dropdown">
+                                            <ul class="dropdown-menu" id="stocktypeDropdown">
+                                                <div ng-repeat="stocktype in stocktypes | filter:po_type">
+                                                    <li class="dropdown-item" ng-click="setStocktype(stocktype.stocktype)"><a>{{stocktype.stocktype}}</a></li>
+
+                                                </div>
+                                            </ul>
                                         </div>
 
                                     </div>
@@ -566,6 +572,17 @@
                     $scope.companys = response.data.records;
                 });
             };
+            $scope.selectStocktype = function() {
+                $http.get("php/stocktypeSelect.php").then(function(response) {
+                    $scope.stocktypes = response.data.records;
+                });
+            }
+
+            $scope.setStocktype = function(type) {
+                //console.log("Work");
+                $scope.po_type = type;
+            }
+
             $scope.setCompany = function(id, name, agent, conn, tel, mail) {
                 $scope.cid = null;
                 $scope.cname = null;
