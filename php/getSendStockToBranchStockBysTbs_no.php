@@ -9,8 +9,8 @@ $subid= $_SESSION['subbranchid'];
 if($data) {
 
     $sTbs_no= mysqli_real_escape_string($con, $data->sTbs_no);
-    echo $sTbs_no;
-    echo $subid;
+    //echo $sTbs_no;
+    //echo $subid;
 
 
     $sql = "SELECT rpt_stocktobranchstock.*,rpt_stocktobranchstockdetail.*,product.pname,stock.productid,stock.stocktype FROM rpt_stocktobranchstock,rpt_stocktobranchstockdetail,product,stock  
