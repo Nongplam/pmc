@@ -26,7 +26,7 @@ $mbranchid = $_SESSION["masterbranchid"] ;
 
 
      $sqlInrpt="INSERT INTO rpt_stocktobranchstock (rptsTbs_no,	rptsTbs_date,rptsTbs_desc,rptsTbs_status,mbranchid,subbranchid,userid) 
-                VALUES('$rptNo',NOW(),'stocktostockbranch','0',$mbranchid,$subid,$id)";
+                VALUES('$rptNo',NOW(),'stocktostockbranch','1',$mbranchid,$subid,$id)";
 
     if (mysqli_query($con,$sqlInrpt)){
         $res[0]['addMrpt'] = 'Successed' ;
