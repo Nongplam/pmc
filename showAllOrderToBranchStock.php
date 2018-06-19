@@ -12,7 +12,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>รายการส่งสินค้าไปยังสาย่อย</title>
+        <title>รายการส่งสินค้าไปยังสาขาย่อย</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="js/lib/angular.min.js"></script>
         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -25,20 +25,20 @@
     <body>
         <?php 
     include 'mainbartest.php';
-   /* $role=$_SESSION["role"];
+    $role=$_SESSION["role"];
     $allowquery="SELECT rule FROM `rolesetting` WHERE rolesetting.rolename = '$role'";
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
     $allowrule = explode(",",$allowruleraw["rule"]);
-        if (!in_array("34", $allowrule)){
+        if (!in_array("39", $allowrule)){
             header("Location: auth.php");
-        }*/
+        }
      ?>
 
         <div ng-app="showAllOrderToBranchStockApp" ng-controller="showAllOrderToBranchStockController" class="ng-scope">
             <div class=" container">
                 <br>
-                <h3 align="center">รายการส่งสินค้าไปยังสาย่อย</h3>
+                <h3 align="center">รายการส่งสินค้าไปยังสาขาย่อย</h3>
                 <hr>
                 <table class="table">
                     <thead>
@@ -55,10 +55,12 @@
                             <td>{{Order.rptsTbs_no}}</td>
                             <td>{{Order.name}}</td>
                             <td>{{Order.rptsTbs_date}}</td>
-                            <td>{{Order.rptsTbs_status}}</td>
-                            
+                            <td>{{checkstatus(Order.rptsTbs_status)}}</td>
+                            <td ng-show="isstatusupload(Order.rptsTbs_status)"><button class="btn btn-success" ng-click="openuploadModal(Order.rptsTbs_no,Order.subbranchid)">ส่งไฟล์</button></td>
+                            <td ng-show="isstatuscancel(Order.rptsTbs_status)"><button class="btn btn-danger" ng-click="cancleTBS(Order.rptsTbs_id)">ยกเลิก</button></td>
+
                             <td><a href="reportOrderToBranchStock.php?no={{Order.rptsTbs_no}}&&br={{Order.subbranchid}}" target="_blank"><button class="btn btn-info" ><span class="icon ion-android-document font-weight-bold"></span>&#160;PDF </button></a> </td>
-          
+
                         </tr>
                     </tbody>
                 </table>
@@ -127,6 +129,40 @@
                     });
                 };
 
+                $scope.isstatuscancel = function(status) {
+                    if (status == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+                $scope.isstatusupload = function(status) {
+                    if (status == 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+                $scope.openuploadModal = function(no, br) {
+                    $scope.no = no;
+                    $scope.br = br;
+                    $("#upload").modal('toggle');
+                }
+
+                $scope.checkstatus = function(stats) {
+                    if (stats == 1) {
+                        return 'รอส่ง';
+                    } else if (stats == 0) {
+                        return 'รอเอกสารตรวจรับ';
+                    } else if (stats == 2) {
+                        return 'เสร็จสิ้น';
+                    } else {
+                        return 'ยกเลิก';
+                    }
+                }
+
 
 
                 $scope.upload = function() {
@@ -136,22 +172,20 @@
                     angular.forEach($scope.uploadfiles, function(file) {
                         fd.append('file[]', file);
                     });
-                    fd.append('no', $scope.Po_no);
-                    fd.append('flag', $scope.Flag);
-                    if ($scope.Flag == 3) {
-                        fd.append('note', $scope.po_note);
-                    }
+                    fd.append('no', $scope.no);
+                    fd.append('br', $scope.br);
+
 
                     $http({
                         method: 'post',
-                        url: 'php/uploadForStatusPO.php',
+                        url: 'php/uploadForStatusToBranchStock.php',
                         data: fd,
                         headers: {
                             'Content-Type': undefined
                         },
 
                     }).then(function successCallback(response) {
-                        if (response.data.records["0"].UpStsrpt_PO == true) {
+                        if (response.data.records["0"].UpStsrpt_TBS == true) {
 
 
                             const toast = swal.mixin({
@@ -167,15 +201,40 @@
                             });
                             $scope.uploadfiles = null;
                             $scope.file = null;
-                            $scope.Po_no = null;
-                            $scope.Flag = null;
-                            $scope.getAllPurchaseOrder();
+
+                            $scope.getAllOrderToBranchStock();
                         }
 
                     });
                 };
 
-                
+                $scope.cancleTBS = function(no) {
+
+                    swal({
+                        type: 'question',
+                        title: 'ยกเลิกใบนำส่ง',
+                        text: 'คุณต้องกายกเลิกใบนำส่งหรือไม่',
+                        showCancelButton: true,
+                        allowOutsideClick: false
+                    }).then(function(result) {
+                        if (result.value) {
+                            $http.post("php/cancleRptTBS.php", {
+                                'no': no
+                            }).then(function(res) {
+                                if (res.data.records["0"].UpStsrpt_TBS == true) {
+
+                                    swal("ยกเลิกสำเร็จ", "ยกเลิกใบนำส่งแล้ว", "success");
+                                    $scope.getAllOrderToBranchStock();
+                                }
+                            });
+                        }
+                    });
+
+
+
+
+                };
+
             });
 
         </script>
