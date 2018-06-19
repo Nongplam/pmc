@@ -32,7 +32,7 @@ if($flag == 3){
 
 $status  = $flag;
 $order = "PO";
-$location = "../upload/$subid/$order/$no/$status"; //
+$location = "../../upload/$subid/$order/$no/$status"; //
 
 include "upload.php";
 
@@ -58,5 +58,3 @@ if (!empty($filename_arr)) {
     $res["records"] = $result;
     echo   json_encode($res);
 }
-
-
