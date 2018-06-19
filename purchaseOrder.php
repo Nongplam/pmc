@@ -25,7 +25,7 @@
     $allowqueryresult=mysqli_query($con,$allowquery);
     $allowruleraw=$allowqueryresult->fetch_array(MYSQLI_ASSOC);    
     $allowrule = explode(",",$allowruleraw["rule"]);
-        if (!in_array("21", $allowrule)){
+        if (!in_array("32", $allowrule)){
             header("Location: auth.php");
         }
      ?>
@@ -207,7 +207,7 @@
             </div>
 
 
-                <button class="btn btn-success text-center" ng-click="addToRptPO()">สร้างใบสั่งสินค้า&#160;<span class="icon ion-compose font-weight-bold"></span></button>
+            <button class="btn btn-success text-center" ng-click="addToRptPO()">สร้างใบสั่งสินค้า&#160;<span class="icon ion-compose font-weight-bold"></span></button>
 
 
 
@@ -241,7 +241,13 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm">หน่วย</span>
                                             </div>
-                                            <input type="text" name="po_type" id="po_type" ng-model="po_type" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                            <input type="text" name="po_type" id="po_type" ng-model="po_type" class="form-control dropdown-toggle" aria-label="Small" aria-describedby="inputGroup-sizing-sm" ng-init="selectStocktype()" data-toggle="dropdown">
+                                            <ul class="dropdown-menu" id="stocktypeDropdown">
+                                                <div ng-repeat="stocktype in stocktypes | filter:po_type">
+                                                    <li class="dropdown-item" ng-click="setStocktype(stocktype.stocktype)"><a>{{stocktype.stocktype}}</a></li>
+
+                                                </div>
+                                            </ul>
                                         </div>
 
                                     </div>
@@ -425,8 +431,8 @@
             $scope.po_discount = 0;
             $scope.countPro = 0;
             $scope.po_date = new Date();
-            $scope.po_datesend   = new Date($scope.po_date );
-            $scope.po_datesend.setDate($scope.po_datesend.getDate() +7);
+            $scope.po_datesend = new Date($scope.po_date);
+            $scope.po_datesend.setDate($scope.po_datesend.getDate() + 7);
             $scope.po_vat = 0;
             $scope.po_disc = 0;
             $scope.discofprice = 0.00;
@@ -434,8 +440,8 @@
             $scope.vatofprice = 0.00;
             $scope.priceallMidisc = 0.00;
             $scope.totalPAll = 0.00;
-           
-            $scope.numberWithCommas =function(x) {
+
+            $scope.numberWithCommas = function(x) {
                 var parts = x.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 return parts.join(".");
@@ -511,7 +517,7 @@
                     });
                     po_productid = null;
                     $scope.po_remain = null;
-                    $scope.po_type = null;
+                    $scope.po_type = '';
                     $scope.po_pricePerType = null;
                     $scope.po_notePro = null;
                     $scope.totalprice = 0.00;
@@ -566,6 +572,17 @@
                     $scope.companys = response.data.records;
                 });
             };
+            $scope.selectStocktype = function() {
+                $http.get("php/stocktypeSelect.php").then(function(response) {
+                    $scope.stocktypes = response.data.records;
+                });
+            }
+
+            $scope.setStocktype = function(type) {
+                //console.log("Work");
+                $scope.po_type = type;
+            }
+
             $scope.setCompany = function(id, name, agent, conn, tel, mail) {
                 $scope.cid = null;
                 $scope.cname = null;
@@ -675,13 +692,13 @@
                     $scope.disc = true;
                     $scope.discOfPrice();
                 }
-                if($scope.disc){
-                    if($scope.po_datePayMent == null ){
+                if ($scope.disc) {
+                    if ($scope.po_datePayMent == null) {
 
-                         swal("คำเตือน", "ไม่ได้ใส่วันที่ชำระเงิน", "warning");
+                        swal("คำเตือน", "ไม่ได้ใส่วันที่ชำระเงิน", "warning");
                         return;
                     }
-                    
+
 
                 }
 
@@ -704,7 +721,7 @@
                     'pricevat': $scope.vatofprice,
                     'totalprice': $scope.totalPAll,
                     'note': $scope.po_note,
-                    'po_datePayMent':$scope.formatDate($scope.po_datePayMent) 
+                    'po_datePayMent': $scope.formatDate($scope.po_datePayMent)
                 }).then(function(res) {
                     var temp = angular.fromJson(res.data);
                     //console.log(temp.addrpt_PO ,temp.addrpt_POD,temp.DelPrePO);
@@ -812,17 +829,17 @@
 
             $scope.test = function() {};
 
-            $scope.changeDay = function(){
-                $scope.po_datesend   = new Date($scope.po_date );
-                $scope.po_datesend.setDate($scope.po_datesend.getDate() +7);
+            $scope.changeDay = function() {
+                $scope.po_datesend = new Date($scope.po_date);
+                $scope.po_datesend.setDate($scope.po_datesend.getDate() + 7);
             };
 
 
 
-            $scope.getDetailBranch = function (){
-                $http.post("php/getDetailBranch.php").then(function(response){
-                
-                    $scope.po_sendlo =  response.data.records["0"].info;
+            $scope.getDetailBranch = function() {
+                $http.post("php/getDetailBranch.php").then(function(response) {
+
+                    $scope.po_sendlo = response.data.records["0"].info;
 
                 });
             };

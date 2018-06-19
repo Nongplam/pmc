@@ -242,7 +242,13 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text  font-weight-bold" id="inputGroup-sizing-sm">หน่วย</span>
                                                 </div>
-                                                <input type="text" name="po_type" id="po_type" ng-model="po_type" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                                <input type="text" name="po_type" id="po_type" ng-model="po_type" class="form-control  dropdown-toggle" aria-label="Small" aria-describedby="inputGroup-sizing-sm" ng-init="selectStocktype()" data-toggle="dropdown">
+                                                <ul class="dropdown-menu" id="stocktypeDropdown">
+                                                    <div ng-repeat="stocktype in stocktypes | filter:po_type">
+                                                        <li class="dropdown-item" ng-click="setStocktype(stocktype.stocktype)"><a>{{stocktype.stocktype}}</a></li>
+
+                                                    </div>
+                                                </ul>
                                             </div>
 
                                         </div>
@@ -443,8 +449,8 @@
 
                 var ttprice = 0.00;
                 var po_productid = null;
-               
-                $scope.numberWithCommas =function(x) {
+
+                $scope.numberWithCommas = function(x) {
                     var parts = x.toString().split(".");
                     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     return parts.join(".");
@@ -539,7 +545,7 @@
                             });
                             po_productid = null;
                             $scope.po_remain = null;
-                            $scope.po_type = null;
+                            $scope.po_type = '';
                             $scope.po_pricePerType = null;
                             $scope.po_notePro = null;
                             $scope.totalprice = 0.00;
@@ -555,6 +561,17 @@
 
                     })
                 };
+                $scope.selectStocktype = function() {
+                    $http.get("php/stocktypeSelect.php").then(function(response) {
+                        $scope.stocktypes = response.data.records;
+                    });
+                }
+
+                $scope.setStocktype = function(type) {
+                    //console.log("Work");
+                    $scope.po_type = type;
+                }
+
                 $scope.delPoDetail = function(id) {
 
                     swal({

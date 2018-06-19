@@ -19,7 +19,7 @@ $status = $_POST["status"];
 
 
 $order = "PO";
-$location = "../upload/$subid/$order/$no/$status";
+$location = "../../upload/$subid/$order/$no/$status";
 include "upload.php";
 
 if (!empty($filename_arr)) {
