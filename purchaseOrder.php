@@ -517,7 +517,7 @@
                     });
                     po_productid = null;
                     $scope.po_remain = null;
-                    $scope.po_type = null;
+                    $scope.po_type = '';
                     $scope.po_pricePerType = null;
                     $scope.po_notePro = null;
                     $scope.totalprice = 0.00;
