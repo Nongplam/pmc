@@ -12,9 +12,6 @@ include 'php/connectDB.php';
 //echo $role;
 ?>
 
-
-
-
     <nav class="navbar navbar-dark navbar-expand-md bg-primary rounded-bottom">
         <div class="container-fluid">
             <a href="auth.php" class="navbar-brand"><!--
@@ -49,10 +46,12 @@ include 'php/connectDB.php';
                     foreach($menuarr as $menuid){
                         echo "<div class='dropdown'>";
                         echo "<button class='btn btn-primary dropdown-toggle' type='button' id='dropdownMenuButton' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
-                        $menunamequery="SELECT menutype.menuname FROM menutype WHERE menutype.menuid = $menuid";
+                        $menunamequery="SELECT menutype.menuname,menutype.iconurl FROM menutype WHERE menutype.menuid = $menuid";
                         $menunameresult = mysqli_query($con, $menunamequery);
                         $menunamerows = mysqli_fetch_assoc($menunameresult);
                         $menuname = $menunamerows['menuname'];
+                        $iconurl = $menunamerows['iconurl'];
+                        echo "<img src='".$iconurl."' height='17' width='17' class='mr-1 mb-2'/>";
                         echo $menuname;    
                         echo "</button>";
                         echo "<div class='dropdown-menu' aria-labelledby='dropdownMenuButton'>";
@@ -101,7 +100,7 @@ include 'php/connectDB.php';
                     </div>
 
                 </div>
-                <a href="logout.php"><button class="btn btn-light ml-auto" type="button" style="color:rgb(0,123,255);">Logout</button></a>
+                <a href="logout.php"><button class="btn btn-light ml-auto" type="button" style="color:rgb(0,123,255);">ออกจากระบบ</button></a>
 
 
             </div>
