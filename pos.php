@@ -204,8 +204,8 @@ function thai_date($time){
                                 <div class="container d-flex justify-content-center">
                                     <div class="row">
                                         <button class="btn btn-primary col-sm" data-toggle="modal" data-target="#membermodal" id="openmemberbtn" type="button" style="height:45px;width:400px;" ng-show="addmemberbtnbool">เพิ่มสมาชิก +</button>
-                                        <button class="btn btn-danger" type="button" style="height:45px;width:400px;" ng-show="!addmemberbtnbool" ng-click="cancelcurrentMember()">ยกเลิก</button>
-                                        <button class="btn btn-danger" id="openreturnmodalbtn" type="button" style="height:45px;width:100px;" data-toggle="modal" data-target="#returnproductmodal">คืนสินค้า</button>
+                                        <button class="btn btn-danger col-sm" type="button" style="height:45px;width:400px;" ng-show="!addmemberbtnbool" ng-click="cancelcurrentMember()">ยกเลิก</button>
+                                        <button class="btn btn-warning" id="openreturnmodalbtn" type="button" style="height:45px;width:100px;" data-toggle="modal" data-target="#returnproductmodal">คืนสินค้า</button>
                                         <br><br>
                                         <div class="container border border-primary rounded" ng-show="currentmemberboxbool">
                                             <table class="table table-hover">
