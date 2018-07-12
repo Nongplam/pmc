@@ -14,7 +14,7 @@ if($data) {
 
         $result = array();
 
-        $sql = "INSERT INTO drugstorerx.stock
+        $sql = "INSERT INTO stock
 (
 productid,barcode,PO_No,
 cid,
@@ -45,7 +45,7 @@ AND rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rpt
             $result[0]['addStock'] = 'Failed';
         }
 
-        $sqlUp = "update drugstorerx.rpt_stocktobranchstockdetail set rpt_stocktobranchstockdetail.sts = '0' where rpt_stocktobranchstockdetail.stockid = $stockid and rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rptsTbs_id FROM rpt_stocktobranchstock where rpt_stocktobranchstock.rptsTbs_no = '$rtsTbsNo')";
+        $sqlUp = "update rpt_stocktobranchstockdetail set rpt_stocktobranchstockdetail.sts = '0' where rpt_stocktobranchstockdetail.stockid = $stockid and rpt_stocktobranchstockdetail.rptsTbs_id = (SELECT rpt_stocktobranchstock.rptsTbs_id FROM rpt_stocktobranchstock where rpt_stocktobranchstock.rptsTbs_no = '$rtsTbsNo')";
 
 
         if(mysqli_query($con,$sqlUp)){
