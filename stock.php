@@ -102,7 +102,7 @@
             <br>
             <br>
 
-            <table class="table table-bordered" ng-init="displayData()" id="stockTable">
+            <table class="table table-bordered table-sm" ng-init="displayData()" id="stockTable">
                 <tbody>
                     <tr>
                         <th>สินค้า</th>
